@@ -1,0 +1,1 @@
+cmd_Release/NativeExtension.node := c++ -bundle -undefined dynamic_lookup -Wl,-no_pie -Wl,-search_paths_first -mmacosx-version-min=10.10 -arch x86_64 -L./Release -stdlib=libc++  -o Release/NativeExtension.node Release/obj.target/NativeExtension/NativeExtension.o Release/obj.target/NativeExtension/functions_mac.o -framework Foundation -framework AppKit -framework ScriptingBridge

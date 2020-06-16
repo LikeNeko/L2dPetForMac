@@ -1,22 +1,59 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
+const { PanelWindow } = require('./panel/');
+
 const path = require('path')
 
 function createWindow () {
+
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+  // const mainWindow = new BrowserWindow({
+  //   width: 800,
+  //   height: 600,
+  //   webPreferences: {
+  //     preload: path.join(__dirname, 'preload.js')
+  //   }
+  // })
+  const mainWindow = new PanelWindow({
+    // center: true,
+    width: 300,
+    height: 300,
+    x:1300,
+    y:800,
+    show: false,
+    // maximizable: false,
+    // minimizable: false,
+    // resizable: false,
+    // fullscreenable: false,
+    frame: true,
+    transparent: true,
+    hasShadow: false,
+    // titleBarStyle: 'customButtonsOnHover',
+    
     webPreferences: {
+      nodeIntegration: true,// 主线程的node
+      // webSecurity:false,
+      // clickThrough: 'pointer-events',// 透明点击穿透
       preload: path.join(__dirname, 'preload.js')
     }
   })
 
-  // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
-
-  // Open the DevTools.
+  // 打开开发者工具
   // mainWindow.webContents.openDevTools()
+  
+  // and load the index.html of the app.
+  mainWindow.loadFile(path.join(__dirname, '/index.html')).finally(function () {
+     mainWindow.show()
+     mainWindow.webContents.openDevTools()
+
+// 在主进程中.
+    const { ipcMain } = require('electron')
+    ipcMain.on('console_log', (event, arg) => {
+      console.log(arg) // prints "ping"
+    })
+  })
+
+
 }
 
 // This method will be called when Electron has finished

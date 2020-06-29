@@ -1,4 +1,3 @@
-window.$ = window.jQuery = require("./js/jq");
 (function ($) {
     $.fn.initTips = function (option) {
         var defaults = {

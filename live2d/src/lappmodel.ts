@@ -47,6 +47,7 @@ import {gl, canvas, frameBuffer, LAppDelegate, lAppDelegateEvent} from './lappde
 import { TextureInfo } from './lapptexturemanager';
 import * as LAppDefine from './lappdefine';
 import 'whatwg-fetch';
+import {DebugModelLogEnable} from "./lappdefine";
 
 export enum LoadStep {
   LoadAssets,
@@ -677,8 +678,8 @@ export class LAppModel extends CubismUserModel {
   }
 
   /**
-   * 当たり判定テスト
-   * 指定ＩＤの頂点リストから矩形を計算し、座標をが矩形範囲内か判定する。
+   * 判定测试
+   * 从指定ID的顶点列表计算矩形，确定坐标是否在矩形范围内。
    *
    * @param hitArenaName  当たり判定をテストする対象のID
    * @param x             判定を行うX座標
@@ -814,6 +815,7 @@ export class LAppModel extends CubismUserModel {
    */
   public constructor() {
     super();
+    this._debugMode = DebugModelLogEnable;
 
     this._modelSetting = null;
     this._modelHomeDir = null;

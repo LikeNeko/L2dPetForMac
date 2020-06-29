@@ -23,11 +23,13 @@ function createWindow () {
     
     webPreferences: {
       nodeIntegration: true,// 主线程的node
+      enableRemoteModule: true,
       // webSecurity:false,
       // clickThrough: 'pointer-events',// 透明点击穿透
       preload: path.join(__dirname, 'preload.js')
     }
   })
+  mainWindow.setVisibleOnAllWorkspaces(true);
   // mainWindow.setIgnoreMouseEvents(true, { forward: true })
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '/index.html')).finally(function () {
@@ -48,6 +50,8 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // 关闭安全警告
+  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
   createWindow()
   
   app.on('activate', function () {

@@ -9,12 +9,39 @@
         margin: 0;
         /*pointer-events: none;*/
     }
+
+    #red {
+      background-color: darkolivegreen;
+      width: 30px;
+      height: 30px;
+      position:absolute;
+      top: 0;
+      left: 0;
+    }
   </style>
-  <script src="./renderer.js"></script>
   <script src="./live2d/Core/live2dcubismcore.min.js"></script>
   <script src="./live2d/dist/bundle.js"></script>
+  <script src="./renderer.js"></script>
+  <script src="./js/tip.js"></script>
+  <script>
+
+
+    function click_btn() {
+      console.log('click');
+    }
+    $(function () {
+      console.log(123);
+
+      // console.log($("#red"))
+      $("#red").on("mousemove",function(){
+        console.log('123')
+      });
+    })
+
+
+  </script>
 </head>
 <body >
-<div id="red"></div>
+<div id="red" onclick="click_btn()"></div>
 </body>
 </html>

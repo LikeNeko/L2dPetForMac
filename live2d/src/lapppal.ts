@@ -10,6 +10,9 @@
  *
  * ファイル読み込みや時刻取得等のプラットフォームに依存する関数をまとめる。
  */
+// 声明一个全局的log方法，用来打log
+export declare function log(any:any, tag:string): void;
+
 export class LAppPal {
   /**
    * ファイルをバイトデータとして読みこむ

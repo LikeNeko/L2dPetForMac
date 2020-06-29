@@ -8,7 +8,7 @@
 import {LAppDelegate, lAppDelegateEvent} from './lappdelegate';
 import {LAppLive2DManager} from "./lapplive2dmanager";
 import {LAppModel, LoadStep} from "./lappmodel";
-import {LAppPal} from "./lapppal";
+import {log, LAppPal} from "./lapppal";
 
 
 /**

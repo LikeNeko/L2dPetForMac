@@ -16,7 +16,7 @@ function createWindow () {
     // minimizable: false,
     // resizable: false,
     // fullscreenable: false,
-    frame: true,
+    frame: false,
     transparent: true,
     hasShadow: false,
     // titleBarStyle: 'customButtonsOnHover',

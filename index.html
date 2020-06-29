@@ -15,8 +15,8 @@
       width: 30px;
       height: 30px;
       position:absolute;
-      top: 0;
-      left: 0;
+      top: 0px;
+      left: 0px;
     }
   </style>
   <script src="./live2d/Core/live2dcubismcore.min.js"></script>
@@ -24,17 +24,26 @@
   <script src="./renderer.js"></script>
   <script src="./js/tip.js"></script>
   <script>
-
-
-    function click_btn() {
-      console.log('click');
-    }
     $(function () {
-      console.log(123);
+      const { remote } = require('electron')
+      let curr_window = remote.getCurrentWindow();
+      i('进入$function','test');
 
       // console.log($("#red"))
       $("#red").on("mousemove",function(){
-        console.log('123')
+        console.log("move");
+        //整个app 忽略所有点击事件
+        curr_window.setIgnoreMouseEvents(false, { forward: true })
+      });
+      $("#red").click(function() {
+        $("body").tips({
+          msg:'你',
+          color:'#FFF',
+          bg:'#535053',
+          time:2,
+          x:90,
+          y:160
+        })
       });
     })
 
@@ -42,6 +51,6 @@
   </script>
 </head>
 <body >
-<div id="red" onclick="click_btn()"></div>
+<div id="red"></div>
 </body>
 </html>

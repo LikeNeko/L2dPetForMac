@@ -1,110 +1,106 @@
+/**
+ * jquery tips 提示插件 jquery.tips.js v0.1beta
+ *
+ * 使用方法
+ * $(selector).tips({   //selector 为jquery选择器
+ *  msg:'your messages!',    //你的提示消息  必填
+ *  side:1,  //提示窗显示位置  1，2，3，4 分别代表 上右下左 默认为1（上） 可选
+ *  color:'#FFF', //提示文字色 默认为白色 可选
+ *  bg:'#F00',//提示窗背景色 默认为红色 可选
+ *  time:2,//自动关闭时间 默认2秒 设置0则不自动关闭 可选
+ *  x:0,//横向偏移  正数向右偏移 负数向左偏移 默认为0 可选
+ *  y:0,//纵向偏移  正数向下偏移 负数向上偏移 默认为0 可选
+ * })
+ *
+ *
+ */
 (function ($) {
-    $.fn.initTips = function (option) {
+    $.fn.tips = function(options){
         var defaults = {
-            title: "toastrTips",
-            message:"<p>mmm</p><p>mmm</p>",
-            duration:5000,
-            space:8,
-            firstSpace:8,
-            limit:4,
-            margin:15,
-            direction:'right bottom',
-            timingFun:'ease',
-            width:'auto',
-            toastType:'info',
-            type:'click',
-            action: function () {},
-        }
-        var options = $.extend(defaults,option);
-        var firstDirection = direction(options.direction)[0].trim().toString();
-        var lastDirection = direction(options.direction)[1].trim().toString();
-        var minus = "";
-        if (firstDirection == 'left') {
-            minus = "-";
-        } else {
-            minus = "";
-        }
-        if ($('.ez_tips').size() == 0 || $('.ez_tips').size() < options.limit) {
-
-            var container = "<div class='ez_tips "+options.toastType+"' style="+firstDirection+":"+options.margin+"px;transform:translateX("+minus+"110%)></div>"
-
-            var head = "<div class='title clearfix'><i class='tips_icon_l fl'></i><i class='tips_icon_r close'></i></div>";
-
-            var content = "<div class='tips-message'></div>"
-
-            var newHead = $(head).append(options.title);
-
-            var newContent = $(content).append(options.message)
-
-            var newContainer = $(container).append(newHead,newContent);
-
-            setTimeout(function () {
-                var timer;
-                function timeOut () {
-                    $(newContainer).removeClass('active');
-                    setTimeout(function () {
-                        $(newContainer).remove();
-                    }, 700)
-                };
-                timer = setTimeout(timeOut, options.duration);
-                var newTimes;
-                var times = Date.now();
-                $(newContainer).css({
-                    'transition-timing-function':options.timingFun,
-                    'width':options.width,
-                });
-                var height = $(newContainer).outerHeight(true);
-                var len = $('.ez_tips').size();
-                if (len >= 2) {
-                    for (var i = 1; i < len; i++) {
-                        if (!$('.ez_tips').hasClass('length1')) {
-                            $(newContainer).css(lastDirection,options.firstSpace + 'px');
-                            $(newContainer).addClass('active length1');
-                            break;
-                        } else if (!$('.ez_tips').hasClass('length'+ (i+1))) {
-                            $(newContainer).css(lastDirection,i * height + options.space * i + options.firstSpace + 'px');
-                            $(newContainer).addClass('active length'+(i+1));
-                            break; // break涓€瀹氳鍔�,鍚﹀垯姣忔鐐瑰嚮閮戒細寰幆鍒扮粨鏉�,瀵艰嚧涓€涓洰鏍嘾iv鍙兘鍚屾椂鏈塴ength1 length2.....绛夊涓被鍚�
-                        }
-                    }
-                } else {
-                    $(newContainer).css(lastDirection,options.firstSpace + 'px');
-                    $(newContainer).addClass('active length1');
-                }
-                $(newContainer).on('mouseenter', function (event) {
-                    event.stopPropagation();
-                    $(newHead).find('.close').addClass('active');
-                    clearTimeout(timer);
-                    newTimes = Date.now() - times;
-                });
-                $(newContainer).on('mouseleave', function (event) {
-                    event.stopPropagation();
-                    $(newHead).find('.close').removeClass('active');
-                    timer = setTimeout(timeOut, options.duration - newTimes);
-                });
-                $(newHead).find('.close').click(function () {
-                    $(newContainer).removeClass('active');
-                    setTimeout(function () {
-                        $(newContainer).remove();
-                    },700)
-                });
-                if (options.action) {
-                    $(newContent).css('cursor','pointer').on(options.type,options.action);
-                }
-            },1);
-
-            $(this).append(newContainer);
-        } else {
-            return;
+            side:1,
+            msg:'',
+            color:'#FFF',
+            bg:'#F00',
+            time:2,
+            x:0,
+            y:0
         }
 
-        function direction (params) {
-            var index = params.indexOf(" ");
-            var result = [];
-            var firstDirection = params.substring(0,index);
-            var lastDirection = params.substring(index);
-            result.push(firstDirection,lastDirection);
-            return result;
+        var options = $.extend(defaults, options);
+        if (!options.msg||isNaN(options.side)) {
+            throw new Error('params error');
         }
-    }
+        if(!$('#jquery_tips_style').length){
+            var style='<style id="jquery_tips_style" type="text/css">';
+            style+='.jq_tips_box{padding:10px;position:absolute;overflow:hidden;display:inline;display:none;z-index:10176523;}';
+            style+='.jq_tips_arrow{display:block;width:0px;height:0px;position:absolute;}';
+            style+='.jq_tips_top{border-left:10px solid transparent;left:20px;bottom:0px;}';
+            style+='.jq_tips_left{border-top:10px solid transparent;right:0px;top:18px;}';
+            style+='.jq_tips_bottom{border-left:10px solid transparent;left:20px;top:0px;}';
+            style+='.jq_tips_right{border-top:10px solid transparent;left:0px;top:18px;}';
+            style+='.jq_tips_info{word-wrap: break-word;word-break:normal;border-radius:4px;padding:5px 8px;max-width:130px;overflow:hidden;box-shadow:1px 1px 1px #999;font-size:12px;cursor:pointer;}';
+            style+='</style>';
+            $(document.body).append(style);
+        }
+        console.log('进来了')
+        this.each(function(){
+            var element=$(this);
+            var element_top=element.offset().top,element_left=element.offset().left,element_height=element.outerHeight(),element_width=element.outerWidth();
+            options.side=options.side<1?1:options.side>4?4:Math.round(options.side);
+            var sideName=options.side==1?'top':options.side==2?'right':options.side==3?'bottom':options.side==4?'left':'top';
+            var tips=$('<div class="jq_tips_box"><i class="jq_tips_arrow jq_tips_'+sideName+'"></i><div class="jq_tips_info">'+options.msg+'</div></div>').appendTo(document.body);
+            tips.find('.jq_tips_arrow').css('border-'+sideName,'10px solid '+options.bg);
+            tips.find('.jq_tips_info').css({
+                color:options.color,
+                backgroundColor:options.bg
+            });
+            switch(options.side){
+                case 1:
+                    tips.css({
+                        top:element_top-tips.outerHeight()+options.x,
+                        left:element_left-10+options.y
+                    });
+                    break;
+                case 2:
+                    tips.css({
+                        top:element_top-20+options.x,
+                        left:element_left+element_width+options.y
+                    });
+                    break;
+                case 3:
+                    tips.css({
+                        top:element_top+element_height+options.x,
+                        left:element_left-10+options.y
+                    });
+                    break;
+                case 4:
+                    tips.css({
+                        top:element_top-20+options.x,
+                        left:element_left-tips.outerWidth()+options.y
+                    });
+                    break;
+                default:
+            }
+            var closeTime;
+            tips.fadeIn('fast').click(function(){
+                clearTimeout(closeTime);
+                tips.fadeOut('fast',function(){
+                    tips.remove();
+                })
+            })
+            if(options.time){
+                closeTime=setTimeout(function(){
+                    tips.click();
+                },options.time*1000);
+                tips.hover(function(){
+                    clearTimeout(closeTime);
+                },function(){
+                    closeTime=setTimeout(function(){
+                        tips.click();
+                    },options.time*1000);
+                })
+            }
+        });
+        return this;
+    };
 })(jQuery);

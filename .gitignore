@@ -1,2 +1,4 @@
 node_modules
 .idea
+panel/node_modules
+live2d/node_modules

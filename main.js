@@ -5,15 +5,6 @@ const { PanelWindow } = require('./panel/');
 const path = require('path')
 
 function createWindow () {
-
-  // Create the browser window.
-  // const mainWindow = new BrowserWindow({
-  //   width: 800,
-  //   height: 600,
-  //   webPreferences: {
-  //     preload: path.join(__dirname, 'preload.js')
-  //   }
-  // })
   const mainWindow = new PanelWindow({
     // center: true,
     width: 300,
@@ -37,10 +28,7 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-
-  // 打开开发者工具
-  // mainWindow.webContents.openDevTools()
-  
+  // mainWindow.setIgnoreMouseEvents(true, { forward: true })
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '/index.html')).finally(function () {
      mainWindow.show()

@@ -5,12 +5,22 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-import { LAppDelegate } from './lappdelegate';
+import {LAppDelegate, lAppDelegateEvent} from './lappdelegate';
+import {LAppLive2DManager} from "./lapplive2dmanager";
+import {LAppModel, LoadStep} from "./lappmodel";
+import {LAppPal} from "./lapppal";
+
 
 /**
  * ブラウザロード後の処理
  */
 window.onload = (): void => {
+  LAppDelegate.getInstance().setLappModelEvent({
+    modelCompleteSetup(){
+        window["live2d"] = LAppLive2DManager.getInstance();
+        eval('nload();')
+    }
+  })
   // create the application instance
   if (LAppDelegate.getInstance().initialize() == false) {
     return;

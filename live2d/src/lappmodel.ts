@@ -43,12 +43,12 @@ import CubismModelSettingJson = cubismmodelsettingjson.CubismModelSettingJson;
 import CubismDefaultParameterId = cubismdefaultparameterid;
 
 import { LAppPal } from './lapppal';
-import { gl, canvas, frameBuffer, LAppDelegate } from './lappdelegate';
+import {gl, canvas, frameBuffer, LAppDelegate, lAppDelegateEvent} from './lappdelegate';
 import { TextureInfo } from './lapptexturemanager';
 import * as LAppDefine from './lappdefine';
 import 'whatwg-fetch';
 
-enum LoadStep {
+export enum LoadStep {
   LoadAssets,
   LoadModel,
   WaitLoadModel,
@@ -407,7 +407,7 @@ export class LAppModel extends CubismUserModel {
         );
         texturePath = this._modelHomeDir + texturePath;
 
-        // ロード完了時に呼び出すコールバック関数
+        // 负载完成时调用的回叫函数
         const onLoad = (textureInfo: TextureInfo): void => {
           this.getRenderer().bindTexture(modelTextureNumber, textureInfo.id);
 
@@ -417,6 +417,7 @@ export class LAppModel extends CubismUserModel {
             // ロード完了
             this._state = LoadStep.CompleteSetup;
           }
+          lAppDelegateEvent.modelCompleteSetup();
         };
 
         // 読み込み

@@ -14,7 +14,7 @@ import ACubismMotion = acubismmotion.ACubismMotion;
 
 import { LAppModel } from './lappmodel';
 import { LAppPal } from './lapppal';
-import { canvas } from './lappdelegate';
+import {canvas, lAppDelegateEvent} from './lappdelegate';
 import * as LAppDefine from './lappdefine';
 
 export let s_instance: LAppLive2DManager = null;

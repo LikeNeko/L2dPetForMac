@@ -1,5 +1,5 @@
 {
-  "name": "electron-quick-start",
+  "name": "my_live",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
@@ -21,8 +21,6 @@
     "electron-rebuild": "^1.11.0"
   },
   "dependencies": {
-    "find-live2d3": "^1.5.2",
-    "pixi-live2d": "^1.2.1",
     "typescript": "^3.9.3"
   }
 }

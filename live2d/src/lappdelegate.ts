@@ -15,12 +15,22 @@ import {LAppPal} from './lapppal';
 import {LAppTextureManager} from './lapptexturemanager';
 import {LAppLive2DManager} from './lapplive2dmanager';
 import * as LAppDefine from './lappdefine';
+import {LAppModel} from "./lappmodel";
 
 export let canvas: HTMLCanvasElement = null;
 export let s_instance: LAppDelegate = null;
 export let gl: WebGLRenderingContext = null;
 export let frameBuffer: WebGLFramebuffer = null;
 export let scale: number = window.devicePixelRatio;
+export let lAppDelegateEvent:LAppDelegateEvent = null;
+
+export let t_canvas:HTMLCanvasElement = null;
+export let t_gl:CanvasRenderingContext2D = null;
+
+interface LAppDelegateEvent {
+    modelCompleteSetup();
+}
+
 
 /**
  * アプリケーションクラス。
@@ -74,6 +84,7 @@ export class LAppDelegate {
         // @ts-ignore
         gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
+
         if (!gl) {
             alert('Cannot initialize WebGL. This browser does not support.');
             gl = null;
@@ -99,6 +110,7 @@ export class LAppDelegate {
         const supportTouch: boolean = 'ontouchend' in canvas;
         canvas.onmouseenter = onMouseEnter;
         canvas.onmouseleave = onMouseLeave;
+        // document.getElementsByName('body')[0].on
         if (supportTouch) {
             // タッチ関連コールバック関数登録
             canvas.ontouchstart = onTouchBegan;
@@ -110,8 +122,18 @@ export class LAppDelegate {
             canvas.onmousedown = onClickBegan;
             canvas.onmousemove = onMouseMoved;
             canvas.onmouseup = onClickEnded;
-
         }
+
+        // 初始化
+        t_canvas = document.createElement('canvas');
+        t_canvas.width = canvas.width;
+        t_canvas.height = canvas.height;
+        t_canvas.style.width = canvas.width + 'px';
+        t_canvas.style.height = canvas.height + 'px';
+        t_canvas.width = canvas.width * scale;
+        t_canvas.height = canvas.height * scale;
+
+        t_gl = t_canvas.getContext("2d");
 
         // AppViewの初期化
         this._view.initialize();
@@ -173,6 +195,8 @@ export class LAppDelegate {
 
             // 描画更新
             this._view.render();
+
+            t_gl.drawImage(canvas,0,0);
 
             // ループのために再帰呼び出し
             requestAnimationFrame(loop);
@@ -249,6 +273,10 @@ export class LAppDelegate {
         return this._view;
     }
 
+    public setLappModelEvent(call:LAppDelegateEvent){
+        lAppDelegateEvent = call;
+    }
+
     public getTextureManager(): LAppTextureManager {
         return this._textureManager;
     }
@@ -299,18 +327,12 @@ export class LAppDelegate {
 function onMouseLeave() {
     console.log("划出去")
 
-    // const { remote } = require('electron')
-    // let curr_window = remote.getCurrentWindow();
-    // curr_window.setIgnoreMouseEvents(false)
+
 }
 
 function onMouseEnter(e: MouseEvent) {
     e.preventDefault()
     console.log("划进来")
-    // const { remote } = require('electron')
-    // let curr_window = remote.getCurrentWindow();
-    // //整个app 忽略所有点击事件
-    // curr_window.setIgnoreMouseEvents(true, { forward: true })
 
 }
 
@@ -318,6 +340,7 @@ function onMouseEnter(e: MouseEvent) {
  * クリックしたときに呼ばれる。
  */
 function onClickBegan(e: MouseEvent): void {
+    LAppPal.log('click_began')
     if (!LAppDelegate.getInstance()._view) {
         LAppPal.printMessage('view notfound');
         return;
@@ -332,11 +355,24 @@ function onClickBegan(e: MouseEvent): void {
     LAppDelegate.getInstance()._view.onTouchesBegan(posX, posY);
 
 }
+export function hitModel(posX,posY) {
+    return t_gl.getImageData(0,0,canvas.width,canvas.height).data[((posY * (canvas.width * 4)) + (posX * 4)) + 3] > 0;
+}
 
 /**
  * マウスポインタが動いたら呼ばれる。
  */
 function onMouseMoved(e: MouseEvent): void {
+    const { remote } = require('electron')
+    let curr_window = remote.getCurrentWindow();
+    if (!hitModel(e.clientX * scale,e.clientY * scale)){
+        //整个app 忽略所有点击事件
+        curr_window.setIgnoreMouseEvents(true, { forward: true })
+        LAppPal.log('move true');
+    }else{
+        curr_window.setIgnoreMouseEvents(false,{ forward: true })
+        LAppPal.log('move false');
+    }
     if (!LAppDelegate.getInstance()._captured) {
         return;
     }
@@ -370,6 +406,7 @@ function onClickEnded(e: MouseEvent): void {
     // 解决模糊问题
     posX *= scale;
     posY *= scale;
+    LAppPal.log('点击')
     LAppDelegate.getInstance()._view.onTouchesEnded(posX, posY);
 }
 

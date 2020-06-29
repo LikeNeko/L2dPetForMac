@@ -4,8 +4,10 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
-// const {Live2DCubismCore} = require('./live2d/Core/live2dcubismcore.min.js')
-// const {} =  require('./live2d/dist/bundle.js')
-//
-// const app = require('electron').remote.app
-// console.log(app)
+// 加载
+function nload(){
+    console.log('动画播放')
+    live2d.getModel(0).startMotion('TapBody',1,3);
+}
+
+window.$ = window.jQuery = require("./js/jq");

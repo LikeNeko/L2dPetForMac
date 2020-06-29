@@ -2,16 +2,18 @@
 1. chrome 83.0.4103.64
 2. node 12.14.1
 3. electron 9.0.0
-4. [CSM][I]Live2D Cubism Core version: 04.00.0000 (67108864)
+4. Live2D Cubism Core version: 04.00.0000 (67108864)
 
 ## 需要技术栈
 
-1. js `live2d`4.0打包之后是这个
-2. ts `live2d`4.0的sdk需要这个
+1. js `live2d` 4.0打包之后是这个
+2. ts `live2d` 4.0的sdk需要这个
 3. nodejs electron需要这个
 4. oc 需要了解程度，窗口顶端化需要这个语言
 5. c++ 需要了解程度，涉及到nodejs和oc通信
 6. webgl 需要有了解，`live2d`展示核心是这个
+7. 需要看一遍 electron 的官网那些文档最起码的概念要知道 [官网文档](https://www.electronjs.org/docs)
+8. live2d 官网的sdk文档，建议每个字都去看一下，建议选日语或者英语用`chrome浏览器`自带的翻译看，官网的机翻更渣 [live2d官网文档4.0](https://docs.live2d.com/cubism-sdk-manual/top/?locale=ja) 
 
 ## 主要功能
 

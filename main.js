@@ -36,7 +36,7 @@ function createWindow () {
      mainWindow.show()
      mainWindow.webContents.openDevTools()
 
-// 在主进程中.
+    // 在主进程中.
     const { ipcMain } = require('electron')
     ipcMain.on('console_log', (event, arg) => {
       console.log(arg) // prints "ping"

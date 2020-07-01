@@ -23,6 +23,7 @@
 4. 窗口在dock层显示
 5. `live2d`的sdk与`electron`关联-`electron`的`node`提供应用后端支持，`live2d`提供前端展示。
 6. electron与osx端关联-osx端提供应用的应用级底层支持
+7. `ejs`端的网络请求模块,对`Promise`做的一些理解性的注释
 
 ## 项目开始
 
@@ -35,6 +36,18 @@
 1. 启动 `ejs` 命令：`yarn ; yarn run start` 正常的话这时桌面应该有模型被显示了
 2. 启动 `live2d` 热更新 命令：`cd live2d ; yarn ; yarn run start` 这一步是为了开启热更新，方便修改
 3. 不想开启热更新的话可以在 `cd live2d` 目录下面使用`yarn run build` 此时会更新 `live2d` 目录下的 `dict` 文件夹
+
+> tips
+
+主要逻辑分别在 `main.js` `src/` `live2d/` `preload.js` `renderer.js` `main.html` 中
+
+## 运行
+
+Dock栏级别的显示
+![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-01-113749.png?x-oss-process=style/shuiyin)
+
+
+
 
 ## 已知bug
 

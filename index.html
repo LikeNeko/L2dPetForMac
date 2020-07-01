@@ -34,6 +34,14 @@
       top: 0px;
       left: 60px;
     }
+    #btn3 {
+      background-color: #e2e21a;
+      width: 30px;
+      height: 30px;
+      position:absolute;
+      top: 0px;
+      left: 90px;
+    }
   </style>
   <script src="./live2d/Core/live2dcubismcore.min.js"></script>
   <script src="./live2d/dist/bundle.js"></script>
@@ -48,26 +56,17 @@
       // console.log($("#red"))
       $("#red").on("mousemove",function(){
         
-        //整个app 忽略所有点击事件
+        // 设置为false 表示不可穿透
         curr_window.setIgnoreMouseEvents(false, { forward: true })
       });
       $("#btn1").on("mousemove",function(){
-        //整个app 忽略所有点击事件
         curr_window.setIgnoreMouseEvents(false, { forward: true })
       });
       $("#btn2").on("mousemove",function(){
-        //整个app 忽略所有点击事件
         curr_window.setIgnoreMouseEvents(false, { forward: true })
       });
       $("#red").click(function() {
-        // $("body").tips({
-        //   msg:'你',
-        //   color:'#FFF',
-        //   bg:'rgba(155,151,146,0.38)',
-        //   time:2,
-        //   x:90,
-        //   y:160
-        // })
+        // 播放完成后弹出提示
         live2d.getModel(0).startRandomMotion("TapBody",3,function () {
           $("body").tips({
             msg:'动画播放完成',
@@ -91,6 +90,12 @@
         }
         live2d._viewMatrix.scale(num,num)
       })
+      $("#btn3").click((e)=>{
+        const { clipboard } = require('electron')
+        log('测试')
+        clipboard.writeText('Example String', 'selection')
+        console.log(clipboard.readText('selection'))
+      })
     })
 
 
@@ -100,5 +105,6 @@
 <div id="red"></div>
 <div id="btn1"></div>
 <div id="btn2"></div>
+<div id="btn3"></div>
 </body>
 </html>

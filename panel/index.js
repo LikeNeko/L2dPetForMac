@@ -1,4 +1,5 @@
 var BrowserWindow = require('electron').BrowserWindow;
+
 var NativeExtension = require('bindings')('NativeExtension');
 
 class PanelWindow extends BrowserWindow {

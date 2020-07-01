@@ -42,7 +42,6 @@
             style+='</style>';
             $(document.body).append(style);
         }
-        console.log('进来了')
         this.each(function(){
             var element=$(this);
             var element_top=element.offset().top,element_left=element.offset().left,element_height=element.outerHeight(),element_width=element.outerWidth();

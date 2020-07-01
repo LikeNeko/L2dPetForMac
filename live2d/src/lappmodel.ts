@@ -417,8 +417,8 @@ export class LAppModel extends CubismUserModel {
           if (this._textureCount >= textureCount) {
             // ロード完了
             this._state = LoadStep.CompleteSetup;
+            lAppDelegateEvent.modelCompleteSetup();
           }
-          lAppDelegateEvent.modelCompleteSetup();
         };
 
         // 読み込み

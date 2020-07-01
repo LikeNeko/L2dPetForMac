@@ -30,8 +30,10 @@
 
 为了方便后面 `electronjs` 统称`ejs`
 
-1. 启动 `ejs` 命令：`yarn run start` 正常的话这时桌面应该有模型被显示了
-2. 启动 `live2d` 热更新 命令：`yarn run start` 这一步是为了开启热更新，方便修改
+0. 分别进入 `panel` | `live2d` | 还有根目录 `/` 运行 `yarn` 初始化构建一下，3个缺一不可
+
+1. 启动 `ejs` 命令：`yarn ; yarn run start` 正常的话这时桌面应该有模型被显示了
+2. 启动 `live2d` 热更新 命令：`cd live2d ; yarn ; yarn run start` 这一步是为了开启热更新，方便修改
 3. 不想开启热更新的话可以在 `cd live2d` 目录下面使用`yarn run build` 此时会更新 `live2d` 目录下的 `dict` 文件夹
 
 ## 已知bug

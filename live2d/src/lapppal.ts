@@ -11,7 +11,6 @@
  * ファイル読み込みや時刻取得等のプラットフォームに依存する関数をまとめる。
  */
 // 声明一个全局的log方法，用来打log
-export declare function log(any:any, tag:string): void;
 
 export class LAppPal {
   /**
@@ -56,10 +55,8 @@ export class LAppPal {
   }
 
   public static log(any:any,tag:string = "info"):void{
-    console.log("%c["+tag+"]", "text-shadow: 0px 0px 1px red",any);
-    const { ipcRenderer } = require('electron')
-
-    ipcRenderer.send('console_log',`[${tag}]`+any.toString())
+    // @ts-ignore
+    window.log(any,tag);
   }
   public static getName(fun){
     return typeof fun==='function'?

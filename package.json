@@ -19,7 +19,8 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^9.0.0",
-    "electron-rebuild": "^1.11.0"
+    "electron-rebuild": "^1.11.0",
+    "log4js": "^6.3.0"
   },
   "dependencies": {
     "typescript": "^3.9.3"

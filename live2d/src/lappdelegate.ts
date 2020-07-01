@@ -108,8 +108,7 @@ export class LAppDelegate {
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         const supportTouch: boolean = 'ontouchend' in canvas;
-        canvas.onmouseenter = onMouseEnter;
-        canvas.onmouseleave = onMouseLeave;
+
         // document.getElementsByName('body')[0].on
         if (supportTouch) {
             // タッチ関連コールバック関数登録
@@ -122,9 +121,11 @@ export class LAppDelegate {
             canvas.onmousedown = onClickBegan;
             canvas.onmousemove = onMouseMoved;
             canvas.onmouseup = onClickEnded;
+            canvas.onmouseenter = onMouseEnter;
+            canvas.onmouseleave = onMouseLeave;
         }
 
-        // 初始化
+        // 初始化 这么做的目的是为了获得鼠标所在的位置的像素点的透明度
         t_canvas = document.createElement('canvas');
         t_canvas.width = canvas.width;
         t_canvas.height = canvas.height;
@@ -368,10 +369,10 @@ function onMouseMoved(e: MouseEvent): void {
     if (!hitModel(e.clientX * scale,e.clientY * scale)){
         //整个app 忽略所有点击事件
         curr_window.setIgnoreMouseEvents(true, { forward: true })
-        LAppPal.log('move true');
+        LAppPal.log(true,'move')
     }else{
         curr_window.setIgnoreMouseEvents(false,{ forward: true })
-        LAppPal.log('move false');
+        LAppPal.log(false,'move')
     }
     if (!LAppDelegate.getInstance()._captured) {
         return;

@@ -18,6 +18,22 @@
       top: 0px;
       left: 0px;
     }
+    #btn1 {
+      background-color: red;
+      width: 30px;
+      height: 30px;
+      position:absolute;
+      top: 0px;
+      left: 30px;
+    }
+    #btn2 {
+      background-color: beige;
+      width: 30px;
+      height: 30px;
+      position:absolute;
+      top: 0px;
+      left: 60px;
+    }
   </style>
   <script src="./live2d/Core/live2dcubismcore.min.js"></script>
   <script src="./live2d/dist/bundle.js"></script>
@@ -25,26 +41,56 @@
   <script src="./js/tip.js"></script>
   <script>
     $(function () {
-      const { remote } = require('electron')
+      const { remote } = require("electron")
       let curr_window = remote.getCurrentWindow();
       log('进入index.html的jqery','test');
 
       // console.log($("#red"))
       $("#red").on("mousemove",function(){
-        console.log("move");
+        
+        //整个app 忽略所有点击事件
+        curr_window.setIgnoreMouseEvents(false, { forward: true })
+      });
+      $("#btn1").on("mousemove",function(){
+        //整个app 忽略所有点击事件
+        curr_window.setIgnoreMouseEvents(false, { forward: true })
+      });
+      $("#btn2").on("mousemove",function(){
         //整个app 忽略所有点击事件
         curr_window.setIgnoreMouseEvents(false, { forward: true })
       });
       $("#red").click(function() {
-        $("body").tips({
-          msg:'你',
-          color:'#FFF',
-          bg:'#535053',
-          time:2,
-          x:90,
-          y:160
+        // $("body").tips({
+        //   msg:'你',
+        //   color:'#FFF',
+        //   bg:'rgba(155,151,146,0.38)',
+        //   time:2,
+        //   x:90,
+        //   y:160
+        // })
+        live2d.getModel(0).startRandomMotion("TapBody",3,function () {
+          $("body").tips({
+            msg:'动画播放完成',
+            color:'#FFF',
+            bg:'rgba(155,151,146,0.38)',
+            time:1,
+            x:90,
+            y:160
+          })
         })
       });
+      $("#btn1").click(function () {
+        log("btn1")
+        live2d.nextScene()
+      })
+      let num = 1;
+      $("#btn2").click(function (e) {
+        num+=0.5;
+        if (num > 3){
+          num = 1;
+        }
+        live2d._viewMatrix.scale(num,num)
+      })
     })
 
 
@@ -52,5 +98,7 @@
 </head>
 <body >
 <div id="red"></div>
+<div id="btn1"></div>
+<div id="btn2"></div>
 </body>
 </html>

@@ -8,7 +8,7 @@
 import {LAppDelegate, lAppDelegateEvent} from './lappdelegate';
 import {LAppLive2DManager} from "./lapplive2dmanager";
 import {LAppModel, LoadStep} from "./lappmodel";
-import {log, LAppPal} from "./lapppal";
+import {LAppPal} from "./lapppal";
 
 
 /**
@@ -18,7 +18,7 @@ window.onload = (): void => {
   LAppDelegate.getInstance().setLappModelEvent({
     modelCompleteSetup(){
         window["live2d"] = LAppLive2DManager.getInstance();
-        eval('nload();')
+        window['nload']();
     }
   })
   // create the application instance

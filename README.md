@@ -46,8 +46,8 @@
 Dock栏级别的显示
 ![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-01-113749.png?x-oss-process=style/shuiyin)
 
-
-
+左边是model模型，右边是model3模型
+![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-02-094546.png?x-oss-process=style/shuiyin)
 
 ## 已知bug
 

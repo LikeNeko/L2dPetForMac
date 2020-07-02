@@ -5,6 +5,7 @@
     "build": "webpack -d --hide-modules",
     "build:prod": "webpack -p --hide-modules",
     "test": "tsc --noEmit",
+    "watch": "tsc -w",
     "lint": "eslint src -f codeframe --ext .ts",
     "lint:fix": "eslint src -f codeframe --ext .ts --fix",
     "serve": "serve . -p 5000",

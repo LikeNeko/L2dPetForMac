@@ -52,7 +52,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
     // 关闭安全警告
-    // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+    process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
     loadIpcServers()
     testNetwork();
 

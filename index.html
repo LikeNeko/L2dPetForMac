@@ -43,68 +43,73 @@
       left: 90px;
     }
   </style>
-  <script src="./live2d/Core/live2dcubismcore.min.js"></script>
-  <script src="./live2d/dist/bundle.js"></script>
-  <script src="./renderer.js"></script>
-  <script src="./js/tip.js"></script>
-  <script>
-    $(function () {
-      const { remote } = require("electron")
-      let curr_window = remote.getCurrentWindow();
-      log('进入index.html的jqery','test');
 
-      // console.log($("#red"))
-      $("#red").on("mousemove",function(){
-        
-        // 设置为false 表示不可穿透
-        curr_window.setIgnoreMouseEvents(false, { forward: true })
-      });
-      $("#btn1").on("mousemove",function(){
-        curr_window.setIgnoreMouseEvents(false, { forward: true })
-      });
-      $("#btn2").on("mousemove",function(){
-        curr_window.setIgnoreMouseEvents(false, { forward: true })
-      });
-      $("#red").click(function() {
-        // 播放完成后弹出提示
-        live2d.getModel(0).startRandomMotion("TapBody",3,function () {
-          $("body").tips({
-            msg:'动画播放完成',
-            color:'#FFF',
-            bg:'rgba(155,151,146,0.38)',
-            time:1,
-            x:90,
-            y:160
-          })
-        })
-      });
-      $("#btn1").click(function () {
-        log("btn1")
-        live2d.nextScene()
-      })
-      let num = 1;
-      $("#btn2").click(function (e) {
-        num+=0.5;
-        if (num > 3){
-          num = 1;
-        }
-        live2d._viewMatrix.scale(num,num)
-      })
-      $("#btn3").click((e)=>{
-        const { clipboard } = require('electron')
-        log('测试')
-        clipboard.writeText('Example String', 'selection')
-        console.log(clipboard.readText('selection'))
-      })
-    })
-
-
-  </script>
 </head>
-<body >
+<body>
 <div id="red"></div>
 <div id="btn1"></div>
 <div id="btn2"></div>
 <div id="btn3"></div>
+<audio id="my_audio"></audio>
 </body>
+<script src="./live2d/Core/live2dcubismcore.min.js"></script>
+<script src="./live2d/dist/bundle.js"></script>
+
+<script src="./renderer.js"></script>
+<script src="./js/tip.js"></script>
+<script>
+
+</script>
+<script>
+  $(function () {
+    const { remote } = require("electron")
+    let curr_window = remote.getCurrentWindow();
+    log('进入index.html的jqery','test');
+
+    // console.log($("#red"))
+    $("#red").on("mousemove",function(){
+
+      // 设置为false 表示不可穿透
+      curr_window.setIgnoreMouseEvents(false, { forward: true })
+    });
+    $("#btn1").on("mousemove",function(){
+      curr_window.setIgnoreMouseEvents(false, { forward: true })
+    });
+    $("#btn2").on("mousemove",function(){
+      curr_window.setIgnoreMouseEvents(false, { forward: true })
+    });
+    $("#red").click(function() {
+      // 播放完成后弹出提示
+      live2d.getModel(0).startRandomMotion("TapBody",3,function () {
+        $("body").tips({
+          msg:'动画播放完成',
+          color:'#FFF',
+          bg:'rgba(155,151,146,0.38)',
+          time:1,
+          x:90,
+          y:160
+        })
+      })
+    });
+    $("#btn1").click(function () {
+      log("btn1")
+      live2d.nextScene()
+    })
+    let num = 1;
+    $("#btn2").click(function (e) {
+      num+=0.5;
+      if (num > 3){
+        num = 1;
+      }
+      live2d._viewMatrix.scale(num,num)
+    })
+    $("#btn3").click((e)=>{
+      const { clipboard } = require('electron')
+      log('测试')
+      clipboard.writeText('Example String', 'selection')
+      console.log(clipboard.readText('selection'))
+    })
+  })
+</script>
+<script type="module" src="./live2d/2.0/all.js"></script>
 </html>

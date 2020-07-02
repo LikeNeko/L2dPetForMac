@@ -18,36 +18,37 @@ window.log = function (any, tag = "debug") {
         let hour = now.getHours(); //小时
         return date + time;
     }
-    let obj2string = function (o) {
-        var r = [];
-        if (typeof o == "string") {
-            return "" + o.replace(/([\'\"\\])/g, "\\$1").replace(/(\n)/g, "\\n").replace(/(\r)/g, "\\r").replace(/(\t)/g, "\\t") + "";
-        }
-        if (typeof o == "object") {
-            if (!o.sort) {
-                for (var i in o) {
-                    r.push(i + ":" + obj2string(o[i]));
-                }
-                if (!!document.all && !/^\n?function\s*toString\(\)\s*\{\n?\s*\[native code\]\n?\s*\}\n?\s*$/.test(o.toString)) {
-                    r.push("toString:" + o.toString.toString());
-                }
-                r = "{" + r.join() + "}";
-            } else {
-                for (var i = 0; i < o.length; i++) {
-                    r.push(obj2string(o[i]))
-                }
-                r = "[" + r.join() + "]";
+    function getCallerFileNameAndLine(){
+        function getException() {
+            try {
+                throw Error('');
+            } catch (err) {
+                return err;
             }
-            return r;
         }
-        return o.toString();
+
+
+        const err = getException();
+
+        const stack = err.stack;
+        const stackArr = stack.split('\n');
+        let callerLogIndex = 0;
+        for (let i = 0; i < stackArr.length; i++) {
+            if (stackArr[i].indexOf('window.log') > 0 && i + 1 < stackArr.length) {
+                callerLogIndex = i + 1;
+                break;
+            }
+        }
+
+        if (callerLogIndex !== 0) {
+            const callerStackLine = stackArr[callerLogIndex];
+            return `[${callerStackLine.substring(callerStackLine.lastIndexOf("/") + 1, callerStackLine.lastIndexOf(':'))}]`;
+        } else {
+            return '[-]';
+        }
     }
-
     let time = gettime()
-    console.log(`%c[${time}][${tag}]`, "text-shadow: 0px 0px 1px red", any);
-    const {ipcRenderer} = require('electron')
-
-    ipcRenderer.send('console_log', `[${time}][${tag}]` + obj2string(any))
+    console.log(`%c[${time}][${tag}]${getCallerFileNameAndLine()}`, "text-shadow: 0px 0px 1px red", any);
 }
 const {ipcRenderer} = require('electron')
 

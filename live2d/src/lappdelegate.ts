@@ -24,8 +24,10 @@ export let frameBuffer: WebGLFramebuffer = null;
 export let scale: number = window.devicePixelRatio;
 export let lAppDelegateEvent:LAppDelegateEvent = null;
 
-export let t_canvas:HTMLCanvasElement = null;
-export let t_gl:CanvasRenderingContext2D = null;
+let lastCalledTime;
+let fps;
+const { remote } = require('electron')
+let curr_window = remote.getCurrentWindow();
 
 interface LAppDelegateEvent {
     modelCompleteSetup();
@@ -125,17 +127,6 @@ export class LAppDelegate {
             canvas.onmouseleave = onMouseLeave;
         }
 
-        // 初始化 这么做的目的是为了获得鼠标所在的位置的像素点的透明度
-        t_canvas = document.createElement('canvas');
-        t_canvas.width = canvas.width;
-        t_canvas.height = canvas.height;
-        t_canvas.style.width = canvas.width + 'px';
-        t_canvas.style.height = canvas.height + 'px';
-        t_canvas.width = canvas.width * scale;
-        t_canvas.height = canvas.height * scale;
-
-        t_gl = t_canvas.getContext("2d");
-
         // AppViewの初期化
         this._view.initialize();
 
@@ -166,12 +157,31 @@ export class LAppDelegate {
      * 実行処理。
      */
     public run(): void {
+        let fps_element = document.createElement('div');
+        fps_element.style.position = 'absolute';
+        fps_element.style.right = '0';
+        fps_element.style.top =  '0';
+        fps_element.style.color = 'rebeccapurple';
+
+        document.body.appendChild(fps_element)
+        setInterval(function () {
+            fps_element.innerText = 'fps:'+fps.toFixed(2);
+        },1000)
+
         // メインループ
         const loop = (): void => {
             // インスタンスの有無の確認
             if (s_instance == null) {
                 return;
             }
+            // if(!lastCalledTime) {
+            //     lastCalledTime = Date.now();
+            //     fps = 0;
+            //     return;
+            // }
+            let delta = (Date.now() - lastCalledTime)/1000;
+            lastCalledTime = Date.now();
+            fps = 1/delta;
 
             // 時間更新
             LAppPal.updateTime();
@@ -197,7 +207,10 @@ export class LAppDelegate {
             // 描画更新
             this._view.render();
 
-            t_gl.drawImage(canvas,0,0);
+            // 建立像素集合 这种方式性能canvas缓冲区越大越差
+            // pixels  = new Uint8Array( canvas.width*canvas.height*4);
+            // //从缓冲区读取像素数据，然后将其装到事先建立好的像素集合里
+            // gl.readPixels(0, 0,gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
             // ループのために再帰呼び出し
             requestAnimationFrame(loop);
@@ -357,26 +370,21 @@ function onClickBegan(e: MouseEvent): void {
 
 }
 export function hitModel(posX,posY) {
-    return t_gl.getImageData(0,0,canvas.width,canvas.height).data[((posY * (canvas.width * 4)) + (posX * 4)) + 3] > 0;
+    let view = LAppDelegate.getInstance().getView()
+    const viewX: number = view.transformViewX(posX);
+    const viewY: number = view.transformViewY(posY);
+    return LAppLive2DManager.getInstance().hitModel(viewX,viewY)
+    // console.log(pixels) 配合loop里的readPixels 虽然性能较差，但可以控制的点很多，比如像素颜色
+    // return pixels[((posY * (canvas.width * 4)) + (posX * 4)) + 3] > 0;
 }
 
 /**
  * マウスポインタが動いたら呼ばれる。
  */
 function onMouseMoved(e: MouseEvent): void {
-    const { remote } = require('electron')
-    let curr_window = remote.getCurrentWindow();
-    if (!hitModel(e.clientX * scale,e.clientY * scale)){
-        //整个app 忽略所有点击事件
-        curr_window.setIgnoreMouseEvents(true, { forward: true })
-        LAppPal.log(true,'move')
-    }else{
-        curr_window.setIgnoreMouseEvents(false,{ forward: true })
-        LAppPal.log(false,'move')
-    }
-    if (!LAppDelegate.getInstance()._captured) {
-        return;
-    }
+    // if (!LAppDelegate.getInstance()._captured) {
+    //     return;
+    // }
 
     if (!LAppDelegate.getInstance()._view) {
         LAppPal.printMessage('view notfound');
@@ -388,7 +396,17 @@ function onMouseMoved(e: MouseEvent): void {
     let posY: number = e.clientY - rect.top;
     posX *= scale;
     posY *= scale;
+    if (!hitModel(posX,posY)){
+        //整个app 忽略所有点击事件
+        curr_window.setIgnoreMouseEvents(true, { forward: true })
+        LAppPal.log(true,'move')
+    }else{
+        curr_window.setIgnoreMouseEvents(false,{ forward: true })
+        LAppPal.log(false,'move')
+    }
     LAppDelegate.getInstance()._view.onTouchesMoved(posX, posY);
+
+
 }
 
 /**

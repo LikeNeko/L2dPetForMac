@@ -9,47 +9,66 @@
         margin: 0;
         /*pointer-events: none;*/
     }
+    #buttons {
+      position: absolute;
+      display: flex;
+      width:80px;
+      text-align: center;
+      height: auto;
+      flex-direction: column;
+    }
 
-    #red {
-      background-color: darkolivegreen;
-      width: 30px;
-      height: 30px;
-      position:absolute;
-      top: 0px;
-      left: 0px;
+    #debug_info{
+      position: absolute;
+      right: 0;
+      top:15px;
     }
-    #btn1 {
-      background-color: red;
-      width: 30px;
-      height: 30px;
-      position:absolute;
-      top: 0px;
-      left: 30px;
+    li{
+      list-style-type :none;
     }
-    #btn2 {
-      background-color: beige;
-      width: 30px;
-      height: 30px;
-      position:absolute;
-      top: 0px;
-      left: 60px;
+    ul,li{ margin:0; padding:0; }
+
+    .button {
+      -webkit-user-select: none;
+      width: auto;
+      height: auto;
+      color: white;
+      /*background: #10bbf1;*/
+      /*height: 58px;*/
+      border: 1px solid #1075f1;
+      font-weight: 500;
+      font-size: 10px;
+      font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      padding: 2px 10px;
+      margin:1px 0px;
+      transition: color 0.1s linear, background-color 0.1s linear, border-color 0.1s linear;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
     }
-    #btn3 {
-      background-color: #e2e21a;
-      width: 30px;
-      height: 30px;
-      position:absolute;
-      top: 0px;
-      left: 90px;
+
+    .button:hover {
+      background: rgba(64, 201, 244, 0.5);
+      border-color: #40c9f4;
     }
+
   </style>
 
 </head>
 <body>
-<div id="red"></div>
-<div id="btn1"></div>
-<div id="btn2"></div>
-<div id="btn3"></div>
+<div id="buttons">
+  <div id="mtn_run" class="button ">动作</div>
+  <div id="next_sence" class="button ">换模</div>
+  <div id="model_scalc" class="button">缩放</div>
+  <div id="text_copy" class="button">复制</div>
+</div>
+
+<ul id="debug_info">
+  <li class="cpu"></li>
+</ul>
 <audio id="my_audio"></audio>
 </body>
 <script src="./live2d/Core/live2dcubismcore.min.js"></script>
@@ -61,24 +80,22 @@
 
 </script>
 <script>
+
   $(function () {
+    setInterval(function () {
+      $("#debug_info .cpu")[0].innerHTML = "cpu:"+process.getCPUUsage().percentCPUUsage.toFixed(2)+"%";
+    },1000);
     const { remote } = require("electron")
     let curr_window = remote.getCurrentWindow();
     log('进入index.html的jqery','test');
 
     // console.log($("#red"))
-    $("#red").on("mousemove",function(){
-
+    $("#buttons").on("mousemove",function(){
       // 设置为false 表示不可穿透
       curr_window.setIgnoreMouseEvents(false, { forward: true })
     });
-    $("#btn1").on("mousemove",function(){
-      curr_window.setIgnoreMouseEvents(false, { forward: true })
-    });
-    $("#btn2").on("mousemove",function(){
-      curr_window.setIgnoreMouseEvents(false, { forward: true })
-    });
-    $("#red").click(function() {
+
+    $("#mtn_run").click(function() {
       // 播放完成后弹出提示
       live2d.getModel(0).startRandomMotion("TapBody",3,function () {
         $("body").tips({
@@ -91,25 +108,31 @@
         })
       })
     });
-    $("#btn1").click(function () {
+    $("#next_sence").click(function () {
       log("btn1")
       live2d.nextScene()
     })
-    let num = 1;
-    $("#btn2").click(function (e) {
-      num+=0.5;
+    let num = 0.1;
+    $("#model_scalc").click(function (e) {
+      num+=0.1;
       if (num > 3){
         num = 1;
       }
       live2d._viewMatrix.scale(num,num)
     })
-    $("#btn3").click((e)=>{
+    $("#text_copy").click((e)=>{
       const { clipboard } = require('electron')
-      log('测试')
       clipboard.writeText('Example String', 'selection')
       console.log(clipboard.readText('selection'))
     })
   })
+
 </script>
-<script type="module" src="./live2d/2.0/all.js"></script>
+<script>
+  ipcRenderer.on('show_mtn', (event, arg) => {
+    live2d.getModel(0).startRandomMotion("TapBody",3);
+    log("播放特效",'特效')
+  });
+</script>
+<!--<script type="module" src="./live2d/2.0/all.js"></script>-->
 </html>

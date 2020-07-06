@@ -24,6 +24,8 @@
 5. `live2d`的sdk与`electron`关联-`electron`的`node`提供应用后端支持，`live2d`提供前端展示。
 6. electron与osx端关联-osx端提供应用的应用级底层支持
 7. `ejs`端的网络请求模块,对`Promise`做的一些理解性的注释
+8. 实现了`websocket`服务
+9. `js` 与 `ts` 打包后的 `js` 代码通信问题
 
 ## 项目开始
 
@@ -39,16 +41,22 @@
 
 > tips
 
-主要逻辑分别在 `main.js` `src/` `live2d/` `preload.js` `renderer.js` `main.html` 中
+主要逻辑分别在
+1. `main.js`
+2. `src/`
+3. `live2d/` 
+4. `preload.js` 
+5. `renderer.js` 
+6. `main.html` 
 
 ## 运行
 
 Dock栏级别的显示
-![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-01-113749.png?x-oss-process=style/shuiyin)
+![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-07-020929.png?x-oss-process=style/shuiyin)
 
-左边是model模型，右边是model3模型
+左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
 ![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-02-094546.png?x-oss-process=style/shuiyin)
 
 ## 已知bug
 
-1. loop方法更新动画时会出现警告
+1. loop方法更新动画时会出现警告-[已解决]原因是为了实现透明区域点击穿透导致的性能问题。

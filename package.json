@@ -1,7 +1,7 @@
 {
   "name": "my_live",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A minimal Electron Live2d application",
   "main": "main.js",
   "scripts": {
     "start": "electron . ",
@@ -10,17 +10,14 @@
   "repository": "",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
     "demo"
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^9.0.0",
-    "electron-rebuild": "^1.11.0"
+    "electron-rebuild": "^1.11.0",
+    "nodejs-websocket": "^1.7.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

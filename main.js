@@ -31,6 +31,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,// 主线程的node
             enableRemoteModule: true,
+            nodeIntegrationInWorker: true,// worker内使用node
             // webSecurity:false,
             preload: path.join(__dirname, 'preload.js')
         }
@@ -78,7 +79,7 @@ app.on('window-all-closed', function () {
 
 // 循环引入js
 function loadIpcServers() {
-    const files = glob.sync(path.join(__dirname, 'src/**/*.js'))
+    const files = glob.sync(path.join(__dirname, 'src/load/*.js'))
     files.forEach((file) => {
         require(file)
     })
@@ -92,7 +93,6 @@ function showNotification() {
             body: "body"
         })
         obj.show();
-        windows[0].webContents.send('show_tips', {"A": 1});
     }, 4000)
 }
 

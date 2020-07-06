@@ -220,12 +220,12 @@ export namespace Live2DCubismFramework {
     }
 
     /**
-     * 当たり判定の取得
+     * 平均判定的取得
      * @param drawableId 検証したいDrawableのID
      * @param pointX X位置
      * @param pointY Y位置
-     * @return true ヒットしている
-     * @return false ヒットしていない
+     * @return true 正在热销
+     * @return false 没有成功
      */
     public isHit(
       drawableId: CubismIdHandle,

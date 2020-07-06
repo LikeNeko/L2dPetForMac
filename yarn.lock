@@ -886,6 +886,11 @@ node-gyp@^6.0.1:
     tar "^4.4.12"
     which "^1.3.1"
 
+nodejs-websocket@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npm.taobao.org/nodejs-websocket/download/nodejs-websocket-1.7.2.tgz#94abd1e248f57d4d1c663dec3831015c6dad98a6"
+  integrity sha1-lKvR4kj1fU0cZj3sODEBXG2tmKY=
+
 nopt@^4.0.1:
   version "4.0.3"
   resolved "https://registry.npm.taobao.org/nopt/download/nopt-4.0.3.tgz#a375cad9d02fd921278d954c2254d5aa57e15e48"

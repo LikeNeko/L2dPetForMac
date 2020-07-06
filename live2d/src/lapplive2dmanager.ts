@@ -128,7 +128,19 @@ export class LAppLive2DManager {
       }
     }
   }
-
+  public hitModel(x:number,y:number):boolean {
+    for (let i = 0; i < this._models.getSize(); i++) {
+      if (this._models.at(i).hitTest(LAppDefine.HitAreaNameHead, x, y)) {
+          return true;
+      } else if (this._models
+          .at(i)
+          .hitTest(LAppDefine.HitAreaNameBody, x, y)
+      ) {
+          return true;
+      }
+    }
+    return false;
+  }
   /**
    * 画面を更新するときの処理
    * モデルの更新処理及び描画処理を行う

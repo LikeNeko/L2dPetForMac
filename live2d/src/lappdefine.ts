@@ -12,7 +12,7 @@ import { LogLevel } from '@framework/live2dcubismframework';
  */
 // 画面
 export const ViewMaxScale = 2.0;
-export const ViewMinScale = 0.8;
+export const ViewMinScale = 0.1;
 
 export const ViewLogicalLeft = -1.0;
 export const ViewLogicalRight = 1.0;
@@ -55,13 +55,13 @@ export const PriorityNormal = 2;
 export const PriorityForce = 3;
 
 // デバッグ用ログの表示オプション
-export const DebugLogEnable = false;
-export const DebugTouchLogEnable = false;
-export const DebugModelLogEnable = false;
+export const DebugLogEnable = true;
+export const DebugTouchLogEnable = true;
+export const DebugModelLogEnable = true;
 
 // Frameworkから出力するログのレベル設定
 export const CubismLoggingLevel: LogLevel = LogLevel.LogLevel_Verbose;
 
 // デフォルトのレンダーターゲットサイズ
-export const RenderTargetWidth = 300;
-export const RenderTargetHeight = 300;
+export const RenderTargetWidth = window.innerWidth;
+export const RenderTargetHeight = window.innerHeight;

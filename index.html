@@ -26,15 +26,14 @@
     li{
       list-style-type :none;
     }
-    ul,li{ margin:0; padding:0; }
+    ul,li{ margin:0; padding:0;text-align: right;font-size: 10px ;color: violet}
 
     .button {
       -webkit-user-select: none;
       width: auto;
       height: auto;
-      color: white;
+      color: red;
       /*background: #10bbf1;*/
-      /*height: 58px;*/
       border: 1px solid #1075f1;
       font-weight: 500;
       font-size: 10px;
@@ -68,23 +67,69 @@
 
 <ul id="debug_info">
   <li class="cpu"></li>
+  <li class="electron">ele:</li>
+  <li class="abi">abi:</li>
+  <li class="node">node:</li>
+  <li class="chrome">chrome:</li>
 </ul>
 <audio id="my_audio"></audio>
 </body>
+<script src="./renderer.js"></script>
 <script src="./live2d/Core/live2dcubismcore.min.js"></script>
 <script src="./live2d/dist/bundle.js"></script>
 
-<script src="./renderer.js"></script>
 <script src="./js/tip.js"></script>
 <script>
+    class Utils{
+      //禁止滚动条滚动
+      static unScroll() {
+        var top = $(document).scrollTop();
+        $(document).on('scroll.unable',function (e) {
+          $(document).scrollTop(top);
+        })
+      }
 
+      static system_info(){
+        // // electron 版本
+        // console.log('process.versions.electron', process.versions.electron)
+        // // ABI版本
+        // console.log('process.versions.modules', process.versions.modules)
+        // // NODE版本
+        // console.log('process.versions.node', process.versions.node)
+        // // V8 引擎版本
+        // console.log('process.versions.v8', process.versions.v8)
+        // // chrome版本
+        // console.log('process.versions.chrome', process.versions.chrome)
+        // // 架构信息
+        // console.log('process.env.PROCESSOR_ARCHITECTURE', process.env.PROCESSOR_ARCHITECTURE)
+
+        $("#debug_info .electron")[0].innerHTML += process.versions.electron
+        $("#debug_info .abi")[0].innerHTML += process.versions.modules
+        $("#debug_info .node")[0].innerHTML += process.versions.node
+        $("#debug_info .chrome")[0].innerHTML += process.versions.chrome
+
+        setInterval(function () {
+          $("#debug_info .cpu")[0].innerHTML = "cpu:"+process.getCPUUsage().percentCPUUsage.toFixed(2)+"%";
+        },1000);
+      }
+
+      static msg(text){
+        $("body").tips({
+          msg:text,
+          // color:'#FFF',
+          // bg:'rgba(155,151,146,0.38)',
+          time:2,
+          x:90,
+          y:100
+        })
+      }
+    }
 </script>
 <script>
 
   $(function () {
-    setInterval(function () {
-      $("#debug_info .cpu")[0].innerHTML = "cpu:"+process.getCPUUsage().percentCPUUsage.toFixed(2)+"%";
-    },1000);
+    Utils.unScroll()
+    Utils.system_info();
     const { remote } = require("electron")
     let curr_window = remote.getCurrentWindow();
     log('进入index.html的jqery','test');
@@ -97,15 +142,9 @@
 
     $("#mtn_run").click(function() {
       // 播放完成后弹出提示
-      live2d.getModel(0).startRandomMotion("TapBody",3,function () {
-        $("body").tips({
-          msg:'动画播放完成',
-          color:'#FFF',
-          bg:'rgba(155,151,146,0.38)',
-          time:1,
-          x:90,
-          y:160
-        })
+      Utils.msg('准备随机播放动作')
+      live2d.getModel(0).startRandomMotion("TapBody",3,function (e) {
+          Utils.msg('动作播放完成')
       })
     });
     $("#next_sence").click(function () {
@@ -122,17 +161,14 @@
     })
     $("#text_copy").click((e)=>{
       const { clipboard } = require('electron')
-      clipboard.writeText('Example String', 'selection')
+      clipboard.writeText('喵喵喵~', 'selection')
       console.log(clipboard.readText('selection'))
+      Utils.msg('复制成功')
     })
   })
 
 </script>
 <script>
-  ipcRenderer.on('show_mtn', (event, arg) => {
-    live2d.getModel(0).startRandomMotion("TapBody",3);
-    log("播放特效",'特效')
-  });
 </script>
 <!--<script type="module" src="./live2d/2.0/all.js"></script>-->
 </html>

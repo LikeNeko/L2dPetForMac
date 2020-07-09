@@ -36,7 +36,7 @@ function log(any, tag = "debug") {
 
     let time = get_time()
 
-    console.log(`[${time}][${tag}]${getCallerFileNameAndLine()}`,any);
+    console.log(`[${time}]${getCallerFileNameAndLine()}[${tag}]`,any);
 }
 
 function getCallerFileNameAndLine(){

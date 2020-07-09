@@ -19,5 +19,7 @@
     "electron-rebuild": "^1.11.0",
     "nodejs-websocket": "^1.7.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "mail-listener5": "^2.0.2"
+  }
 }

@@ -26,6 +26,8 @@
 7. `ejs`端的网络请求模块,对`Promise`做的一些理解性的注释
 8. 实现了`websocket`服务
 9. `js` 与 `ts` 打包后的 `js` 代码通信问题
+10. `node-imap` `mail-listener5` 邮件监听，随时获取最新邮件信息
+11. `opencv-node` 准备接入人脸扫描，期望达到类似`faceicg` 的效果
 
 ## 项目开始
 
@@ -51,10 +53,16 @@
 
 ## 运行
 
-Dock栏级别的显示
+> Dock栏级别的显示
+
 ![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-07-020929.png?x-oss-process=style/shuiyin)
 
-左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
+> 邮件获取截图
+
+![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-09-132033.png?x-oss-process=style/shuiyin)
+
+> 左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
+
 ![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-02-094546.png?x-oss-process=style/shuiyin)
 
 ## 已知bug

@@ -2,7 +2,6 @@
 const {app, BrowserWindow, Notification} = require('electron')
 const {PanelWindow} = require('./panel/');
 const path = require('path')
-const {Nlib} = require('./js/nlib');
 const glob = require('glob')
 const isMac = process.platform === 'darwin'
 
@@ -36,6 +35,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js')
         }
     })
+    log(mainWindow.id,'窗口id')
     // mainWindow.maximize();
     // 所有工作空间中显示
     mainWindow.setVisibleOnAllWorkspaces(true);

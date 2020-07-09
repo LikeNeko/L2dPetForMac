@@ -58,6 +58,19 @@ ipcRenderer.on('show_tips', (event, arg) => {
 // 加载
 window.nload = function () {
     log('执行成功', 'nload');
+    live2d._viewMatrix.scale(0.8,0.8)
+
+    ipcRenderer.on('show_mtn', (event, arg) => {
+        live2d.getModel(0).startRandomMotion("TapBody",3);
+        log("播放特效",'特效')
+    });
+    ipcRenderer.on('mail', (event, arg) => {
+        if (live2d){
+            live2d.getModel(0).startMotion("TapBody",0,3);
+        }
+        $("#debug_info").append(`<li>mail:${arg.title}</li>`)
+        console.log(arg.title)
+    });
     // live2d.getModel(0).startMotion('TapBody', 1, 3, function () {
     //     log('初始动画执行完成', 'nload')
     // });

@@ -20,7 +20,7 @@
             side:1,
             msg:'',
             color:'#FFF',
-            bg:'#F00',
+            bg:'rgba(255,0,0,0.59)',
             time:2,
             x:0,
             y:0
@@ -47,7 +47,9 @@
             var element_top=element.offset().top,element_left=element.offset().left,element_height=element.outerHeight(),element_width=element.outerWidth();
             options.side=options.side<1?1:options.side>4?4:Math.round(options.side);
             var sideName=options.side==1?'top':options.side==2?'right':options.side==3?'bottom':options.side==4?'left':'top';
-            var tips=$('<div class="jq_tips_box"><i class="jq_tips_arrow jq_tips_'+sideName+'"></i><div class="jq_tips_info">'+options.msg+'</div></div>').appendTo(document.body);
+            var tips=$('<div class="jq_tips_box">' +
+                // '<i class="jq_tips_arrow jq_tips_'+sideName+'"></i>' +
+                '<div class="jq_tips_info">'+options.msg+'</div></div>').appendTo(document.body);
             tips.find('.jq_tips_arrow').css('border-'+sideName,'10px solid '+options.bg);
             tips.find('.jq_tips_info').css({
                 color:options.color,

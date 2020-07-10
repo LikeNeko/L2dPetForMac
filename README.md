@@ -55,15 +55,15 @@
 
 > Dock栏级别的显示
 
-![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-07-020929.png?x-oss-process=style/shuiyin)
+![](https://github.com/likeneko/job/raw/master/images/2020-07-07-020929.jpeg)
 
 > 邮件获取截图
 
-![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-09-132033.png?x-oss-process=style/shuiyin)
+![图片](https://github.com/likeneko/job/raw/master/images/2020-07-09-132033.jpeg)
 
 > 左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
 
-![图片](https://nekoya.oss-cn-beijing.aliyuncs.com/blog/2020-07-02-094546.png?x-oss-process=style/shuiyin)
+![图片](https://github.com/likeneko/job/raw/master/images/2020-07-02-094546.jpeg)
 
 ## 已知bug
 

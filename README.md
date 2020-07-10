@@ -55,15 +55,15 @@
 
 > Dock栏级别的显示
 
-![](https://github.com/likeneko/job/raw/master/images/2020-07-07-020929.jpeg)
+![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-07-020929.jpeg)
 
 > 邮件获取截图
 
-![图片](https://github.com/likeneko/job/raw/master/images/2020-07-09-132033.jpeg)
+![图片](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-09-132033.jpeg)
 
 > 左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
 
-![图片](https://github.com/likeneko/job/raw/master/images/2020-07-02-094546.jpeg)
+![图片](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-02-094546.jpeg)
 
 ## 已知bug
 

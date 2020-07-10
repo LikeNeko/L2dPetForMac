@@ -3,7 +3,7 @@ const {app, BrowserWindow, Notification} = require('electron')
 const {PanelWindow} = require('./panel/');
 const path = require('path')
 const glob = require('glob')
-const isMac = process.platform === 'darwin'
+const {Config} = require('./src/Config.js')
 
 // 初始化一些node全局要用的参数
 

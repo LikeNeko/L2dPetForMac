@@ -7,6 +7,10 @@
 // 这个文件是渲染进程里最最开始执行的代码，如果有比它还前的，那一定是preload.js,否则什么情况下不论引入顺序都是这个文件最先执行
 // 引入jquery
 window.$ = window.jQuery = require("./js/jq");
+const {ipcRenderer} = require('electron')
+// 获取app的配置项
+window.Config = ipcRenderer.sendSync('config');
+
 // 引入log方法
 window.log = function (any, tag = "debug") {
     let gettime = function () {
@@ -50,11 +54,11 @@ window.log = function (any, tag = "debug") {
     let time = gettime()
     console.log(`%c[${time}][${tag}]${getCallerFileNameAndLine()}`, "text-shadow: 0px 0px 1px red", any);
 }
-const {ipcRenderer} = require('electron')
 
 ipcRenderer.on('show_tips', (event, arg) => {
 
 });
+
 // 加载
 window.nload = function () {
     log('执行成功', 'nload');

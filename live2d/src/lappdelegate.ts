@@ -16,6 +16,7 @@ import {LAppTextureManager} from './lapptexturemanager';
 import {LAppLive2DManager} from './lapplive2dmanager';
 import * as LAppDefine from './lappdefine';
 import {LAppModel} from "./lappmodel";
+import { DebugLogEnable } from './lappdefine';
 
 export let canvas: HTMLCanvasElement = null;
 export let s_instance: LAppDelegate = null;
@@ -157,16 +158,19 @@ export class LAppDelegate {
      * 実行処理。
      */
     public run(): void {
-        let fps_element = document.createElement('div');
-        fps_element.style.position = 'absolute';
-        fps_element.style.right = '0';
-        fps_element.style.top =  '0';
-        fps_element.style.color = 'rebeccapurple';
+        if (DebugLogEnable){
+            let fps_element = document.createElement('div');
+            fps_element.style.position = 'absolute';
+            fps_element.style.right = '0';
+            fps_element.style.top =  '0';
+            fps_element.style.color = 'rebeccapurple';
 
-        document.body.appendChild(fps_element)
-        setInterval(function () {
-            fps_element.innerText = 'fps:'+fps.toFixed(2);
-        },1000)
+            document.body.appendChild(fps_element)
+            setInterval(function () {
+                fps_element.innerText = 'fps:'+fps.toFixed(2);
+            },1000)
+        }
+
 
         // メインループ
         const loop = (): void => {

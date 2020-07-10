@@ -55,9 +55,9 @@ export const PriorityNormal = 2;
 export const PriorityForce = 3;
 
 // デバッグ用ログの表示オプション
-export const DebugLogEnable = true;
-export const DebugTouchLogEnable = true;
-export const DebugModelLogEnable = true;
+export const DebugLogEnable = window['Config'].debug;
+export const DebugTouchLogEnable = window['Config'].debug;
+export const DebugModelLogEnable = window['Config'].debug;
 
 // Frameworkから出力するログのレベル設定
 export const CubismLoggingLevel: LogLevel = LogLevel.LogLevel_Verbose;

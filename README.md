@@ -52,6 +52,9 @@
 6. `main.html` 
 
 ## 运行
+> 正常显示
+
+![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/Snipaste_2020-07-10_10-34-04.jpg)
 
 > Dock栏级别的显示
 

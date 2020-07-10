@@ -10,8 +10,9 @@
         /*pointer-events: none;*/
     }
     #buttons {
+      display: none;
       position: absolute;
-      display: flex;
+      /*display: flex;*/
       width:80px;
       text-align: center;
       height: auto;
@@ -19,6 +20,7 @@
     }
 
     #debug_info{
+      display: none;
       position: absolute;
       right: 0;
       top:15px;
@@ -128,6 +130,10 @@
 <script>
 
   $(function () {
+    if (Config.debug){
+        $("#buttons")[0].style.display = 'flex';
+        $("#debug_info")[0].style.display = 'block';
+    }
     Utils.unScroll()
     Utils.system_info();
     const { remote } = require("electron")

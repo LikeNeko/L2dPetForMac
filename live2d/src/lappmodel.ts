@@ -458,9 +458,9 @@ export class LAppModel extends CubismUserModel {
     let motionUpdated = false;
 
     //--------------------------------------------------------------------------
-    this._model.loadParameters(); // 前回セーブされた状態をロード
+    this._model.loadParameters(); // 加载上次被保存的状态
     if (this._motionManager.isFinished()) {
-      // モーションの再生がない場合、待機モーションの中からランダムで再生する
+      // 如果没有动作回放，则从等待动作中随机回放
       this.startRandomMotion(
         LAppDefine.MotionGroupIdle,
         LAppDefine.PriorityIdle
@@ -469,7 +469,7 @@ export class LAppModel extends CubismUserModel {
       motionUpdated = this._motionManager.updateMotion(
         this._model,
         deltaTimeSeconds
-      ); // モーションを更新
+      ); // 更新动作
     }
     this._model.saveParameters(); // 状態を保存
     //--------------------------------------------------------------------------
@@ -486,8 +486,8 @@ export class LAppModel extends CubismUserModel {
       this._expressionManager.updateMotion(this._model, deltaTimeSeconds); // 表情でパラメータ更新（相対変化）
     }
 
-    // ドラッグによる変化
-    // ドラッグによる顔の向きの調整
+    // model带来的变化
+    // 通过model调整脸部的方向
     this._model.addParameterValueById(this._idParamAngleX, this._dragX * 30); // -30から30の値を加える
     this._model.addParameterValueById(this._idParamAngleY, this._dragY * 30);
     this._model.addParameterValueById(
@@ -495,7 +495,7 @@ export class LAppModel extends CubismUserModel {
       this._dragX * this._dragY * -30
     );
 
-    // ドラッグによる体の向きの調整
+    // 通过毒品调整身体的方向
     this._model.addParameterValueById(
       this._idParamBodyAngleX,
       this._dragX * 10

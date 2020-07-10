@@ -84,23 +84,6 @@ export class LAppView {
     );
 
   }
-  public modelScaling(scale) {
-    let isMaxScale = this._viewMatrix.isMaxScale();
-    let isMinScale = this._viewMatrix.isMinScale();
-    this._viewMatrix.adjustScale(0, 0, scale);
-    if (!isMaxScale) {
-      if (this._viewMatrix.isMaxScale()) {
-         // this._touchManager.maxScaleEvent()
-         LAppLive2DManager.getInstance().getModel(0).startMotion('Idle',3,3);
-      }
-    }
-    if (!isMinScale) {
-      if (this._viewMatrix.isMinScale()) {
-        LAppPal.log('最小')
-        // thisRef.live2DMgr.minScaleEvent()
-      }
-    }
-  }
   /**
    * 解放する
    */

@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron . ",
-    "run": "echo 执行"
+    "run": "echo 执行",
+    "postinstall": "patch-package "
   },
   "repository": "",
   "keywords": [
@@ -20,6 +21,8 @@
     "nodejs-websocket": "^1.7.2"
   },
   "dependencies": {
-    "mail-listener5": "^2.0.2"
+    "lowdb": "^1.0.0",
+    "mail-listener5": "^2.0.2",
+    "patch-package": "^6.2.2"
   }
 }

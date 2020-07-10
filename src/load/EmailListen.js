@@ -13,7 +13,7 @@ let mailListener = new MailListener({
     tls: true,
     connTimeout: 10000, // Default by node-imap
     authTimeout: 5000, // Default by node-imap,
-    debug:console.log, // Or your custom function with only one incoming argument. Default: null
+    // debug:console.log, // Or your custom function with only one incoming argument. Default: null
     tlsOptions: { rejectUnauthorized: false },
     mailbox: "INBOX", // mailbox to monitor
     searchFilter: [

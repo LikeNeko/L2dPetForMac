@@ -343,14 +343,16 @@ export class LAppDelegate {
 }
 
 function onMouseLeave() {
-    console.log("划出去")
+    LAppPal.log("划出去")
 
+    const live2DManager: LAppLive2DManager = LAppLive2DManager.getInstance();
+    live2DManager.onDrag(0.0, 0.0);
 
 }
 
 function onMouseEnter(e: MouseEvent) {
     e.preventDefault()
-    console.log("划进来")
+    LAppPal.log("划进来")
 
 }
 

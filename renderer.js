@@ -52,7 +52,7 @@ window.log = function (any, tag = "debug") {
         }
     }
     let time = gettime()
-    console.log(`%c[${time}][${tag}]${getCallerFileNameAndLine()}`, "text-shadow: 0px 0px 1px red", any);
+    console.log(`%c[${time}]${getCallerFileNameAndLine()}[${tag}]`, "text-shadow: 0px 0px 1px red", any);
 }
 
 ipcRenderer.on('show_tips', (event, arg) => {

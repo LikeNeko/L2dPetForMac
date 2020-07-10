@@ -1,0 +1,22 @@
+diff --git a/node_modules/imap/lib/Connection.js b/node_modules/imap/lib/Connection.js
+index 619862f..5ce762e 100644
+--- a/node_modules/imap/lib/Connection.js
++++ b/node_modules/imap/lib/Connection.js
+@@ -240,7 +240,7 @@ Connection.prototype.connect = function() {
+       // now idling
+       self._idle.started = Date.now();
+     } else if (/^AUTHENTICATE XOAUTH/.test(self._curReq.fullcmd)) {
+-      self._curReq.oauthError = new Buffer(info.text, 'base64').toString('utf8');
++      self._curReq.oauthError = Buffer.alloc(info.text, 'base64').toString('utf8');
+       self.debug && self.debug('=> ' + inspect(CRLF));
+       self._sock.write(CRLF);
+     } else if (type === 'APPEND') {
+@@ -1847,7 +1847,7 @@ function buildString(str) {
+     str = ''+str;
+ 
+   if (hasNonASCII(str)) {
+-    var buf = new Buffer(str, 'utf8');
++    var buf = Buffer.alloc(str, 'utf8');
+     return '{' + buf.length + '}\r\n' + buf.toString('binary');
+   } else
+     return '"' + escape(str) + '"';

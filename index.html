@@ -130,6 +130,7 @@
 <script>
 
   $(function () {
+    log('onload','jquery');
     if (Config.debug){
         $("#buttons")[0].style.display = 'flex';
         $("#debug_info")[0].style.display = 'block';
@@ -138,7 +139,6 @@
     Utils.system_info();
     const { remote } = require("electron")
     let curr_window = remote.getCurrentWindow();
-    log('进入index.html的jqery','test');
 
     // console.log($("#red"))
     $("#buttons").on("mousemove",function(){

@@ -1,5 +1,11 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Notification} = require('electron')
+const {
+    app,
+    BrowserWindow,
+    Notification,
+    Menu,
+    Tray
+} = require('electron')
 const {PanelWindow} = require('./panel/');
 const path = require('path')
 const glob = require('glob')
@@ -35,7 +41,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    log(mainWindow.id,'窗口id')
+    log(mainWindow.id, '窗口id')
     // mainWindow.maximize();
     // 所有工作空间中显示
     mainWindow.setVisibleOnAllWorkspaces(true);
@@ -48,6 +54,19 @@ function createWindow() {
     windows[0] = mainWindow;
 }
 
+function create_menu() {
+    let tray = new Tray(path.join(__dirname,'./src/image/icon_16x16@2x.png'))
+    const contextMenu = Menu.buildFromTemplate([
+        { label: 'Item1', type: 'radio' },
+        { label: 'Item2', type: 'radio' },
+        { label: 'Item3', type: 'radio', checked: true },
+        { label: 'Item4', type: 'radio' }
+    ])
+    tray.setToolTip('This is my application.')
+    tray.setTitle("\u001b[34m")
+    tray.setContextMenu(contextMenu)
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -58,6 +77,7 @@ app.whenReady().then(() => {
     testNetwork();
 
     createWindow()
+    create_menu()
 
     // 展示一个notify
     showNotification();
@@ -96,12 +116,11 @@ function showNotification() {
     }, 4000)
 }
 
-
-
 class nnw {
     static get(key) {
         return this[key];
     }
+
     static f(url) {
         // 返回一个 Promise
         return new Promise(
@@ -133,6 +152,7 @@ class nnw {
         )
     }
 }
+
 function testNetwork() {
     let url = 'https://test.litemob.com/yanlidaren_ios/login/uid?uid=1';
     let req = nnw.f(url);

@@ -10,7 +10,7 @@ const {PanelWindow} = require('./panel/');
 const path = require('path')
 const glob = require('glob')
 const {Config} = require('./src/Config.js')
-
+// const cv = require('opencv4nodejs')
 // 初始化一些node全局要用的参数
 
 // 所有窗口列表

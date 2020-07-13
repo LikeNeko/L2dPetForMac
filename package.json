@@ -21,8 +21,16 @@
     "nodejs-websocket": "^1.7.2"
   },
   "dependencies": {
+    "applescript": "^1.0.0",
+    "cron": "^1.8.2",
     "lowdb": "^1.0.0",
     "mail-listener5": "^2.0.2",
     "patch-package": "^6.2.2"
+  },
+  "opencv4nodejs": {
+    "disableAutoBuild": 1,
+    "opencvIncludeDir": "/usr/local/include",
+    "opencvLibDir": "/usr/local/lib",
+    "opencvBinDir": "/usr/local/bin"
   }
 }

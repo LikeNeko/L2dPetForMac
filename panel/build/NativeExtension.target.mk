@@ -53,13 +53,13 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/neko/.node-gyp/9.0.0/include/node \
-	-I/Users/neko/.node-gyp/9.0.0/src \
-	-I/Users/neko/.node-gyp/9.0.0/deps/openssl/config \
-	-I/Users/neko/.node-gyp/9.0.0/deps/openssl/openssl/include \
-	-I/Users/neko/.node-gyp/9.0.0/deps/uv/include \
-	-I/Users/neko/.node-gyp/9.0.0/deps/zlib \
-	-I/Users/neko/.node-gyp/9.0.0/deps/v8/include \
+	-I/Users/neko/.electron-gyp/9.1.0/include/node \
+	-I/Users/neko/.electron-gyp/9.1.0/src \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/config \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/openssl/include \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/uv/include \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/zlib \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/v8/include \
 	-I$(srcdir)/node_modules/nan
 
 DEFS_Release := \
@@ -110,13 +110,13 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/neko/.node-gyp/9.0.0/include/node \
-	-I/Users/neko/.node-gyp/9.0.0/src \
-	-I/Users/neko/.node-gyp/9.0.0/deps/openssl/config \
-	-I/Users/neko/.node-gyp/9.0.0/deps/openssl/openssl/include \
-	-I/Users/neko/.node-gyp/9.0.0/deps/uv/include \
-	-I/Users/neko/.node-gyp/9.0.0/deps/zlib \
-	-I/Users/neko/.node-gyp/9.0.0/deps/v8/include \
+	-I/Users/neko/.electron-gyp/9.1.0/include/node \
+	-I/Users/neko/.electron-gyp/9.1.0/src \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/config \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/openssl/include \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/uv/include \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/zlib \
+	-I/Users/neko/.electron-gyp/9.1.0/deps/v8/include \
 	-I$(srcdir)/node_modules/nan
 
 OBJS := \

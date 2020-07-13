@@ -278,9 +278,9 @@ $(obj).$(TOOLSET)/%.o: $(srcdir)/%.m FORCE_DO_CMD
 	@$(call do_cmd,objc,1)
 $(obj).$(TOOLSET)/%.o: $(srcdir)/%.mm FORCE_DO_CMD
 	@$(call do_cmd,objcxx,1)
-$(obj).$(TOOLSET)/%.o: $(srcdir)/%.S FORCE_DO_CMD
-	@$(call do_cmd,cc,1)
 $(obj).$(TOOLSET)/%.o: $(srcdir)/%.s FORCE_DO_CMD
+	@$(call do_cmd,cc,1)
+$(obj).$(TOOLSET)/%.o: $(srcdir)/%.S FORCE_DO_CMD
 	@$(call do_cmd,cc,1)
 
 # Try building from generated source, too.
@@ -296,9 +296,9 @@ $(obj).$(TOOLSET)/%.o: $(obj).$(TOOLSET)/%.m FORCE_DO_CMD
 	@$(call do_cmd,objc,1)
 $(obj).$(TOOLSET)/%.o: $(obj).$(TOOLSET)/%.mm FORCE_DO_CMD
 	@$(call do_cmd,objcxx,1)
-$(obj).$(TOOLSET)/%.o: $(obj).$(TOOLSET)/%.S FORCE_DO_CMD
-	@$(call do_cmd,cc,1)
 $(obj).$(TOOLSET)/%.o: $(obj).$(TOOLSET)/%.s FORCE_DO_CMD
+	@$(call do_cmd,cc,1)
+$(obj).$(TOOLSET)/%.o: $(obj).$(TOOLSET)/%.S FORCE_DO_CMD
 	@$(call do_cmd,cc,1)
 
 $(obj).$(TOOLSET)/%.o: $(obj)/%.c FORCE_DO_CMD
@@ -313,9 +313,9 @@ $(obj).$(TOOLSET)/%.o: $(obj)/%.m FORCE_DO_CMD
 	@$(call do_cmd,objc,1)
 $(obj).$(TOOLSET)/%.o: $(obj)/%.mm FORCE_DO_CMD
 	@$(call do_cmd,objcxx,1)
-$(obj).$(TOOLSET)/%.o: $(obj)/%.S FORCE_DO_CMD
-	@$(call do_cmd,cc,1)
 $(obj).$(TOOLSET)/%.o: $(obj)/%.s FORCE_DO_CMD
+	@$(call do_cmd,cc,1)
+$(obj).$(TOOLSET)/%.o: $(obj)/%.S FORCE_DO_CMD
 	@$(call do_cmd,cc,1)
 
 
@@ -326,8 +326,8 @@ ifeq ($(strip $(foreach prefix,$(NO_LOAD),\
 endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
-cmd_regen_makefile = cd $(srcdir); /Users/neko/Electronjs/my_live/panel/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "--toplevel-dir=." -I/Users/neko/Electronjs/my_live/panel/build/config.gypi -I/Users/neko/Electronjs/my_live/panel/node_modules/node-gyp/addon.gypi -I/Users/neko/.node-gyp/9.0.0/include/node/common.gypi "--depth=." "-Goutput_dir=." "--generator-output=build" "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/Users/neko/.node-gyp/9.0.0" "-Dnode_gyp_dir=/Users/neko/Electronjs/my_live/panel/node_modules/node-gyp" "-Dnode_lib_file=/Users/neko/.node-gyp/9.0.0/<(target_arch)/node.lib" "-Dmodule_root_dir=/Users/neko/Electronjs/my_live/panel" "-Dnode_engine=v8" binding.gyp
-Makefile: $(srcdir)/../../../.node-gyp/9.0.0/include/node/common.gypi $(srcdir)/node_modules/node-gyp/addon.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp
+cmd_regen_makefile = cd $(srcdir); /Users/neko/Electronjs/my_live/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/Users/neko/.electron-gyp/9.1.0" "-Dnode_gyp_dir=/Users/neko/Electronjs/my_live/node_modules/node-gyp" "-Dnode_lib_file=/Users/neko/.electron-gyp/9.1.0/<(target_arch)/node.lib" "-Dmodule_root_dir=/Users/neko/Electronjs/my_live/panel" "-Dnode_engine=v8" "--depth=." "-Goutput_dir=." "--generator-output=build" -I/Users/neko/Electronjs/my_live/panel/build/config.gypi -I/Users/neko/Electronjs/my_live/node_modules/node-gyp/addon.gypi -I/Users/neko/.electron-gyp/9.1.0/include/node/common.gypi "--toplevel-dir=." binding.gyp
+Makefile: $(srcdir)/build/config.gypi $(srcdir)/../node_modules/node-gyp/addon.gypi $(srcdir)/binding.gyp $(srcdir)/../../../.electron-gyp/9.1.0/include/node/common.gypi
 	$(call do_cmd,regen_makefile)
 
 # "all" is a concatenation of the "all" targets from all the included

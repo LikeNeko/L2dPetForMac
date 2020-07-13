@@ -54,48 +54,6 @@ void SwizzlingMethod(Class c, SEL originSEL, SEL swizzledSEL)
   return YES;
 }
 @end
-@interface NSView(exttt)
-
-@end
-@implementation NSView(exttt)
-    + (void)load
-    {
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            [self adean_AppDelegateHook];
-        });
-    }
-    + (void)adean_AppDelegateHook
-    {
-        SwizzlingMethod([NSView class], @selector(pointInside:withEvent:), @selector(adean_pointInside:withEvent:));
-    }
-    - (BOOL)adean_pointInside:(CGPoint)point withEvent:(NSEvent *)event {
-        CGFloat alpha = [self alphaOfPoint:point];
-        if(alpha == 1){
-            return YES;
-            //位于当前视图及子视图的单击位置颜色的alpha值大于阈值,则事件不透传,否则就透传。
-        }else{
-            return NO;
-
-        }
-
-    } //一种方案:渲染层来获取颜色 。
-    -(CGFloat)alphaOfPoint:(CGPoint)point {
-        return [self alphaOfPointFromLayer:point];
-    }
-    -(CGFloat)alphaOfPointFromLayer:(CGPoint)point {
-        unsigned char pixel [4] = {0};
-
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGContextRef context = CGBitmapContextCreate(pixel,1,1,8,8,colorSpace,kCGBitmapAlphaInfoMask&&kCGImageAlphaPremultipliedLast);
-        CGContextTranslateCTM(context,-point.x,-point.y);
-        [self.layer renderInContext:context];
-        CGContextRelease(context);
-        CGColorSpaceRelease(colorSpace);
-        NSLog(@"pixel:％d％d％d％d",pixel[0],pixel[1],pixel[2],pixel[3]);
-        return pixel[3] /255.0;
-    }
-@end
 
 NAN_METHOD(MakePanel) {
   v8::Local<v8::Object> handleBuffer = info[0].As<v8::Object>();

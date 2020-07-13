@@ -8,7 +8,7 @@
     "configure": "node-gyp configure",
     "prepare": "node-gyp build",
     "build": "node-gyp build",
-    "gyp":"node-gyp rebuild --target=7.0.0 --dist-url=https://atom.io/download/electron",
+    "gyp":"node-gyp rebuild --target=9.0.0 --dist-url=https://atom.io/download/electron",
     "test": "mocha"
   },
   "devDependencies": {

@@ -1,1 +1,1 @@
-console.log(l2dModel)
+const cv = require('opencv4nodejs')

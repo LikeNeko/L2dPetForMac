@@ -1,0 +1,13 @@
+diff --git a/node_modules/applescript/lib/applescript-parser.js b/node_modules/applescript/lib/applescript-parser.js
+index 78bf3ae..f3827d7 100644
+--- a/node_modules/applescript/lib/applescript-parser.js
++++ b/node_modules/applescript/lib/applescript-parser.js
+@@ -70,7 +70,7 @@ exports.DataParser = function() {
+   body = body.substring(6, body.length-1);
+   var type = body.substring(0,4);
+   body = body.substring(4, body.length);
+-  var buf = new Buffer(body.length/2);
++  var buf = Buffer.from(body.length);
+   var count = 0;
+   for (var i=0, l=body.length; i<l; i += 2) {
+     buf[count++] = parseInt(body[i]+body[i+1], 16);

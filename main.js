@@ -10,7 +10,7 @@ const {PanelWindow} = require('./panel/');
 const path = require('path')
 const glob = require('glob')
 const {Config} = require('./src/Config.js')
-// const cv = require('opencv4nodejs')
+const cv = require('./src/Opencv.js');
 // 初始化一些node全局要用的参数
 
 // 所有窗口列表
@@ -56,6 +56,7 @@ function createWindow() {
 
 function create_menu() {
     let tray = new Tray(path.join(__dirname,'./src/image/icon_16x16@2x.png'))
+
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Item1', type: 'radio' },
         { label: 'Item2', type: 'radio' },
@@ -78,7 +79,9 @@ app.whenReady().then(() => {
 
     createWindow()
     create_menu()
-
+    if (cv){
+        log('load',"opencv")
+    }
     // 展示一个notify
     showNotification();
 
@@ -166,3 +169,18 @@ function testNetwork() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

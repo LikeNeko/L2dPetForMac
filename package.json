@@ -16,21 +16,15 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^9.0.0",
-    "electron-rebuild": "^1.11.0",
-    "nodejs-websocket": "^1.7.2"
+    "electron-rebuild": "^1.11.0"
   },
   "dependencies": {
     "applescript": "^1.0.0",
     "cron": "^1.8.2",
+    "electron": "^9.0.0",
     "lowdb": "^1.0.0",
     "mail-listener5": "^2.0.2",
+    "nodejs-websocket": "^1.7.2",
     "patch-package": "^6.2.2"
-  },
-  "opencv4nodejs": {
-    "disableAutoBuild": 1,
-    "opencvIncludeDir": "/usr/local/include",
-    "opencvLibDir": "/usr/local/lib",
-    "opencvBinDir": "/usr/local/bin"
   }
 }

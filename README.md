@@ -16,7 +16,7 @@
 8. 实现了`websocket`服务
 9. `js` 与 `ts` 打包后的 `js` 代码通信问题
 10. `node-imap` `mail-listener5` 邮件监听，随时获取最新邮件信息
-11. `opencv-node` 准备接入人脸扫描，期望达到类似`faceicg` 的效果
+11. `opencv-node` 准备接入人脸扫描，期望达到类似`faceicg` 的效果,`face-api`可以研究
 12. `cron` 定时任务库引入
 13. `Volume.js` 声音控制
 

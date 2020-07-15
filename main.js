@@ -4,13 +4,14 @@ const {
     BrowserWindow,
     Notification,
     Menu,
-    Tray
+    Tray,
+    globalShortcut
 } = require('electron')
-const {PanelWindow} = require('./panel/');
+const {PanelWindow} = require('./panel/index.js');
 const path = require('path')
 const glob = require('glob')
 const {Config} = require('./src/Config.js')
-const cv = require('./src/Opencv.js');
+// const cv = require('./src/Opencv.js');
 // 初始化一些node全局要用的参数
 
 // 所有窗口列表
@@ -46,10 +47,8 @@ function createWindow() {
     // 所有工作空间中显示
     mainWindow.setVisibleOnAllWorkspaces(true);
 
-    mainWindow.loadFile(path.join(__dirname, '/index.html'))
-        .finally(function () {
+    mainWindow.loadFile(path.join(__dirname, '/index.html')).finally(function () {
             mainWindow.show()
-            mainWindow.webContents.openDevTools()
         })
     windows[0] = mainWindow;
 }
@@ -73,17 +72,21 @@ function create_menu() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
     // 关闭安全警告
-    process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+    // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
     loadIpcServers()
-    testNetwork();
+    // testNetwork();
 
     createWindow()
     create_menu()
-    if (cv){
-        log('load',"opencv")
-    }
+    // if (cv){
+    //     log('load',"opencv")
+    // }
+
+    globalShortcut.register('CommandOrControl+X', () => {
+        windows[0].webContents.openDevTools()
+    })
     // 展示一个notify
-    showNotification();
+    // showNotification();
 
     app.on('activate', function () {
         // On macOS it's common to re-create a window in the app when the

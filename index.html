@@ -17,6 +17,7 @@
       text-align: center;
       height: auto;
       flex-direction: column;
+      transform: translate3d(0, 0, 0)
     }
 
     #debug_info{
@@ -170,6 +171,8 @@
       clipboard.writeText('喵喵喵~', 'selection')
       console.log(clipboard.readText('selection'))
       Utils.msg('复制成功')
+      $("#buttons")[0].style.display = 'none';
+      $("#debug_info")[0].style.display = 'none';
     })
   })
 

@@ -1,12 +1,13 @@
 {
-  "name": "my_live",
+  "name": "L2dPetForMac",
   "version": "1.0.0",
-  "description": "A minimal Electron Live2d application",
+  "description": "基于electronjs的live2d桌宠项目，想在mac上养一只live2d宠物的话可以试试，另外这个项目自认为是比较适合学习live2d的sdk的一个项目，也许你会有很多灵感:)",
   "main": "main.js",
   "scripts": {
     "start": "electron . ",
     "run": "echo 执行",
-    "postinstall": "patch-package "
+    "postinstall": "patch-package 模块名(imap)",
+    "build-mac": "electron-builder --mac dmg"
   },
   "repository": "",
   "keywords": [
@@ -16,15 +17,23 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron-rebuild": "^1.11.0"
+    "electron": "latest",
+    "electron-rebuild": "latest",
+    "electron-packager": "latest"
   },
   "dependencies": {
     "applescript": "^1.0.0",
     "cron": "^1.8.2",
-    "electron": "^9.0.0",
+    "bindings": "latest",
     "lowdb": "^1.0.0",
     "mail-listener5": "^2.0.2",
     "nodejs-websocket": "^1.7.2",
     "patch-package": "^6.2.2"
+  },
+  "build": {
+    "mac": {
+      "icon": "./src/image/icon.icns"
+    },
+    "asarUnpack": ["./panel"]
   }
 }

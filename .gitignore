@@ -1,7 +1,9 @@
 node_modules
 .idea
 panel/node_modules
+panel/yarn.lock
 live2d/node_modules
+live2d/yarn.lock
 test.js
 yarn.lock
 package-lock.json

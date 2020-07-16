@@ -44,22 +44,17 @@ git apply --ignore-whitespace patches/imap+0.8.19.patch
 
 > tips
 
-主要逻辑分别在
-1. `main.js`
-2. `src/`
-3. `live2d/` 
-4. `preload.js` 
-5. `renderer.js` 
-6. `main.html` 
+主进程的处理逻辑都在 `app/main/` 目录下
+渲染进程的逻辑 `app/renderer/` 目录下
 
 > 重要文件
 
-1. `src/Config.js` 应用配置整个app都可以拿到的配置属性
+1. `app/main/libs/Config.js` 应用配置整个app都可以拿到的配置属性
 2. `live2d/src/lappdefine.ts` live2d的配置，像更换模型，和live2d有关的都在这里
-3. `src/load/EmailListen.js` 可以配置一些邮件方面的东西
-4. `src/load/WebSocket.js` websocket相关的代码在这个文件里面
-5. `src/load/log.js` 应用的node层全局有`log(any,tag)`方法,打印log
-6 `./renderer.js` renderer（渲染）层也定义了一个`log(any,tag)` 方法，输出与node层的一样，同样在渲染层可用
+3. `app/main/loads/EmailListen.js` 可以配置一些邮件方面的东西
+4. `app/main/loads/WebSocket.js` websocket相关的代码在这个文件里面
+5. `app/main/loads/log.js` 应用的node层全局有`log(any,tag)`方法,打印log
+6. `app/main/renderer/renderer.js` renderer（渲染）层也定义了一个`log(any,tag)` 方法，输出与node层的一样，同样在渲染层可用
 
 
 ## 运行

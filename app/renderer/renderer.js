@@ -5,12 +5,6 @@
 // selectively enable features needed in the rendering
 // process.
 // 这个文件是渲染进程里最最开始执行的代码，如果有比它还前的，那一定是preload.js,否则什么情况下不论引入顺序都是这个文件最先执行
-// 引入jquery
-window.$ = window.jQuery = require("./js/jq");
-const {ipcRenderer} = require('electron')
-// 获取app的配置项
-window.Config = ipcRenderer.sendSync('config');
-
 // 引入log方法
 window.log = function (any, tag = "debug") {
     let gettime = function () {
@@ -22,7 +16,8 @@ window.log = function (any, tag = "debug") {
         let hour = now.getHours(); //小时
         return date + time;
     }
-    function getCallerFileNameAndLine(){
+
+    function getCallerFileNameAndLine() {
         function getException() {
             try {
                 throw Error('');
@@ -51,9 +46,28 @@ window.log = function (any, tag = "debug") {
             return '[-]';
         }
     }
+
     let time = gettime()
     console.log(`%c[${time}]${getCallerFileNameAndLine()}[${tag}]`, "text-shadow: 0px 0px 1px red", any);
 }
+
+// 获取app的配置项
+const {ipcRenderer} = require('electron')
+window.Config = ipcRenderer.sendSync('config');
+
+// 引入jquery
+window.$ = window.jQuery = require(Config.path.renderer_js + "jq.js");
+
+Promise.all([
+    $.getScript(Config.path.app + "/live2d/Core/live2dcubismcore.min.js"),
+    $.getScript(Config.path.app + '/live2d/dist/bundle.js'),
+    $.getScript(Config.path.renderer_js + 'tip.js')
+]).then(() => {
+    live2d_onload()
+}).catch((e) => {
+    log(e)
+})
+
 
 ipcRenderer.on('show_tips', (event, arg) => {
 
@@ -62,15 +76,15 @@ ipcRenderer.on('show_tips', (event, arg) => {
 // 加载
 window.nload = function () {
     log('执行成功', 'nload');
-    live2d._viewMatrix.scale(0.8,0.8)
+    live2d._viewMatrix.scale(0.8, 0.8)
 
     ipcRenderer.on('show_mtn', (event, arg) => {
-        live2d.getModel(0).startRandomMotion("TapBody",3);
-        log("播放特效",'特效')
+        live2d.getModel(0).startRandomMotion("TapBody", 3);
+        log("播放特效", '特效')
     });
     ipcRenderer.on('mail', (event, arg) => {
-        if (live2d){
-            live2d.getModel(0).startMotion("TapBody",0,3);
+        if (live2d) {
+            live2d.getModel(0).startMotion("TapBody", 0, 3);
         }
         $("#debug_info").append(`<li>mail:${arg.title}</li>`)
         console.log(arg.title)

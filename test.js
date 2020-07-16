@@ -1,1 +1,1 @@
-const cv = require('opencv4nodejs')
+Promise.all()

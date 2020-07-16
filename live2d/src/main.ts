@@ -14,19 +14,20 @@ import {LAppPal} from "./lapppal";
 /**
  * ブラウザロード後の処理
  */
-window.onload = (): void => {
-  LAppDelegate.getInstance().setLappModelEvent({
-    modelCompleteSetup(){
-        window["live2d"] = LAppLive2DManager.getInstance();
-        window['nload']();
+// window.onload =
+window["live2d_onload"]  = (): void => {
+    LAppDelegate.getInstance().setLappModelEvent({
+        modelCompleteSetup(){
+            window["live2d"] = LAppLive2DManager.getInstance();
+            window['nload']();
+        }
+    })
+    // create the application instance
+    if (LAppDelegate.getInstance().initialize() == false) {
+        return;
     }
-  })
-  // create the application instance
-  if (LAppDelegate.getInstance().initialize() == false) {
-    return;
-  }
 
-  LAppDelegate.getInstance().run();
+    LAppDelegate.getInstance().run();
 };
 
 /**

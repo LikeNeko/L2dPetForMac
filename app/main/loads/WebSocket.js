@@ -1,5 +1,5 @@
 const ws = require('nodejs-websocket');
-const {Notice} = require("../Notice");
+const {Notice} = require("../libs/Notice");
 let port = 8233;
 let server = ws.createServer(function(conn){
     //受到连接触发//

@@ -19,6 +19,7 @@
 11. `opencv-node` 准备接入人脸扫描，期望达到类似`faceicg` 的效果,`face-api`可以研究
 12. `cron` 定时任务库引入
 13. `Volume.js` 声音控制
+14. `spinquiz.js` 画圈开启debug视图
 
 ## 项目开始
 
@@ -89,3 +90,8 @@ git apply --ignore-whitespace patches/imap+0.8.19.patch
 
 1. loop方法更新动画时会出现警告-[已解决]原因是为了实现透明区域点击穿透导致的性能问题。
 2. cpu占用率过高-因为live2dsdk4的渲染是使用的cpu，导致`drawImage`方法太费cpu资源了。后续可以优化一下
+
+## 依赖
+
+[electron-panel-window 魔改](https://github.com/goabstract/electron-panel-window)
+[spin 魔改](https://github.com/mini188/Spin-Wheel/)

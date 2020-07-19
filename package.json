@@ -6,8 +6,9 @@
   "scripts": {
     "start": "electron . ",
     "run": "echo 执行",
-    "postinstall": "patch-package 模块名(imap)",
-    "build-mac": "electron-builder --mac dmg"
+    "postinstall": "patch-package #模块名(imap)",
+    "build-mac": "electron-builder --mac dmg",
+    "build-sqlite3": "yarn add sqlite3 --build-from-source --sqlite_libname=sqlcipher --sqlite=`brew --prefix` --runtime=electron --target=9.1.0 --dist-url=https://electronjs.org/headers"
   },
   "repository": "",
   "keywords": [
@@ -18,22 +19,26 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "latest",
-    "electron-rebuild": "latest",
-    "electron-packager": "latest"
+    "electron-packager": "latest",
+    "electron-rebuild": "latest"
   },
   "dependencies": {
     "applescript": "^1.0.0",
-    "cron": "^1.8.2",
     "bindings": "latest",
+    "cron": "^1.8.2",
     "lowdb": "^1.0.0",
     "mail-listener5": "^2.0.2",
     "nodejs-websocket": "^1.7.2",
-    "patch-package": "^6.2.2"
+    "patch-package": "^6.2.2",
+    "rsync": "^0.6.1",
+    "sqlite3": "^5.0.0"
   },
   "build": {
     "mac": {
       "icon": "./app/res/image/icon.icns"
     },
-    "asarUnpack": ["./panel"]
+    "asarUnpack": [
+      "./panel"
+    ]
   }
 }

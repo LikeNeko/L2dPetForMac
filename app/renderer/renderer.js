@@ -50,10 +50,11 @@ window.log = function (any, tag = "debug") {
     let time = gettime()
     console.log(`%c[${time}]${getCallerFileNameAndLine()}[${tag}]`, "text-shadow: 0px 0px 1px red", any);
 }
+window.RPC = require('../RPC.js');
 
 // 获取app的配置项
 const {ipcRenderer} = require('electron')
-window.Config = ipcRenderer.sendSync('config');
+window.Config = ipcRenderer.sendSync(RPC.config);
 
 // 引入jquery
 window.$ = window.jQuery = require(Config.path.renderer_js + "jq.js");
@@ -64,6 +65,17 @@ Promise.all([
     $.getScript(Config.path.renderer_js + 'tip.js')
 ]).then(() => {
     live2d_onload()
+    if (Config.debug){
+        if ($("#buttons")[0].style.display=='none'){
+            $("#buttons")[0].style.display = 'flex';
+            $("#debug_info")[0].style.display = 'block';
+            ipcRenderer.send(RPC.open_dev_tools)
+        }else{
+            $("#buttons")[0].style.display = 'none';
+            $("#debug_info")[0].style.display = 'none';
+            ipcRenderer.send(RPC.close_dev_tools)
+        }
+    }
 }).catch((e) => {
     log(e)
 })
@@ -78,11 +90,11 @@ window.nload = function () {
     log('执行成功', 'nload');
     live2d._viewMatrix.scale(0.8, 0.8)
 
-    ipcRenderer.on('show_mtn', (event, arg) => {
+    ipcRenderer.on(RPC.show_mtn, (event, arg) => {
         live2d.getModel(0).startRandomMotion("TapBody", 3);
         log("播放特效", '特效')
     });
-    ipcRenderer.on('mail', (event, arg) => {
+    ipcRenderer.on(RPC.mail, (event, arg) => {
         if (live2d) {
             live2d.getModel(0).startMotion("TapBody", 0, 3);
         }

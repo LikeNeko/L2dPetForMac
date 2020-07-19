@@ -5,10 +5,16 @@ const {
     webContents
 } = require('electron')
 
+let Chrome = require('./libs/ChromeRealTimeSync.js').ChromeHistory;
+
+let path = require("path")
+let fs = require("fs")
+
 global.app = require("electron").app
 global.path = require('path')
 global.glob = require('glob')
 require("./libs/path.js");
+global.RPC = require(path.app + '/app/RPC.js');
 
 global.Config = require('./libs/Config.js')
 
@@ -26,21 +32,21 @@ app.whenReady().then(() => {
     // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
     loadServers()
     // testNetwork();
-
+    app.dock.hide()
+    new Chrome()
     global.main = main_window.createWindow()
     menu.create_menu()
 
     // 注册快捷键
-    globalShortcut.register('CommandOrControl+X', () => {
-        webContents.fromId(main.id).openDevTools()
-    })
+    // globalShortcut.register('CommandOrControl+Return', () => {
+    // })
     // 展示一个notify
     // showNotification();
 
     app.on('activate', function () {
-        // On macOS it's common to re-create a window in the app when the
-        // dock icon is clicked and there are no other windows open.
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+        // 在macOS上，重新创建一个窗口是很常见的
+        // 点击dock图标，没有其他窗口打开。
+        // if (BrowserWindow.getAllWindows().length === 0) main_window.createWindow()
     })
 })
 

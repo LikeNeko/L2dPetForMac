@@ -9,8 +9,8 @@ let server = ws.createServer(function(conn){
         // 收到信息触发     接收 //
         log(str,'received')
         if (str == '1'){
-            if (windows.length){
-                windows[0].webContents.send('show_mtn', {"A": 2});
+            if (main){
+                main.webContents.send(RPC.show_mtn, {"A": 2});
             }
         }else{
             Notice.show();

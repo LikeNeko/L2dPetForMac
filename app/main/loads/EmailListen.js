@@ -75,5 +75,5 @@ mailListener.on("mail", function(mail, seqno) {
         return;
     }
     arr.push(seqno)
-    webContents.fromId(1).send('mail',{title:mail.subject});
+    webContents.fromId(1).send(RPC.mail,{title:mail.subject});
 })

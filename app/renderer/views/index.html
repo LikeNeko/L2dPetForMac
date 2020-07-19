@@ -130,10 +130,9 @@
 
   $(function () {
     log('onload','jquery');
-    if (Config.debug){
-        $("#buttons")[0].style.display = 'flex';
-        $("#debug_info")[0].style.display = 'block';
-    }
+
+
+
     Utils.unScroll()
     Utils.system_info();
     const { remote } = require("electron")
@@ -169,8 +168,7 @@
       clipboard.writeText('喵喵喵~', 'selection')
       console.log(clipboard.readText('selection'))
       Utils.msg('复制成功')
-      $("#buttons")[0].style.display = 'none';
-      $("#debug_info")[0].style.display = 'none';
+
     })
   })
 

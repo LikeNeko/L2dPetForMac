@@ -19,7 +19,8 @@
 11. `opencv-node` 准备接入人脸扫描，期望达到类似`faceicg` 的效果,`face-api`可以研究
 12. `cron` 定时任务库引入
 13. `Volume.js` 声音控制
-14. `spinquiz.js` 画圈开启debug视图
+14. 谷歌浏览器历史记录实时获取
+15. sqlite3加入
 
 ## 项目开始
 
@@ -94,4 +95,3 @@ git apply --ignore-whitespace patches/imap+0.8.19.patch
 ## 依赖
 
 [electron-panel-window 魔改](https://github.com/goabstract/electron-panel-window)
-[spin 魔改](https://github.com/mini188/Spin-Wheel/)

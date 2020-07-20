@@ -72,6 +72,10 @@ git apply --ignore-whitespace patches/imap+0.8.19.patch
 
 ![图片](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-09-132033.jpeg)
 
+> 监听Chrome浏览截图
+
+![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-20-030601.png)
+
 > 左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
 
 ![图片](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-02-094546.jpeg)

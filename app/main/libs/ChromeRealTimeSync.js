@@ -26,71 +26,73 @@ class ChromeHistory {
         },
     }
 
+    constructor() {
+
+    }
+    begin(){
+        this.watchHistory(this.history_db_path)
+    }
+    /**
+     * 监听文件实时变化
+     * @param file
+     */
     watchHistory(file) {
         let rsync = new Rsync()
         rsync.source(file)
             .destination('./History')
             .execute(function (error, code, cmd) {
-                console.log('默认加载')
+                log('load History success','rsync')
         });
-        fs.watch(file, (event, filename) => {
+        fs.watch(file, function(event, filename)  {
             console.log(`文件发生更新${filename}-${event}`)
             // Build the command
             rsync.source(file)
                 .destination('./History')
                 .execute(function (error, code, cmd) {
                     // we're done
-                    thisDict.chromeHistory.initDB();
-                    thisDict.chromeHistory.getHistoryUrls()
-                });
-        })
+                    // 有变化
+                    this.initDB();
+                    this.getHistoryUrls()
+                }.bind(this));
+        }.bind(this))
 
     }
 
     initDB() {
-        let that = this;
         return new Promise(function (resolve) {
-            if(that.db){
-                that.db.close()
+            if(this.db){
+                this.db.close()
             }
-            that.db = null;
-            that.db = new SqliteDB()
-            that.db.connect(that.db_file)
-            for (const a of that.sqlite_sql.init) {
-                that.db.execute(a)
+            this.db = null;
+            this.db = new SqliteDB()
+            this.db.connect(this.db_file)
+            for (const a of this.sqlite_sql.init) {
+                this.db.execute(a)
             }
 
             resolve()
-        })
+        }.bind(this))
 
     }
 
-    /**
-     *
-     * @param file
-     */
-    constructor(file) {
-        thisDict.chromeHistory = this;
-        this.watchHistory(this.history_db_path)
 
-    }
 
     getHistoryUrls() {
-        thisDict.chromeHistory
-            .sqlite_sql
+        this.sqlite_sql
             .tables
             .urls
             .table
             .sql_format({page: 0, limit: 1})
-            .sql_query(thisDict.chromeHistory.db)
-            .then((data) => {
+            .sql_query(this.db)
+            .then(function(data) {
                 for (let i = 0; i < data.length; i++) {
                     data[i]['last_visit_time'] = (data[i]['last_visit_time'])
                         .db_time_to_unix()
                         .db_time_format("Y-m-d H:i:s")
                 }
                 console.debug(data)
-            })
+                main.webContents.send(RPC.chrome_history,data[0])
+            }.bind(this))
     }
 
 }

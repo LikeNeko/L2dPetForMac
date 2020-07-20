@@ -5,8 +5,7 @@ const {
     webContents
 } = require('electron')
 
-let Chrome = require('./libs/ChromeRealTimeSync.js').ChromeHistory;
-
+let Chrome = new (require('./libs/ChromeRealTimeSync.js').ChromeHistory)();
 let path = require("path")
 let fs = require("fs")
 
@@ -14,7 +13,7 @@ global.app = require("electron").app
 global.path = require('path')
 global.glob = require('glob')
 require("./libs/path.js");
-global.RPC = require(path.app + '/app/RPC.js');
+global.RPC = require(path.app + '/app/RPC.js').RPC;
 
 global.Config = require('./libs/Config.js')
 
@@ -33,7 +32,7 @@ app.whenReady().then(() => {
     loadServers()
     // testNetwork();
     app.dock.hide()
-    new Chrome()
+    Chrome.begin();
     global.main = main_window.createWindow()
     menu.create_menu()
 

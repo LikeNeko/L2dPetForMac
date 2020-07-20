@@ -18,11 +18,10 @@ class menu {
                 }
             },
             {
-                label: 'https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-09-132033.jpeg',
+                label: 'debug',
                 type: 'normal',
                 click:()=>{
-                    log("click")
-                    app.quit()
+                    main.webContents.openDevTools();
                 }
             },
 

@@ -13,7 +13,7 @@ ipcMain.on(RPC.open_dev_tools, (event, arg) => {
     main.webContents.openDevTools()
 })
 ipcMain.on(RPC.close_dev_tools, (event, arg) => {
-    main.webContents.openDevTools()
+    main.webContents.closeDevTools()
 })
 
 

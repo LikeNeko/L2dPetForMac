@@ -20,7 +20,9 @@
 12. `cron` 定时任务库引入
 13. `Volume.js` 声音控制
 14. 谷歌浏览器历史记录实时获取
-15. sqlite3加入
+15. `sqlite3`加入
+16. 引入`openBES`弹幕系统
+17. 快捷键`cmd+p`打开debug模式
 
 ## 项目开始
 
@@ -42,6 +44,7 @@
 ```git
 # 项目根目录运行
 git apply --ignore-whitespace patches/imap+0.8.19.patch
+git apply --ignore-whitespace patches/applescript+1.0.0.patch
 ```
 
 > tips
@@ -75,6 +78,14 @@ git apply --ignore-whitespace patches/imap+0.8.19.patch
 > 监听Chrome浏览截图
 
 ![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-20-030601.png)
+
+> cmd + p 打开关闭debug
+
+![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/Snipaste_2020-07-23_19-35-50.jpg)
+
+> 弹幕
+
+![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-23-114246.png)
 
 > 左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
 

@@ -33,7 +33,7 @@ class main_window {
         let file = path.join(path.renderer_views, 'index.html');
         log(file)
         mainWindow.loadFile(file).finally(function () {
-            mainWindow.show()
+            mainWindow.showInactive()
         })
 
 

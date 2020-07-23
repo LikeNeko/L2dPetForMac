@@ -1,176 +1,205 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport">
-  <title>TypeScript HTML App</title>
-  <style>
-    html, body {
-        margin: 0;
-        /*pointer-events: none;*/
-    }
-    #buttons {
-      display: none;
-      position: absolute;
-      /*display: flex;*/
-      width:80px;
-      text-align: center;
-      height: auto;
-      flex-direction: column;
-      transform: translate3d(0, 0, 0)
-    }
+    <meta charset="utf-8">
+    <meta name="viewport">
+    <title>TypeScript HTML App</title>
+    <style>
+        html, body {
+            margin: 0;
+            /*pointer-events: none;*/
+        }
 
-    #debug_info{
-      display: none;
-      position: absolute;
-      right: 0;
-      top:15px;
-    }
-    li{
-      list-style-type :none;
-    }
-    ul,li{ margin:0; padding:0;text-align: right;font-size: 10px ;color: violet}
+        #buttons {
+            display: none;
+            position: absolute;
+            /*display: flex;*/
+            width: 80px;
+            text-align: center;
+            z-index: 99999;
+            height: auto;
+            flex-direction: column;
+            transform: translate3d(0, 0, 0)
+        }
 
-    .button {
-      -webkit-user-select: none;
-      width: auto;
-      height: auto;
-      color: red;
-      /*background: #10bbf1;*/
-      border: 1px solid #1075f1;
-      font-weight: 500;
-      font-size: 10px;
-      font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      padding: 2px 10px;
-      margin:1px 0px;
-      transition: color 0.1s linear, background-color 0.1s linear, border-color 0.1s linear;
-      -moz-border-radius: 5px;
-      -webkit-border-radius: 5px;
-      border-radius: 5px;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-    }
+        #debug_info {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 15px;
+        }
 
-    .button:hover {
-      background: rgba(64, 201, 244, 0.5);
-      border-color: #40c9f4;
-    }
+        li {
+            list-style-type: none;
+        }
 
-  </style>
+        ul, li {
+            margin: 0;
+            padding: 0;
+            text-align: right;
+            font-size: 10px;
+            color: violet
+        }
+
+        .button {
+            -webkit-user-select: none;
+            width: auto;
+            height: auto;
+            color: red;
+            /*background: #10bbf1;*/
+            border: 1px solid #1075f1;
+            font-weight: 500;
+            font-size: 10px;
+            font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding: 2px 10px;
+            margin: 1px 0px;
+            transition: color 0.1s linear, background-color 0.1s linear, border-color 0.1s linear;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .button:hover {
+            background: rgba(64, 201, 244, 0.5);
+            border-color: #40c9f4;
+        }
+
+        #danmu_div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+    </style>
 
 </head>
 <body>
 <div id="buttons">
-  <div id="mtn_run" class="button ">动作</div>
-  <div id="next_sence" class="button ">换模</div>
-  <div id="model_scalc" class="button">缩放</div>
-  <div id="text_copy" class="button">复制</div>
+    <div id="mtn_run" class="button ">动作</div>
+    <div id="next_sence" class="button ">换模</div>
+    <div id="model_scalc" class="button">缩放</div>
+    <div id="text_copy" class="button">复制</div>
+    <div id="danmu" class="button">弹幕</div>
 </div>
 
 <ul id="debug_info">
-  <li class="cpu"></li>
-  <li class="electron">ele:</li>
-  <li class="abi">abi:</li>
-  <li class="node">node:</li>
-  <li class="chrome">chrome:</li>
+    <li class="cpu"></li>
+    <li class="electron">ele:</li>
+    <li class="abi">abi:</li>
+    <li class="node">node:</li>
+    <li class="chrome">chrome:</li>
 </ul>
+<div id="danmu_div"></div>
 <audio id="my_audio"></audio>
 </body>
 <script src="../renderer.js"></script>
 
 <!--<script src="/js/tip.js"></script>-->
 <script>
-    class Utils{
-      //禁止滚动条滚动
-      static unScroll() {
-        var top = $(document).scrollTop();
-        $(document).on('scroll.unable',function (e) {
-          $(document).scrollTop(top);
-        })
-      }
+    class Utils {
+        //禁止滚动条滚动
+        static unScroll() {
+            var top = $(document).scrollTop();
+            $(document).on('scroll.unable', function (e) {
+                $(document).scrollTop(top);
+            })
+        }
 
-      static system_info(){
-        // // electron 版本
-        // console.log('process.versions.electron', process.versions.electron)
-        // // ABI版本
-        // console.log('process.versions.modules', process.versions.modules)
-        // // NODE版本
-        // console.log('process.versions.node', process.versions.node)
-        // // V8 引擎版本
-        // console.log('process.versions.v8', process.versions.v8)
-        // // chrome版本
-        // console.log('process.versions.chrome', process.versions.chrome)
-        // // 架构信息
-        // console.log('process.env.PROCESSOR_ARCHITECTURE', process.env.PROCESSOR_ARCHITECTURE)
+        static system_info() {
+            // // electron 版本
+            // console.log('process.versions.electron', process.versions.electron)
+            // // ABI版本
+            // console.log('process.versions.modules', process.versions.modules)
+            // // NODE版本
+            // console.log('process.versions.node', process.versions.node)
+            // // V8 引擎版本
+            // console.log('process.versions.v8', process.versions.v8)
+            // // chrome版本
+            // console.log('process.versions.chrome', process.versions.chrome)
+            // // 架构信息
+            // console.log('process.env.PROCESSOR_ARCHITECTURE', process.env.PROCESSOR_ARCHITECTURE)
 
-        $("#debug_info .electron")[0].innerHTML += process.versions.electron
-        $("#debug_info .abi")[0].innerHTML += process.versions.modules
-        $("#debug_info .node")[0].innerHTML += process.versions.node
-        $("#debug_info .chrome")[0].innerHTML += process.versions.chrome
+            $("#debug_info .electron")[0].innerHTML += process.versions.electron
+            $("#debug_info .abi")[0].innerHTML += process.versions.modules
+            $("#debug_info .node")[0].innerHTML += process.versions.node
+            $("#debug_info .chrome")[0].innerHTML += process.versions.chrome
 
-        setInterval(function () {
-          $("#debug_info .cpu")[0].innerHTML = "cpu:"+process.getCPUUsage().percentCPUUsage.toFixed(2)+"%";
-        },1000);
-      }
+            setInterval(function () {
+                $("#debug_info .cpu")[0].innerHTML = "cpu:" + process.getCPUUsage().percentCPUUsage.toFixed(2) + "%";
+            }, 1000);
+        }
 
-      static msg(text){
-        $("body").tips({
-          msg:text,
-          // color:'#FFF',
-          // bg:'rgba(155,151,146,0.38)',
-          time:2,
-          x:90,
-          y:100
-        })
-      }
+        static msg(text) {
+            $("body").tips({
+                msg: text,
+                // color:'#FFF',
+                // bg:'rgba(155,151,146,0.38)',
+                time: 2,
+                x: 90,
+                y: 100
+            })
+        }
     }
 </script>
 <script>
 
-  $(function () {
-    log('onload','jquery');
+    $(function () {
+        log('onload', 'jquery');
 
+        Utils.unScroll()
+        Utils.system_info();
+        const {remote} = require("electron")
+        let curr_window = remote.getCurrentWindow();
 
+        // console.log($("#red"))
+        $("#buttons").on("mousemove", function () {
+            // 设置为false 表示不可穿透
+            curr_window.setIgnoreMouseEvents(false, {forward: true})
+        });
 
-    Utils.unScroll()
-    Utils.system_info();
-    const { remote } = require("electron")
-    let curr_window = remote.getCurrentWindow();
+        $("#mtn_run").click(function () {
+            // 播放完成后弹出提示
+            Utils.msg('准备随机播放动作')
+            live2d.getModel(0).startRandomMotion("TapBody", 3, function (e) {
+                Utils.msg('动作播放完成')
+            })
+        });
+        $("#next_sence").click(function () {
+            log("btn1")
+            live2d.nextScene()
+        })
+        let num = 0.1;
+        $("#model_scalc").click(function (e) {
+            num += 0.1;
+            if (num > 3) {
+                num = 1;
+            }
+            live2d._viewMatrix.scale(num, num)
+        })
+        $("#text_copy").click((e) => {
+            const {clipboard} = require('electron')
+            clipboard.writeText('喵喵喵~', 'selection')
+            console.log(clipboard.readText('selection'))
+            Utils.msg('复制成功')
+        })
+        $("#danmu").click(function (e) {
+            let bulletScreenEngine = new openBSE.BulletScreenEngine(document.getElementById('danmu_div'));
+            let _startTime = 1;
+            for (var i = 0; i < 10; i++) {
+                bulletScreenEngine.addBulletScreen({
+                    text: "喵喵喵",
+                    startTime: _startTime
+                });
+                _startTime += parseInt(Math.random() * 300);
+            }
 
-    // console.log($("#red"))
-    $("#buttons").on("mousemove",function(){
-      // 设置为false 表示不可穿透
-      curr_window.setIgnoreMouseEvents(false, { forward: true })
-    });
-
-    $("#mtn_run").click(function() {
-      // 播放完成后弹出提示
-      Utils.msg('准备随机播放动作')
-      live2d.getModel(0).startRandomMotion("TapBody",3,function (e) {
-          Utils.msg('动作播放完成')
-      })
-    });
-    $("#next_sence").click(function () {
-      log("btn1")
-      live2d.nextScene()
+            bulletScreenEngine.play();
+        })
     })
-    let num = 0.1;
-    $("#model_scalc").click(function (e) {
-      num+=0.1;
-      if (num > 3){
-        num = 1;
-      }
-      live2d._viewMatrix.scale(num,num)
-    })
-    $("#text_copy").click((e)=>{
-      const { clipboard } = require('electron')
-      clipboard.writeText('喵喵喵~', 'selection')
-      console.log(clipboard.readText('selection'))
-      Utils.msg('复制成功')
-
-    })
-  })
 
 </script>
 <script>

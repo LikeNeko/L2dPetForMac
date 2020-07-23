@@ -1,4 +1,4 @@
-function queue(promise_list) {
+function queue(promise_list=[]) {
     let res = [];
     let sequence = Promise.resolve();
     promise_list.forEach(function (item) {

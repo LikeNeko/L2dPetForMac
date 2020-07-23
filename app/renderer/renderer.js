@@ -58,23 +58,52 @@ window.Config = ipcRenderer.sendSync(RPC.config);
 
 // 引入jquery
 window.$ = window.jQuery = require(Config.path.renderer_js + "jq.js");
+require(Config.path.renderer_js + "extends/promise.js")
+require(Config.path.renderer_js + 'openBSE.all.js');
 
 Promise.all([
     $.getScript(Config.path.app + "/live2d/Core/live2dcubismcore.min.js"),
     $.getScript(Config.path.app + '/live2d/dist/bundle.js'),
+    // 低配弹幕
+    // var item={
+    //    img:'static/heisenberg.png', //图片
+    //    info:'弹幕文字信息', //文字
+    //    href:'http://www.yaseng.org', //链接
+    //    close:true, //显示关闭按钮
+    //    speed:8, //延迟,单位秒,默认8
+    //    bottom:70, //距离底部高度,单位px,默认随机
+    //    color:'#fff', //颜色,默认白色
+    //    old_ie_color:'#000000', //ie低版兼容色,不能与网页背景相同,默认黑色
+    //  }
+    // $('body').barrager(item);
+    // delete
+    //  $.fn.barrager.removeAll();
+    // $.getScript(Config.path.renderer_js + 'jquery.barrager.js'),
+    // 高配弹幕
+    // var bulletScreenEngine = new openBSE.BulletScreenEngine(document.getElementById('BulletScreensDiv'));
+    // var _startTime = 5000;
+    // for (var i = 0; i < 10000; i++) {
+    //     bulletScreenEngine.addBulletScreen({
+    //         text: "这是一个长长长长长长长长长长长长长长长长长长长长长长长长的测试(^_^)",
+    //         startTime: _startTime
+    //     });
+    //     _startTime += parseInt(Math.random() * 300);
+    // }
+    // bulletScreenEngine.play();
     $.getScript(Config.path.renderer_js + 'tip.js')
 ]).then(() => {
     live2d_onload()
+
     if (Config.debug){
-        if ($("#buttons")[0].style.display=='none'){
-            $("#buttons")[0].style.display = 'flex';
-            $("#debug_info")[0].style.display = 'block';
-            ipcRenderer.send(RPC.open_dev_tools)
-        }else{
-            $("#buttons")[0].style.display = 'none';
-            $("#debug_info")[0].style.display = 'none';
-            ipcRenderer.send(RPC.close_dev_tools)
-        }
+        ipcRenderer.on(RPC.is_debug,function (event, args) {
+            if (args.state){
+                $("#buttons")[0].style.display = 'flex';
+                $("#debug_info")[0].style.display = 'block';
+            }else{
+                $("#buttons")[0].style.display = 'none';
+                $("#debug_info")[0].style.display = 'none';
+            }
+        })
     }
 }).catch((e) => {
     log(e)
@@ -109,6 +138,13 @@ window.nload = function () {
         console.log(arg.title)
         Utils.msg("主人在Chrome访问了:"+arg.title)
     });
+    live2d.move_hit = function (str) {
+        console.log(str,'move');
+    }
+    live2d.click_hit = function (str) {
+        console.log(str,'click');
+        ipcRenderer.sendSync(RPC.focus)
+    }
     // live2d.getModel(0).startMotion('TapBody', 1, 3, function () {
     //     log('初始动画执行完成', 'nload')
     // });

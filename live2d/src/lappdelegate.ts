@@ -402,7 +402,12 @@ function onMouseMoved(e: MouseEvent): void {
     let posY: number = e.clientY - rect.top;
     posX *= scale;
     posY *= scale;
-    if (!hitModel(posX,posY)){
+    let hit  = LAppLive2DManager.getInstance();
+    let hitstr = hit.isHit(posX,posY);
+    if (hitstr != "" && hit.move_hit){
+        hit.move_hit(hitstr)
+    }
+    if (!hitstr){
         //整个app 忽略所有点击事件
         curr_window.setIgnoreMouseEvents(true, { forward: true })
         LAppPal.log(true,'move')
@@ -432,6 +437,11 @@ function onClickEnded(e: MouseEvent): void {
     posX *= scale;
     posY *= scale;
     LAppPal.log('点击')
+    let hit  = LAppLive2DManager.getInstance();
+    let hitstr = hit.isHit(posX,posY);
+    if (hitstr != ""&&hit.click_hit){
+        hit.click_hit(hitstr)
+    }
     LAppDelegate.getInstance()._view.onTouchesEnded(posX, posY);
 }
 

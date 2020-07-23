@@ -5,6 +5,7 @@ const {
 let tray;
 class menu {
     static create_menu() {
+        app.dock.hide()
         let icon_path = path.join(path.res,'/image/icon_16x16@2x.png')
         tray = new Tray(icon_path)
 
@@ -26,8 +27,8 @@ class menu {
             },
 
         ])
-        tray.setToolTip('This is my application.')
-        tray.setTitle("\u001b[34m")
+        // tray.setToolTip('This is my application.')
+        // tray.setTitle("\u001b[34m")
         tray.setContextMenu(contextMenu)
     }
 }

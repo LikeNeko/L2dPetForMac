@@ -15,5 +15,8 @@ ipcMain.on(RPC.open_dev_tools, (event, arg) => {
 ipcMain.on(RPC.close_dev_tools, (event, arg) => {
     main.webContents.closeDevTools()
 })
-
+ipcMain.on(RPC.focus,(event, args) => {
+    main.focus()
+    event.returnValue = 0;
+})
 

@@ -31,14 +31,22 @@ app.whenReady().then(() => {
     // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
     loadServers()
     // testNetwork();
-    app.dock.hide()
     Chrome.begin();
     global.main = main_window.createWindow()
     menu.create_menu()
 
     // 注册快捷键
-    // globalShortcut.register('CommandOrControl+Return', () => {
-    // })
+    let is_debug = Config.debug;
+    globalShortcut.register('CommandOrControl+P', () => {
+        if (is_debug){
+            is_debug = false;
+            main.webContents.send(RPC.is_debug,{state:0})
+        }else {
+            is_debug = true;
+            main.webContents.send(RPC.is_debug,{state:1})
+            main.webContents.openDevTools()
+        }
+    })
     // 展示一个notify
     // showNotification();
 

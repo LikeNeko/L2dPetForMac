@@ -6,11 +6,13 @@
   "scripts": {
     "start": "electron . ",
     "run": "echo 执行",
-    "postinstall": "patch-package #模块名(imap)",
-    "build-mac": "electron-builder --mac dmg",
+    "postinstall": "patch-package #模块名(imap);electron-builder install-app-deps;",
+    "build-mac": "electron-builder --mac dmg -c.electronVersion=9.1.0",
+    "build-mac-p": "electron-builder --mac dmg -c.electronVersion=9.1.0 -p always",
+    "build-mac2": "electron-packager . --platform=darwin --overwrite --out=builds --prune=true",
     "build-sqlite3": "yarn add sqlite3 --build-from-source --sqlite_libname=sqlcipher --sqlite=`brew --prefix` --runtime=electron --target=9.1.0 --dist-url=https://electronjs.org/headers"
   },
-  "repository": "",
+  "repository": "github:LikeNeko/L2dPetForMac",
   "keywords": [
     "Electron",
     "demo"
@@ -18,9 +20,6 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "latest",
-    "electron-packager": "latest",
-    "electron-rebuild": "latest"
   },
   "dependencies": {
     "applescript": "^1.0.0",
@@ -37,6 +36,7 @@
     "mac": {
       "icon": "./app/res/image/icon.icns"
     },
+    "asar": false,
     "asarUnpack": [
       "./panel"
     ]

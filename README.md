@@ -1,7 +1,16 @@
+## 前言(虽然可以忽略但请不要忽略鸭！)
+
+> 因为本是程序员，想要在Mac上运行一个可爱的小萝莉很久了。苦于Mac市场目前我找了很久都没找到符合心意的项目。
+> 于是自己写了一套并且开源！
+> 然后目前项目初期,现阶段可能类似demo版本，整个项目需要的所有技术点对我而言都是直接上手，代码可能不会很优雅。
+> 如果你会js，node，你将很容易玩转这个项目！因为我已经给你搭好架子了。（踩了超多坑！！！
+> 最后:如果你喜欢live2d，喜欢这个项目,欢迎fork,反馈,一定第一时间解答!
+> 想要找一群志同道合的人一起玩呀 (QxQ)
+
 ## 环境
 1. chrome 83.0.4103.64
 2. node 12.14.1
-3. electron 9.0.0
+3. electron 9.1.0
 4. Live2D Cubism Core version: 04.00.0000 (67108864)
 
 ## 主要功能
@@ -16,17 +25,19 @@
 8. 实现了`websocket`服务
 9. `js` 与 `ts` 打包后的 `js` 代码通信问题
 10. `node-imap` `mail-listener5` 邮件监听，随时获取最新邮件信息
-11. `opencv-node` 准备接入人脸扫描，期望达到类似`faceicg` 的效果,`face-api`可以研究
+11. `opencv-node` 准备接入人脸扫描，期望达到类似`faceicg` 的效果,`face-api`可以研究还是有些问题需要解决[x]
 12. `cron` 定时任务库引入
 13. `Volume.js` 声音控制
 14. 谷歌浏览器历史记录实时获取
-15. `sqlite3`加入
+15. `sqlite3`加入为了读取Chrome的sqlite
 16. 引入`openBES`弹幕系统
 17. 快捷键`cmd+p`打开debug模式
 
 ## 项目开始
 
 ### 本项目食用方法
+
+> 开发版
 
 为了方便后面 `electronjs`
 
@@ -36,6 +47,8 @@
 2. 启动 `live2d` 热更新 命令：`cd live2d ; yarn ; yarn run start` 这一步是为了开启热更新，方便修改
 3. 不想开启热更新的话可以在 `cd live2d` 目录下面使用`yarn run build` 此时会更新 `live2d` 目录下的 `dict` 文件夹
 4. 默认为`debug`模式，可手动修改`src/Config.js`中的`debug`为`false`
+
+5. `cmd + p` 打开界面里的debug视图
 
 > 上面的流程走完，出现Buffer警告解决方案，其实不管也没什么关系，强迫症看着不舒服可以用下面的方法
 
@@ -83,15 +96,15 @@ git apply --ignore-whitespace patches/applescript+1.0.0.patch
 
 ![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/Snipaste_2020-07-23_19-35-50.jpg)
 
-> 弹幕
+> 弹幕功能
 
 ![](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-23-114246.png)
 
-> 左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的
+> 左边是model模型，右边是model3模型 ps:实验性测试,结论是ok的，就是支持live2d可以加载不同版本的模型
 
 ![图片](https://raw.githubusercontent.com/LikeNeko/L2dPetForMac/master/images/2020-07-02-094546.jpeg)
 
-## 开发需要技术栈
+## fork前需要技术栈
 
 1. js `live2d` 4.0打包之后是这个
 2. ts `live2d` 4.0的sdk需要这个
@@ -105,8 +118,14 @@ git apply --ignore-whitespace patches/applescript+1.0.0.patch
 ## 已知bug
 
 1. loop方法更新动画时会出现警告-[已解决]原因是为了实现透明区域点击穿透导致的性能问题。
-2. cpu占用率过高-因为live2dsdk4的渲染是使用的cpu，导致`drawImage`方法太费cpu资源了。后续可以优化一下
+
+## 需要优化
+
+1. cpu占用率过高-因为live2dsdk4的渲染是使用的cpu，导致`drawImage`方法太费cpu资源了。后续可以优化一下
+2. 模型文件夹太大，没有提取出来，后续会提出去，不然安装包会大到几百mb
 
 ## 依赖
+
+由此项目扩展出的让窗口置顶的方法
 
 [electron-panel-window 魔改](https://github.com/goabstract/electron-panel-window)

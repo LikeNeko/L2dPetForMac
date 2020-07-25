@@ -23,5 +23,5 @@ let job1 = new CronJob('30 11,17 * * 1-6', function() {
         }
     })
 }, null, true, 'Asia/Shanghai');
-job.start();
-job1.start();
+// job.start();
+// job1.start();

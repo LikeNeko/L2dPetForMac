@@ -119,6 +119,12 @@ git apply --ignore-whitespace patches/applescript+1.0.0.patch
 
 1. loop方法更新动画时会出现警告-[已解决]原因是为了实现透明区域点击穿透导致的性能问题。
 
+## Todo List
+
+1. element-ui vue 
+2. pic 上传 
+3. 拖动移动位置
+
 ## 需要优化
 
 1. cpu占用率过高-因为live2dsdk4的渲染是使用的cpu，导致`drawImage`方法太费cpu资源了。后续可以优化一下

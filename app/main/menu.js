@@ -1,6 +1,7 @@
 const {
     Menu,
     Tray,
+    BrowserWindow
 } = require('electron')
 let tray;
 class menu {
@@ -23,6 +24,25 @@ class menu {
                 type: 'normal',
                 click:()=>{
                     main.webContents.openDevTools();
+                }
+            },
+            {
+                label: 'drag',
+                type: 'normal',
+                click:()=>{
+                    drag = new BrowserWindow({
+                        width:400,
+                        height:400,
+                        webPreferences: {
+                            nodeIntegration: true,// 主线程的node
+                            enableRemoteModule: true,
+                            nodeIntegrationInWorker: true,// worker内使用node
+                            // webSecurity:false,
+                        }
+                    })
+                    drag.loadFile(path.renderer_views + 'drag.html');
+                    drag.show()
+                    drag.webContents.openDevTools();
                 }
             },
 

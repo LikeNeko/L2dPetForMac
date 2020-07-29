@@ -8,7 +8,13 @@ ipcMain.on(RPC.console_log, (event, arg) => {
 ipcMain.on(RPC.config, (event, arg) => {
     event.returnValue = Config
 })
-
+ipcMain.on(RPC.ondragstart, (event, filePath) => {
+    console.log(filePath)
+    event.sender.startDrag({
+        file: filePath,
+        icon: '/path/to/icon.png'
+    })
+})
 ipcMain.on(RPC.open_dev_tools, (event, arg) => {
     main.webContents.openDevTools()
 })

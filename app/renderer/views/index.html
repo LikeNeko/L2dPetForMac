@@ -146,6 +146,20 @@
     }
 </script>
 <script>
+    var content=document.querySelector('#buttons');
+
+    content.ondragenter=content.ondragover=content.ondragleave=function(){
+        return false; /*阻止默认行为*/
+    }
+
+    content.ondrop=function(e){
+        //阻止默认行为
+        e.preventDefault();
+
+        console.log(e.dataTransfer.files[0]);
+
+        var path=e.dataTransfer.files[0].path;
+    }
 
     $(function () {
         log('onload', 'jquery');

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src=""></script>
+</head>
+<body>
+<div id="app">
+    {{ message }}
+</div>
+
+<div class="content" id="content"  style="width: 300px;height: 300px;border: 1px red solid;">
+
+</div>
+<script type="text/javascript" charset="utf-8">
+    // 获取app的配置项
+    const {ipcRenderer,remote} = require('electron')
+    window.RPC = remote.getGlobal('RPC');
+    window.Config = ipcRenderer.sendSync(RPC.config);
+    window.log = function (any, tag = "debug") {
+        let gettime = function () {
+            let now = new Date();
+            let nowTime = now.toLocaleString();
+            let date = nowTime.substring(0, 10);//截取日期
+            let time = nowTime.substring(10, 20); //截取时间
+            let week = now.getDay(); //星期
+            let hour = now.getHours(); //小时
+            return date + time;
+        }
+
+        function getCallerFileNameAndLine() {
+            function getException() {
+                try {
+                    throw Error('');
+                } catch (err) {
+                    return err;
+                }
+            }
+
+
+            const err = getException();
+
+            const stack = err.stack;
+            const stackArr = stack.split('\n');
+            let callerLogIndex = 0;
+            for (let i = 0; i < stackArr.length; i++) {
+                if (stackArr[i].indexOf('window.log') > 0 && i + 1 < stackArr.length) {
+                    callerLogIndex = i + 1;
+                    break;
+                }
+            }
+
+            if (callerLogIndex !== 0) {
+                const callerStackLine = stackArr[callerLogIndex];
+                return `[${callerStackLine.substring(callerStackLine.lastIndexOf("/") + 1, callerStackLine.lastIndexOf(':'))}]`;
+            } else {
+                return '[-]';
+            }
+        }
+
+        let time = gettime()
+        console.log(`%c[${time}]${getCallerFileNameAndLine()}[${tag}]`, "text-shadow: 0px 0px 1px red", any);
+    }
+
+    var JSLink = Config.path.renderer_js+"vue.js?" + Math.random();
+    var JSElement = document.createElement('script');
+    JSElement.src = JSLink;
+    JSElement.onload = OnceLoaded;
+    document.getElementsByTagName('head')[0].appendChild(JSElement);
+
+    function OnceLoaded() {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!'
+            }
+        })
+
+
+    }
+
+
+
+    var content=document.querySelector('#content');
+
+    content.ondragenter=content.ondragover=content.ondragleave=function(){
+        return false; /*阻止默认行为*/
+    }
+
+    content.ondrop=function(e){
+        //阻止默认行为
+        e.preventDefault();
+        console.log(e.dataTransfer.files[0]);
+        var path=e.dataTransfer.files[0].path;
+    }
+</script>
+<script>
+
+</script>
+</body>
+
+
+<!-- 生产环境版本，优化了尺寸和速度 https://cdn.jsdelivr.net/npm/vue -->
+
+</html>

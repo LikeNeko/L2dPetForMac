@@ -84,6 +84,7 @@
     <div id="model_scalc" class="button">缩放</div>
     <div id="text_copy" class="button">复制</div>
     <div id="danmu" class="button">弹幕</div>
+    <div id="move" class="button">移动</div>
 </div>
 
 <ul id="debug_info">
@@ -143,9 +144,36 @@
                 y: 100
             })
         }
+        static drag_move(element) {
+            element = document.querySelector(element);
+            let dragging = false;
+            let mouseX = 0;
+            let mouseY = 0;
+            element.addEventListener('mousedown', (e) => {
+                dragging = true;
+                const { pageX, pageY } = e;
+                mouseX = pageX;
+                mouseY = pageY;
+            });
+            window.addEventListener('mouseup', () => {
+                dragging = false;
+            });
+            const win = require('electron').remote.getCurrentWindow();
+
+            window.addEventListener('mousemove', (e) => {
+                if (dragging) {
+                    const { pageX, pageY } = e;
+                    const pos = win.getPosition()
+                    pos[0] = pos[0] + pageX - mouseX;
+                    pos[1] = pos[1] + pageY - mouseY;
+                    window.moveTo(pos[0], pos[1]);
+                }
+            });
+        }
     }
 </script>
 <script>
+    Utils.drag_move('#move');
 
     $(function () {
         log('onload', 'jquery');

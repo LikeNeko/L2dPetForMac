@@ -1,6 +1,10 @@
 const {PanelWindow} = require('../../panel/index.js');
 
 class main_window {
+    /**
+     * 创建主视图
+     * @returns {PanelWindow}
+     */
     static createWindow() {
         let preload_path = path.join(__dirname, './preload.js');
         const mainWindow = new PanelWindow({
@@ -31,7 +35,6 @@ class main_window {
         // 所有工作空间中显示
         mainWindow.setVisibleOnAllWorkspaces(true);
         let file = path.join(path.renderer_views, 'index.html');
-        log(file)
         mainWindow.loadFile(file).finally(function () {
             mainWindow.showInactive()
         })

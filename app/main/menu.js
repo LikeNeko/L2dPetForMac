@@ -19,7 +19,7 @@ class menu {
                 }
             },
             {
-                label: 'debug',
+                label: 'Debug',
                 type: 'normal',
                 click:()=>{
                     main.webContents.openDevTools();

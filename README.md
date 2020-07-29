@@ -32,6 +32,7 @@
 15. `sqlite3`加入为了读取Chrome的sqlite
 16. 引入`openBES`弹幕系统
 17. 快捷键`cmd+p`打开debug模式
+18. 拖动移动位置
 
 ## 项目开始
 
@@ -121,9 +122,11 @@ git apply --ignore-whitespace patches/applescript+1.0.0.patch
 
 ## Todo List
 
-1. element-ui vue 
+> 整合完善所有功能点(终极目标)，成为可配置，可扩展的应用。- 有条件的话兼容windows系统
+
+1. element-ui vue 做管理页面
 2. pic 上传 
-3. 拖动移动位置
+
 
 ## 需要优化
 

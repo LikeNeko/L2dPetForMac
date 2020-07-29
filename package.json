@@ -19,8 +19,7 @@
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "applescript": "^1.0.0",
     "bindings": "latest",

@@ -47,7 +47,7 @@
 1. 启动 `electronjs` 命令：`yarn ; yarn run start` 正常的话这时桌面应该有模型被显示了
 2. 启动 `live2d` 热更新 命令：`cd live2d ; yarn ; yarn run start` 这一步是为了开启热更新，方便修改
 3. 不想开启热更新的话可以在 `cd live2d` 目录下面使用`yarn run build` 此时会更新 `live2d` 目录下的 `dict` 文件夹
-4. 默认为`debug`模式，可手动修改`src/Config.js`中的`debug`为`false`
+4. 默认为`debug`模式，可手动修改`app/libs/Config.js`中的`debug`为`false`
 
 5. `cmd + p` 打开界面里的debug视图
 

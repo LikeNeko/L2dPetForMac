@@ -1,4 +1,5 @@
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+# L2dPetForMac/Live2d桌宠
+
 ## 前言(虽然可以忽略但请不要忽略鸭！)
 
 * 因为本是程序员，想要在Mac上运行一个可爱的小萝莉很久了。苦于Mac市场目前我找了很久都没找到符合心意的项目。

@@ -7,3 +7,4 @@ live2d/yarn.lock
 test.js
 yarn.lock
 package-lock.json
+.cz-config.js

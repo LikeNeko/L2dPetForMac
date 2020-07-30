@@ -20,14 +20,11 @@
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
-  "devDependencies": {
-    "cz-customizable": "^6.2.1"
-  },
+  "devDependencies": {},
   "dependencies": {
     "applescript": "^1.0.0",
     "bindings": "latest",
     "cron": "^1.8.2",
-    "husky": "^4.2.5",
     "lowdb": "^1.0.0",
     "mail-listener5": "^2.0.2",
     "nodejs-websocket": "^1.7.2",

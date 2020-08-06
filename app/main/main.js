@@ -1,11 +1,10 @@
 const {
-    BrowserWindow,
+    app,
     Notification,
     globalShortcut,
-    webContents
 } = require('electron')
 
-let Chrome = new (require('./libs/ChromeRealTimeSync.js').ChromeHistory)();
+global.Chrome = new (require('./libs/ChromeRealTimeSync.js').ChromeHistory)();
 let path = require("path")
 let fs = require("fs")
 
@@ -17,11 +16,13 @@ global.RPC = require(path.app + '/app/RPC.js').RPC;
 
 global.Config = require('./libs/Config.js')
 
-
 global.log = require("./libs/log.js")
 
 const {main_window} = require("./main_window.js")
 const {menu} = require("./menu.js")
+
+// {BrowserWindow}
+global.drag = null;
 
 // 这个方法将在完成时被调用
 // 初始化，并准备创建浏览器窗口。
@@ -33,7 +34,8 @@ app.whenReady().then(() => {
     // testNetwork();
     Chrome.begin();
     global.main = main_window.createWindow()
-    menu.create_menu()
+    menu.create_menu();
+
 
     // 注册快捷键
     let is_debug = Config.debug;

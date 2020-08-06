@@ -11,7 +11,8 @@
     "build-mac": "electron-builder --mac dmg -c.electronVersion=9.1.0",
     "build-mac-p": "electron-builder --mac dmg -c.electronVersion=9.1.0 -p always",
     "build-mac2": "electron-packager . --platform=darwin --overwrite --out=builds --prune=true",
-    "build-sqlite3": "yarn add sqlite3 --build-from-source --sqlite_libname=sqlcipher --sqlite=`brew --prefix` --runtime=electron --target=9.1.0 --dist-url=https://electronjs.org/headers"
+    "build-sqlite3": "yarn add sqlite3 --build-from-source --sqlite_libname=sqlcipher --sqlite=`brew --prefix` --runtime=electron --target=9.1.0 --dist-url=https://electronjs.org/headers",
+    "download_vue_element_ui": "wget https://unpkg.com/element-ui/lib/index.js;mv ./index.js ./app/renderer/js/element_ui.js;wget https://unpkg.com/vue/dist/vue.js;mv ./vue.js ./app/renderer/js/vue.js"
   },
   "repository": "github:LikeNeko/L2dPetForMac",
   "keywords": [

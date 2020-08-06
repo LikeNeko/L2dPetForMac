@@ -56,6 +56,8 @@
 
 5. `cmd + p` 打开界面里的debug视图
 
+6. `yarn run download_vue_element_ui` vue相关的需要执行这个命令
+
 > 上面的流程走完，出现Buffer警告解决方案，其实不管也没什么关系，强迫症看着不舒服可以用下面的方法
 
 使用项目`./patches`目录下的补丁文件

@@ -7,7 +7,11 @@ let RPC = {
     mail:'mail',
     chrome_history:"chrome_history",
     focus:"focus",// 获得焦点
-    is_debug:"is_debugs"
+    is_debug:"is_debugs",
+    ondragstart:'ondragstart',// 文件拖拽
+    web:{
+        chrome_history_list:'chrome_history_list'
+    }
 }
 module.exports = {
     RPC

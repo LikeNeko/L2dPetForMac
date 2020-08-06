@@ -4,7 +4,7 @@ const {
     globalShortcut,
 } = require('electron')
 
-let Chrome = new (require('./libs/ChromeRealTimeSync.js').ChromeHistory)();
+global.Chrome = new (require('./libs/ChromeRealTimeSync.js').ChromeHistory)();
 let path = require("path")
 let fs = require("fs")
 

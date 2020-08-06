@@ -1,3 +1,8 @@
+/**
+ * 队列
+ * @param promise_list
+ * @returns {Promise|Promise<void>|Promise<any>}
+ */
 function queue(promise_list=[]) {
     let res = [];
     let sequence = Promise.resolve();

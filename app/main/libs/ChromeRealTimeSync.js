@@ -18,7 +18,7 @@ class ChromeHistory {
         tables: {
             downloads: {
                 counts: `"SELECT COUNT(*) FROM (SELECT "_rowid_",* FROM "main"."downloads" ORDER BY "_rowid_" ASC);"`,
-                table: `SELECT "_rowid_",* FROM "main"."downloads" ORDER BY "_rowid_" ASC LIMIT 0, {test};`
+                table: `SELECT "_rowid_",* FROM "main"."downloads" ORDER BY "_rowid_" DESC LIMIT {page}, {limit};`
             },
             urls: {
                 table: `SELECT "_rowid_",* FROM "main"."urls" ORDER BY "last_visit_time" DESC LIMIT {page}, {limit};`,

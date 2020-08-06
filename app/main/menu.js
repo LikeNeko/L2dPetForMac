@@ -20,14 +20,14 @@ class menu {
                 }
             },
             {
-                label: 'debug',
+                label: 'Debug',
                 type: 'normal',
                 click:()=>{
                     main.webContents.openDevTools();
                 }
             },
             {
-                label: 'drag',
+                label: 'Drag',
                 type: 'normal',
                 click:()=>{
                     drag = new BrowserWindow({

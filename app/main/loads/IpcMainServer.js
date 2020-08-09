@@ -5,6 +5,11 @@ const { Config } = require('../libs/Config.js')
 ipcMain.on(RPC.console_log, (event, arg) => {
     console.log(arg) // prints "ping"
 })
+ipcMain.on(RPC.show_main_window, (event, arg) => {
+    main.showInactive();
+    loading_window.webContents.send(RPC.model.load);
+})
+
 ipcMain.on(RPC.web.chrome_history_list, (event, arg) => {
     Chrome.initDB();
     let ret = [];

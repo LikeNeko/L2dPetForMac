@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .el-progress{
+            left: 50%;
+            margin: 0 !important;
+            top: 50%;
+            line-height: 1;
+            transform: translate(-50%,-50%);
+        }
+    </style>
+</head>
+<body>
+<div id="app" style="height: 300px;width: 300px;">
+    <el-progress
+            :percentage="progress_num"
+    >
+    </el-progress>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../js/element_ui.js"></script>
+<script>
+    // 获取app的配置项
+    const {ipcRenderer,remote} = require('electron')
+    window.RPC = remote.getGlobal('RPC');
+    window.Config = ipcRenderer.sendSync(RPC.config);
+    require(Config.path.renderer_js + "extends/promise.js")
+
+
+    let app = new Vue({
+        el: '#app',
+        data: function() {
+            this.timer = setInterval(function () {
+                if (this.progress_num >=95){
+                    this.progress_num = 95;
+                    clearInterval(this.timer);
+                    this.timer = undefined;
+                }
+                this.progress_num++;
+            }.bind(this),100);
+            return {
+                progress_num:0
+            }
+        },
+        methods:{
+            set_success:function () {
+                let time = setInterval(function () {
+                    if (this.progress_num>=100){
+                        remote.getCurrentWindow().close()
+                    }else{
+                        this.progress_num ++;
+                    }
+                }.bind(this),60);
+
+            }
+        }
+    })
+
+    ipcRenderer.on(RPC.model.load,function (event, args) {
+        app.set_success()
+    })
+</script>
+</html>

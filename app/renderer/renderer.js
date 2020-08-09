@@ -138,6 +138,8 @@ window.nload = function () {
         console.log(arg.title)
         Utils.msg("主人在Chrome访问了:"+arg.title)
     });
+    ipcRenderer.send(RPC.show_main_window);
+
     live2d.move_hit = function (str) {
         console.log(str,'move');
     }

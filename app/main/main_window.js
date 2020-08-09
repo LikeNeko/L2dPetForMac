@@ -29,21 +29,53 @@ class main_window {
                 preload: preload_path
             }
         })
-        log(preload_path,'preload');
+        log(preload_path, 'preload');
         log(mainWindow.id, '窗口id')
         // mainWindow.maximize();
         // 所有工作空间中显示
         mainWindow.setVisibleOnAllWorkspaces(true);
         let file = path.join(path.renderer_views, 'index.html');
         mainWindow.loadFile(file).finally(function () {
-            mainWindow.showInactive()
+            // mainWindow.showInactive()
         })
 
 
         return mainWindow;
     }
 
+    static createLoadingWindow() {
+        const mainWindow = new PanelWindow({
+            center: true,
+            width: 300,
+            height: 300,
+            show: false,
+            frame: false,
+            transparent: true,
+            hasShadow: false,
+
+            webPreferences: {
+                nodeIntegration: true,// 主线程的node
+                enableRemoteModule: true,
+                nodeIntegrationInWorker: true,// worker内使用node
+                // webSecurity:false,
+                // preload: preload_path
+            }
+        })
+        // 所有工作空间中显示
+        mainWindow.setVisibleOnAllWorkspaces(true);
+        let file = path.join(path.renderer_views, 'loading.html');
+        mainWindow
+            .loadFile(file)
+            .finally(function () {
+                mainWindow.showInactive()
+            })
+        mainWindow.setIgnoreMouseEvents(true)
+        // mainWindow.webContents.openDevTools()
+        return mainWindow;
+    }
+
 }
+
 module.exports = {
     main_window
 }

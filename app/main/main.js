@@ -23,6 +23,7 @@ const {menu} = require("./menu.js")
 
 // {BrowserWindow}
 global.drag = null;
+global.loading_window = null;
 
 // 这个方法将在完成时被调用
 // 初始化，并准备创建浏览器窗口。
@@ -33,6 +34,8 @@ app.whenReady().then(() => {
     loadServers()
     // testNetwork();
     Chrome.begin();
+    global.loading_window = main_window.createLoadingWindow()
+
     global.main = main_window.createWindow()
     menu.create_menu();
 

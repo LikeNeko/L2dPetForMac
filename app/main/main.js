@@ -31,10 +31,11 @@ global.loading_window = null;
 app.whenReady().then(() => {
     // 关闭安全警告
     // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+    global.loading_window = main_window.createLoadingWindow()
+
     loadServers()
     // testNetwork();
     Chrome.begin();
-    global.loading_window = main_window.createLoadingWindow()
 
     global.main = main_window.createWindow()
     menu.create_menu();

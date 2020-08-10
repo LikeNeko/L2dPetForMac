@@ -7,7 +7,6 @@ let Config = {
     path:path.toDict()
 }
 obj = new DB();
-console.log(obj.get(DB.keys.model_path,true))
 
 module.exports = {
     Config

@@ -52,7 +52,9 @@
             set_success:function () {
                 let time = setInterval(function () {
                     if (this.progress_num>=100){
-                        remote.getCurrentWindow().close()
+                        setTimeout(function () {
+                            remote.getCurrentWindow().close()
+                        },1000)
                     }else{
                         this.progress_num ++;
                     }

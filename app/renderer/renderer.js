@@ -114,41 +114,4 @@ ipcRenderer.on('show_tips', (event, arg) => {
 
 });
 
-// 加载
-window.nload = function () {
-    log('执行成功', 'nload');
-    live2d._viewMatrix.scale(0.8, 0.8)
-
-    ipcRenderer.on(RPC.show_mtn, (event, arg) => {
-        live2d.getModel(0).startRandomMotion("TapBody", 3);
-        log("播放特效", '特效')
-    });
-    ipcRenderer.on(RPC.mail, (event, arg) => {
-        if (live2d) {
-            live2d.getModel(0).startMotion("TapBody", 0, 3);
-        }
-        $("#debug_info").append(`<li>mail:${arg.title}</li>`)
-        console.log(arg.title)
-    });
-    ipcRenderer.on(RPC.chrome_history, (event, arg) => {
-        if (live2d) {
-            live2d.getModel(0).startMotion("TapBody", 0, 3);
-        }
-        $("#debug_info").append(`<li>chrome:${arg.title}-visit:${arg.visit_count}</li>`)
-        console.log(arg.title)
-        Utils.msg("主人在Chrome访问了:"+arg.title)
-    });
-    ipcRenderer.send(RPC.show_main_window);
-
-    live2d.move_hit = function (str) {
-        console.log(str,'move');
-    }
-    live2d.click_hit = function (str) {
-        console.log(str,'click');
-        ipcRenderer.sendSync(RPC.focus)
-    }
-    // live2d.getModel(0).startMotion('TapBody', 1, 3, function () {
-    //     log('初始动画执行完成', 'nload')
-    // });
-}
 log('renderer load 100%');

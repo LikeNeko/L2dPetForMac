@@ -40,6 +40,7 @@
 18. 拖动移动位置
 19. 顶部的菜单栏里加了管理面板的入口(google历史下载记录查看，拖动文件获得地址)
 21. loading加载窗口
+22. 拖入图片，压缩图片
 
 ## 项目开始
 
@@ -59,6 +60,8 @@
 5. `cmd + p` 打开界面里的debug视图
 
 6. `yarn run download_vue_element_ui` vue相关的需要执行这个命令
+
+7. `yarn global add imagezip` 全局安装压缩图片的命令或者项目安装`yarn add imagezip`
 
 > 上面的流程走完，出现Buffer警告解决方案，其实不管也没什么关系，强迫症看着不舒服可以用下面的方法
 

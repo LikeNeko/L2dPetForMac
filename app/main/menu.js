@@ -1,8 +1,9 @@
 const {
     Menu,
-    Tray,
-    BrowserWindow
+    Tray
 } = require('electron')
+const {main_window} = require("./main_window.js")
+
 let tray;
 class menu {
     static create_menu() {
@@ -27,22 +28,29 @@ class menu {
                 }
             },
             {
-                label: 'Drag',
+                label: 'Drag(拖入压缩图片)',
                 type: 'normal',
                 click:()=>{
-                    drag = new BrowserWindow({
-                        width:400,
-                        height:400,
-                        webPreferences: {
-                            nodeIntegration: true,// 主线程的node
-                            enableRemoteModule: true,
-                            nodeIntegrationInWorker: true,// worker内使用node
-                            // webSecurity:false,
-                        }
-                    })
-                    drag.loadFile(path.renderer_views + 'drag.html');
+                    global.drag = main_window.create('drag');
                     drag.show()
                     drag.webContents.openDevTools();
+                }
+            }, {
+                label: 'ChromeHistory(谷歌历史记录)',
+                type: 'normal',
+                click:()=>{
+                    global.chrome_history_window = main_window.create('chrome_history');
+                    chrome_history_window.show()
+                    chrome_history_window.webContents.openDevTools();
+                }
+            },
+            {
+                label: 'nkpush',
+                type: 'normal',
+                click:()=>{
+                    global.nkpush_window = main_window.create('nkpush');
+                    nkpush_window.show()
+                    nkpush_window.webContents.openDevTools();
                 }
             },
 

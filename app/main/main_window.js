@@ -1,4 +1,7 @@
 const {PanelWindow} = require('../../panel/index.js');
+const {
+    BrowserWindow
+} = require('electron')
 
 class main_window {
     /**
@@ -72,6 +75,37 @@ class main_window {
         mainWindow.setIgnoreMouseEvents(true)
         // mainWindow.webContents.openDevTools()
         return mainWindow;
+    }
+
+    static create(name){
+        const window = new BrowserWindow({
+            center: true,
+            width: 500,
+            height: 500,
+            show: false,
+            // frame: false,
+            // transparent: true,
+            // hasShadow: false,
+
+            webPreferences: {
+                nodeIntegration: true,// 主线程的node
+                enableRemoteModule: true,
+                nodeIntegrationInWorker: true,// worker内使用node
+                // webSecurity:false,
+                // preload: preload_path
+            }
+        })
+        // 所有工作空间中显示
+        window.setVisibleOnAllWorkspaces(true);
+        let file = path.join(path.renderer_views, name+'.html');
+        window.loadFile(file)
+            .finally(function () {
+                window.show()
+            })
+        // window.setAlwaysOnTop(true,'screen-saver')
+        // window.setIgnoreMouseEvents(true)
+        // mainWindow.webContents.openDevTools()
+        return window
     }
 
 }

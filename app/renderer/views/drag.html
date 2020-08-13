@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/element-ui.css">
     <style>
         .el-upload-dragger{
             width: 260px;
@@ -11,89 +11,44 @@
 </head>
 <body>
 <div id="app">
-
-    <el-tabs tab-position="left">
-        <el-tab-pane label="拖动文件" content="把文件拖到这里，获取到图片之后可以做一些处理" placement="top-start">
-            <el-upload
-                    class="content"
-                    drag
-                    action
-                    :auto-upload=false
-                    :on-change="bef_upload"
-                    tip="123"
-                    multiple>
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-        </el-tab-pane>
-        <el-tab-pane label="谷歌历史记录" content="谷歌浏览器的历史记录查询" placement="top-start">
-            <el-table
-                    :data="chrome_history_list"
-                    style="width: 100%">
-                <el-table-column
-                        prop="date"
-                        label="日期"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="url_path"
-                        label="地址">
-                </el-table-column>
-            </el-table>
-
-        </el-tab-pane>
-
-    </el-tabs>
+    <el-upload
+            class="content"
+            drag
+            action
+            :auto-upload=false
+            :on-change="bef_upload"
+            tip="123"
+            multiple>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处压缩，或<em>点击上传</em></div>
+    </el-upload>
 </div>
 
-<!--<div class="content" id="content"  style="width: 300px;height: 300px;border: 1px red solid;">-->
-
-<!--</div>-->
 <!-- 引入组件库 -->
 <script src="../js/vue.js"></script>
 <script src="../js/element_ui.js"></script>
-<script type="text/javascript" charset="utf-8">
-
-    // 获取app的配置项
-    const {ipcRenderer,remote} = require('electron')
-    window.RPC = remote.getGlobal('RPC');
-    window.Config = ipcRenderer.sendSync(RPC.config);
-    require(Config.path.renderer_js + "extends/promise.js")
-
-    var app = new Vue({
-        el: '#app',
-        data: function() {
-            let data = ipcRenderer.sendSync(RPC.web.chrome_history_list)
-            let ret = [];
-            for (let i = 0; i < data.length; i++) {
-                ret.push({
-                    'date':data[i]['start_time'],
-                    'url_path':data[i]['current_path']
-                })
-            }
-            console.log(ret)
-
-            return {
-                chrome_history_list: ret
-            }
-        },
-        methods:{
-            bef_upload(a,b){
-                this.$message('拖进来啦');
-                let filename = a.name
-                let filepath = a.raw.path;
-                console.log(filename,filepath)
-            }
-        }
-    })
-
-</script>
-<script>
-
-</script>
+<script src="../js/common.js"></script>
 </body>
+<script>
+var app = new Vue({
+    el: '#app',
+    data: function() {
+        return {
 
+        }
+    },
+    methods:{
+        bef_upload(a,b){
+            let filename = a.name
+            let filepath = a.raw.path;
+            console.log(filename,filepath)
+            let code = ipcRenderer.sendSync(RPC.zip_image,{
+                path:filepath
+            })
+            this.$message('压缩成功');
+        },
+    }
+})
 
-<!-- 生产环境版本，优化了尺寸和速度 https://cdn.jsdelivr.net/npm/vue -->
-
+</script>
 </html>

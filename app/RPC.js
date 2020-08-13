@@ -8,7 +8,10 @@ let RPC = {
     chrome_history:"chrome_history",
     focus:"focus",// 获得焦点
     is_debug:"is_debugs",
-    ondragstart:'ondragstart',// 文件拖拽
+    // 文件拖拽
+    ondragstart:'ondragstart',
+    // 压缩图片
+    zip_image:"zip_image",
     web:{
         // 查询谷歌浏览器历史
         chrome_history_list:'chrome_history_list'

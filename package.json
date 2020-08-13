@@ -12,7 +12,7 @@
     "build-mac-p": "electron-builder --mac dmg -c.electronVersion=9.1.0 -p always",
     "build-mac2": "electron-packager . --platform=darwin --overwrite --out=builds --prune=true",
     "build-sqlite3": "yarn add sqlite3 --build-from-source --sqlite_libname=sqlcipher --sqlite=`brew --prefix` --runtime=electron --target=9.1.0 --dist-url=https://electronjs.org/headers",
-    "download_vue_element_ui": "wget https://unpkg.com/element-ui/lib/index.js;mv ./index.js ./app/renderer/js/element_ui.js;wget https://unpkg.com/vue/dist/vue.js;mv ./vue.js ./app/renderer/js/vue.js"
+    "download_vue_element_ui": "./install-vue.sh"
   },
   "repository": "github:LikeNeko/L2dPetForMac",
   "keywords": [
@@ -26,12 +26,14 @@
     "applescript": "^1.0.0",
     "bindings": "latest",
     "cron": "^1.8.2",
+    "electron-clipboard-watcher": "^1.0.1",
     "lowdb": "^1.0.0",
     "mail-listener5": "^2.0.2",
     "nodejs-websocket": "^1.7.2",
     "patch-package": "^6.2.2",
     "rsync": "^0.6.1",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.0",
+    "tinify": "^1.6.0-beta.2"
   },
   "build": {
     "mac": {

@@ -6,6 +6,9 @@ class LowDB {
     db =null;
 
     constructor(db_file) {
+        if (!db_file){
+            db_file = path.res + "db.json";
+        }
         // Set some defaults
         const adapter = new FileSync(db_file)
         this.db = low(adapter)
@@ -37,8 +40,11 @@ class LowDB {
      */
     get(key,is_set=false){
         if (is_set){
-            this.db.set(key).write()
-            return this.db.get(key).value()
+            let ret  = this.db.get(key).value()
+            if (!ret){
+                this.db.set(key).write()
+            }
+            return ret
         }
         return this.db.get(key).value()
     }

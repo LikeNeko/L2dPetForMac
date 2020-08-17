@@ -12,6 +12,8 @@ let RPC = {
     ondragstart:'ondragstart',
     // 压缩图片
     zip_image:"zip_image",
+    // 上传图片到oss
+    upload_oss_image:"upload_oss_image",
     web:{
         // 查询谷歌浏览器历史
         chrome_history_list:'chrome_history_list'

@@ -3,15 +3,35 @@ const {ipcMain} = require('electron')
 const {Config} = require('../libs/Config.js')
 const exec = require('child_process').exec
 const fs = require("fs")
+const OSS = require("ali-oss")
+const {LowDB} = require('../libs/db/LowDB.js')
 
 ipcMain.on(RPC.console_log, (event, arg) => {
     console.log(arg) // prints "ping"
 })
+// 展示主窗口
 ipcMain.on(RPC.show_main_window, (event, arg) => {
     main.showInactive();
     loading_window.webContents.send(RPC.model.load);
 })
-
+// 上传oss img
+ipcMain.on(RPC.upload_oss_image, (event, arg) => {
+    let obj = new LowDB();
+    let client = new OSS({
+        accessKeyId: obj.get('ali_oss.accessKeyId',true),
+        accessKeySecret: obj.get('ali_oss.accessKeySecret',true),
+        bucket: obj.get('ali_oss.bucket',true),
+        region:obj.get('ali_oss.region',true),
+    });
+    log(arg);
+    var timestamp = Date.parse(new Date());
+    // 'object'表示从OSS下载的object名称，'localfile'表示本地文件或者文件路径。
+    client.put(arg.name+"/"+timestamp+'.png', arg.path).then(function (r1) {
+        console.log('put success: %j', r1);
+        event.returnValue = r1.url;
+    })
+})
+// 获取谷歌浏览历史
 ipcMain.on(RPC.web.chrome_history_list, (event, arg) => {
     log('chrome_history_list', 'sqlite')
     Chrome.initDB()
@@ -32,23 +52,19 @@ ipcMain.on(RPC.web.chrome_history_list, (event, arg) => {
         })
 
 })
-
+// 获得配置
 ipcMain.on(RPC.config, (event, arg) => {
     event.returnValue = Config
 })
-ipcMain.on(RPC.ondragstart, (event, filePath) => {
-    console.log(filePath)
-    event.sender.startDrag({
-        file: filePath,
-        icon: '/path/to/icon.png'
-    })
-})
+
+// 打开dev_tools
 ipcMain.on(RPC.open_dev_tools, (event, arg) => {
     main.webContents.openDevTools()
 })
 ipcMain.on(RPC.close_dev_tools, (event, arg) => {
     main.webContents.closeDevTools()
 })
+
 ipcMain.on(RPC.focus, (event, args) => {
     main.focus()
     event.returnValue = 0;

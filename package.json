@@ -23,6 +23,7 @@
   "license": "CC0-1.0",
   "devDependencies": {},
   "dependencies": {
+    "ali-oss": "^6.10.0",
     "applescript": "^1.0.0",
     "bindings": "latest",
     "cron": "^1.8.2",

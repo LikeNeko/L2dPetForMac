@@ -11,34 +11,58 @@
 </head>
 <body>
 <div id="app">
-    <el-upload
-            class="content"
-            drag
-            action
-            :auto-upload=false
-            :on-change="bef_upload"
-            tip="123"
-            multiple>
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处压缩，或<em>点击上传</em></div>
-    </el-upload>
+    <el-tabs>
+        <el-tab-pane label="压缩图片">
+            <el-upload
+                    class="content"
+                    drag
+                    action
+                    :auto-upload=false
+                    :on-change="bef_zip"
+                    tip="123"
+                    multiple>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处压缩，或<em>点击上传</em></div>
+            </el-upload>
+        </el-tab-pane>
+        <el-tab-pane label="上传图片到云">
+            <el-input
+                    placeholder="项目名"
+                    v-model="name"
+                    style="width: 200px;margin-bottom: 10px"
+            ></el-input>
+            <el-upload
+                    class="content"
+                    drag
+                    action
+                    :auto-upload=false
+                    :on-change="bef_upload"
+                    multiple>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处</div>
+            </el-upload>
+        </el-tab-pane>
+    </el-tabs>
+
+
 </div>
 
 <!-- 引入组件库 -->
 <script src="../js/vue.js"></script>
 <script src="../js/element_ui.js"></script>
 <script src="../js/common.js"></script>
+<script src="../../../node_modules/ali-oss/dist/aliyun-oss-sdk.min.js"></script>
 </body>
 <script>
 var app = new Vue({
     el: '#app',
     data: function() {
         return {
-
+            name:''
         }
     },
     methods:{
-        bef_upload(a,b){
+        bef_zip(a, b){
             let filename = a.name
             let filepath = a.raw.path;
             console.log(filename,filepath)
@@ -47,6 +71,17 @@ var app = new Vue({
             })
             this.$message('压缩成功');
         },
+        bef_upload(a,b){
+            let filename = a.name
+            let filepath = a.raw.path;
+            console.log(filename,filepath)
+            let code = ipcRenderer.sendSync(RPC.upload_oss_image,{
+                path:filepath,
+                name:this.name
+            })
+            remote.clipboard.writeText(code);
+            this.$message('上传成功');
+        }
     }
 })
 

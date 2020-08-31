@@ -1,27 +1,13 @@
-const {Volume}=require("../libs/Volume.js")
-
 const {CronJob} = require('cron');
 
-let job = new CronJob('0 9,23 * * 1-6', function() {
-    // 每天9点和23点 周1至周六
-    Volume.setOutput(0);
-}, null, true, 'Asia/Shanghai');
+let other_cron = require(path.app+"/plugins/cron/system.js");
 
-let job1 = new CronJob('30 11,17 * * 1-6', function() {
-    let {dialog}=require('electron');
+function cron_job(time, call) {
+    let job = new CronJob(time, call, null, true, 'Asia/Shanghai');
+    job.start()
+}
+console.log(other_cron)
+for (let i = 0; i < other_cron.length; i++) {
+    cron_job(other_cron[i].time,other_cron[i].call)
+}
 
-    dialog.showMessageBox({
-        type:'info',
-        title: '订饭啦',
-        message: '订饭订饭订饭订饭订饭',
-        buttons:['ok','cancel']
-    },(index) => {
-        if ( index == 0 ) {
-            console.log('You click ok.');
-        } else {
-            console.log('You click cancel');
-        }
-    })
-}, null, true, 'Asia/Shanghai');
-// job.start();
-// job1.start();

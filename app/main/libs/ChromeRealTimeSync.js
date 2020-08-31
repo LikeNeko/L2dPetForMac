@@ -90,7 +90,7 @@ class ChromeHistory {
                         .db_time_to_unix()
                         .db_time_format("Y-m-d H:i:s")
                 }
-                console.debug(data)
+                // console.debug(data)
                 main.webContents.send(RPC.chrome_history,data[0])
             }.bind(this))
     }

@@ -21,9 +21,9 @@ global.log = require("./libs/log.js")
 const {main_window} = require("./main_window.js")
 const {menu} = require("./menu.js")
 
-// {BrowserWindow}
-global.drag = null;
-global.loading_window = null;
+global.HookCore = require("./libs/HookCore.js");
+
+require("./request.js");
 
 // 这个方法将在完成时被调用
 // 初始化，并准备创建浏览器窗口。
@@ -47,10 +47,11 @@ app.whenReady().then(() => {
         if (is_debug){
             is_debug = false;
             main.webContents.send(RPC.is_debug,{state:0})
+            main_window.closeAllDevTools()
         }else {
             is_debug = true;
             main.webContents.send(RPC.is_debug,{state:1})
-            main.webContents.openDevTools()
+            main_window.showAllDevTools()
         }
     })
     // 展示一个notify

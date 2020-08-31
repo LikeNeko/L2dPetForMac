@@ -32,8 +32,8 @@ class menu {
                 type: 'normal',
                 click:()=>{
                     global.drag = main_window.create('drag');
+                    drag.setContentSize(500,350);
                     drag.show()
-                    drag.webContents.openDevTools();
                 }
             }, {
                 label: 'ChromeHistory(谷歌历史记录)',
@@ -41,7 +41,6 @@ class menu {
                 click:()=>{
                     global.chrome_history_window = main_window.create('chrome_history');
                     chrome_history_window.show()
-                    chrome_history_window.webContents.openDevTools();
                 }
             },
             {
@@ -50,7 +49,13 @@ class menu {
                 click:()=>{
                     global.nkpush_window = main_window.create('nkpush');
                     nkpush_window.show()
-                    nkpush_window.webContents.openDevTools();
+                }
+            },{
+                label: 'manager',
+                type: 'normal',
+                click:()=>{
+                    global.manager = main_window.create('model_manager');
+                    manager.show()
                 }
             },
 

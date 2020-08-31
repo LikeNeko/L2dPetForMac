@@ -5,6 +5,11 @@ const {
 
 class main_window {
     /**
+     *
+     * @type {BrowserWindow[]}
+     */
+    static all_windows=[];
+    /**
      * 创建主视图
      * @returns {PanelWindow}
      */
@@ -41,7 +46,7 @@ class main_window {
         mainWindow.loadFile(file).finally(function () {
             // mainWindow.showInactive()
         })
-
+        this.all_windows.push(mainWindow)
 
         return mainWindow;
     }
@@ -105,9 +110,27 @@ class main_window {
         // window.setAlwaysOnTop(true,'screen-saver')
         // window.setIgnoreMouseEvents(true)
         // mainWindow.webContents.openDevTools()
+        this.all_windows.push(window);
         return window
     }
 
+    static showAllDevTools(){
+        console.log(this.all_windows)
+
+        this.all_windows.forEach(function (value, index, array) {
+            if (value){
+                value.webContents.openDevTools({mode:'detach',activate:false});
+            }
+
+        })
+    }
+    static closeAllDevTools(){
+        this.all_windows.forEach(function (value, index, array) {
+            if (value){
+                value.webContents.closeDevTools();
+            }
+        })
+    }
 }
 
 module.exports = {

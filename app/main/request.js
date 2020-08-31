@@ -1,3 +1,4 @@
+const {net} = require('electron')
 class nnw {
     static get(key) {
         return this[key];
@@ -12,7 +13,6 @@ class nnw {
              */
             function (resolve, reject) {
                 // 获取一个网络请求对象
-                const {net} = require('electron')
                 const request = net.request(url)
                 request.on('response', (response) => {
                     // console.log(`STATUS: ${response.statusCode}`)
@@ -45,3 +45,4 @@ function testNetwork() {
         log(da);
     });
 }
+app.nnw = nnw

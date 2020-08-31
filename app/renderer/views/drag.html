@@ -5,13 +5,13 @@
     <link rel="stylesheet" href="../css/element-ui.css">
     <style>
         .el-upload-dragger{
-            width: 260px;
+            width: 210px;
         }
     </style>
 </head>
 <body>
 <div id="app">
-    <el-tabs>
+    <el-tabs type="border-card">
         <el-tab-pane label="压缩图片">
             <el-upload
                     class="content"
@@ -19,28 +19,45 @@
                     action
                     :auto-upload=false
                     :on-change="bef_zip"
-                    tip="123"
                     multiple>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处压缩，或<em>点击上传</em></div>
             </el-upload>
         </el-tab-pane>
         <el-tab-pane label="上传图片到云">
-            <el-input
-                    placeholder="项目名"
-                    v-model="name"
-                    style="width: 200px;margin-bottom: 10px"
-            ></el-input>
-            <el-upload
-                    class="content"
-                    drag
-                    action
-                    :auto-upload=false
-                    :on-change="bef_upload"
-                    multiple>
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处</div>
-            </el-upload>
+            <el-row>
+                <el-col :span="12">
+                    <el-input
+                            placeholder="项目名"
+                            v-model="name"
+                            style="width: 200px;margin-bottom: 10px"
+                    ></el-input>
+                    <el-upload
+                            class="content"
+                            drag
+                            action
+                            :auto-upload=false
+                            :on-change="bef_upload"
+                            multiple>
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">将文件拖到此处</div>
+                    </el-upload>
+                </el-col>
+                <el-col :span="12">
+                    <el-table :data="file_list"
+                              :cell-dblclick="double_copy"
+                              :border="true"
+                    >
+                        <el-table-column
+                                prop="file"
+                                label="地址"
+                                header-align="center"
+                        >
+                        </el-table-column>
+                    </el-table>
+                </el-col>
+            </el-row>
+
         </el-tab-pane>
     </el-tabs>
 
@@ -57,8 +74,11 @@
 var app = new Vue({
     el: '#app',
     data: function() {
+
         return {
-            name:''
+            name:'',
+            file_list:[
+            ]
         }
     },
     methods:{
@@ -79,8 +99,14 @@ var app = new Vue({
                 path:filepath,
                 name:this.name
             })
+            this.file_list.push({
+                file:code
+            })
             remote.clipboard.writeText(code);
             this.$message('上传成功');
+        },
+        double_copy(row){
+            console.log(row);
         }
     }
 })

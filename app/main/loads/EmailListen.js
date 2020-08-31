@@ -46,7 +46,6 @@ mailListener.on("mailbox", function(mailbox){
 });
 
 mailListener.on("server:disconnected", function(){
-    log("imapDisconnected");
     mailListener.start(); // start listening
 
 });

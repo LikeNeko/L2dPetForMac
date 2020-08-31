@@ -63,6 +63,21 @@
 
 7. `yarn global add imagezip` 全局安装压缩图片的命令或者项目安装`yarn add imagezip`
 
+8. 添加一个空任务文件
+
+```
+# 文件路径文件名: plugins/cron/system.js
+
+module.exports =  [
+    {
+        time: '0 9,23 * * 1-6',
+        call: () => {
+            // 你的定时任务
+        }
+    }
+]
+```
+
 > 上面的流程走完，出现Buffer警告解决方案，其实不管也没什么关系，强迫症看着不舒服可以用下面的方法
 
 使用项目`./patches`目录下的补丁文件

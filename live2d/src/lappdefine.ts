@@ -23,7 +23,7 @@ export const ViewLogicalMaxBottom = -2.0;
 export const ViewLogicalMaxTop = 2.0;
 
 // 相対パス
-export const ResourcesPath = '../../res/models/';
+export const ResourcesPath = window["Config"].ResourcesPath;
 
 // モデルの後ろにある背景の画像ファイル
 export const BackImageName = 'back_class_normal.png';
@@ -37,7 +37,7 @@ export const PowerImageName = 'CloseNormal.png';
 // モデル定義---------------------------------------------
 // モデルを配置したディレクトリ名の配列
 // ディレクトリ名とmodel3.jsonの名前を一致させておくこと
-export const ModelDir: string[] = ['Senko','Rice','Hiyori','Haru',  'Mark', 'Natori'];
+export let ModelDir: string[] = ['Senko','jinsechangzhifa','Rice','Hiyori','Haru',  'Mark', 'Natori'];
 export const ModelDirSize: number = ModelDir.length;
 
 // 外部定義ファイル（json）と合わせる
@@ -55,9 +55,9 @@ export const PriorityNormal = 2;
 export const PriorityForce = 3;
 
 // デバッグ用ログの表示オプション
-export const DebugLogEnable = window['Config'].debug;
-export const DebugTouchLogEnable = window['Config'].debug;
-export const DebugModelLogEnable = window['Config'].debug;
+export const DebugLogEnable = true;
+export const DebugTouchLogEnable = true;
+export const DebugModelLogEnable = true;
 
 // Frameworkから出力するログのレベル設定
 export const CubismLoggingLevel: LogLevel = LogLevel.LogLevel_Verbose;
@@ -65,3 +65,5 @@ export const CubismLoggingLevel: LogLevel = LogLevel.LogLevel_Verbose;
 // デフォルトのレンダーターゲットサイズ
 export const RenderTargetWidth = window.innerWidth;
 export const RenderTargetHeight = window.innerHeight;
+
+export const IsElectron = true;

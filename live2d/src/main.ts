@@ -9,17 +9,17 @@ import {LAppDelegate, lAppDelegateEvent} from './lappdelegate';
 import {LAppLive2DManager} from "./lapplive2dmanager";
 import {LAppModel, LoadStep} from "./lappmodel";
 import {LAppPal} from "./lapppal";
+interface config{
+    loadModelComplete():void;
+    live2d_config:{};
+}
+console.log('live2d_onload');
+window["live2d_onload"]  = (config:config): void => {
 
-
-/**
- * ブラウザロード後の処理
- */
-// window.onload =
-window["live2d_onload"]  = (): void => {
     LAppDelegate.getInstance().setLappModelEvent({
         modelCompleteSetup(){
             window["live2d"] = LAppLive2DManager.getInstance();
-            window['nload']();
+            config.loadModelComplete();
         }
     })
     // create the application instance

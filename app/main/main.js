@@ -51,7 +51,7 @@ app.whenReady().then(() => {
         }else {
             is_debug = true;
             main.webContents.send(RPC.is_debug,{state:1})
-            main_window.showAllDevTools()
+            main_window.showAllDevTools({})
         }
     })
     // 展示一个notify

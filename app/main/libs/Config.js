@@ -4,7 +4,8 @@ let Config = {
     debug: true,
     isMac: process.platform === 'darwin',
     model_path:"",
-    path:path.toDict()
+    path:path.toDict(),
+    ResourcesPath:"../../res/models/",
 }
 obj = new DB();
 

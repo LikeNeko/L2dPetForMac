@@ -32,7 +32,7 @@ let mailListener = new MailListener({
     // }
 });
 
-mailListener.start(); // start listening
+// mailListener.start(); // start listening
 
 // stop listening
 //mailListener.stop();
@@ -74,5 +74,5 @@ mailListener.on("mail", function(mail, seqno) {
         return;
     }
     arr.push(seqno)
-    webContents.fromId(1).send(RPC.mail,{title:mail.subject});
+    // webContents.fromId(1).send(RPC.mail,{title:mail.subject});
 })

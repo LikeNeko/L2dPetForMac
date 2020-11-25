@@ -4,7 +4,6 @@ const {Config} = require('../libs/Config.js')
 const exec = require('child_process').exec
 const fs = require("fs")
 const OSS = require("ali-oss")
-const {LowDB} = require('../libs/db/LowDB.js')
 
 ipcMain.on(RPC.console_log, (event, arg) => {
     console.log(arg) // prints "ping"
@@ -18,15 +17,15 @@ ipcMain.on(RPC.show_main_window, (event, arg) => {
 ipcMain.on(RPC.upload_oss_image, (event, arg) => {
     let obj = new LowDB();
     let client = new OSS({
-        accessKeyId: obj.get('ali_oss.accessKeyId',true),
-        accessKeySecret: obj.get('ali_oss.accessKeySecret',true),
-        bucket: obj.get('ali_oss.bucket',true),
-        region:obj.get('ali_oss.region',true),
+        accessKeyId: obj.get('ali_oss.accessKeyId', true),
+        accessKeySecret: obj.get('ali_oss.accessKeySecret', true),
+        bucket: obj.get('ali_oss.bucket', true),
+        region: obj.get('ali_oss.region', true),
     });
     log(arg);
     var timestamp = Date.parse(new Date());
     // 'object'表示从OSS下载的object名称，'localfile'表示本地文件或者文件路径。
-    client.put(arg.name+"/"+timestamp+'.png', arg.path).then(function (r1) {
+    client.put(arg.name + "/" + timestamp + '.png', arg.path).then(function (r1) {
         console.log('put success: %j', r1);
         event.returnValue = r1.url;
     })

@@ -4,6 +4,7 @@ const FileSync = require('lowdb/adapters/FileSync')
 class LowDB {
 
     db =null;
+    __ins = null;
 
     constructor(db_file) {
         if (!db_file){
@@ -12,6 +13,14 @@ class LowDB {
         // Set some defaults
         const adapter = new FileSync(db_file)
         this.db = low(adapter)
+    }
+
+    static ins(){
+        if (this.__ins){
+            return this.__ins
+        }
+        this.__ins = new LowDB();
+        return this.__ins
     }
 
     demo(){

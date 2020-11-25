@@ -1,4 +1,4 @@
-const {PanelWindow} = require('../../panel/index.js');
+const {PanelWindow} = require(path.join(path.app,'/panel/index.js'));
 const {
     BrowserWindow
 } = require('electron')

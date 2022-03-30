@@ -13,9 +13,8 @@ interface config{
     loadModelComplete():void;
     live2d_config:{};
 }
-console.log('live2d_onload');
+console.log('live2d_onload 加载准备');
 window["live2d_onload"]  = (config:config): void => {
-
     LAppDelegate.getInstance().setLappModelEvent({
         modelCompleteSetup(){
             window["live2d"] = LAppLive2DManager.getInstance();

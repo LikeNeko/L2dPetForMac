@@ -27,12 +27,8 @@ export let lAppDelegateEvent:LAppDelegateEvent = null;
 
 let lastCalledTime;
 let fps;
-let curr_window = null;
-if (LAppDefine.IsElectron){
-    const { remote } = require('electron')
-    let curr_window = remote.getCurrentWindow();
-}
-
+const { remote } = require('electron')
+let curr_window = remote.getCurrentWindow();
 
 interface LAppDelegateEvent {
     modelCompleteSetup();

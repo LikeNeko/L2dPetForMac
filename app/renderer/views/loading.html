@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <style>
         .el-progress{
             left: 50%;
@@ -16,10 +15,7 @@
 </head>
 <body>
 <div id="app" style="height: 300px;width: 300px;">
-    <el-progress
-            :percentage="progress_num"
-    >
-    </el-progress>
+
 </div>
 </body>
 <!-- 引入组件库 -->
@@ -28,9 +24,9 @@
 <script>
     // 获取app的配置项
     const {ipcRenderer,remote} = require('electron')
-    window.RPC = remote.getGlobal('RPC');
-    window.Config = ipcRenderer.sendSync(RPC.config);
-    require(Config.path.renderer_js + "extends/promise.js")
+    // window.RPC = remote.getGlobal('RPC');
+    // window.Config = ipcRenderer.sendSync(RPC.config);
+    // require(Config.path.renderer_js + "extends/promise.js")
 
 
     let app = new Vue({
@@ -64,8 +60,8 @@
         }
     })
 
-    ipcRenderer.on(RPC.model.load,function (event, args) {
-        app.set_success()
-    })
+    // ipcRenderer.on(RPC.model.load,function (event, args) {
+    //     app.set_success()
+    // })
 </script>
 </html>

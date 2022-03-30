@@ -1,20 +1,14 @@
-const {PanelWindow} = require(path.join(path.app,'/panel/index.js'));
-const {
-    BrowserWindow
-} = require('electron')
+/**
+ * 窗口管理类
+ */
+class WindowsManager {
+    static #windows = {}
 
-class main_window {
     /**
-     *
-     * @type {BrowserWindow[]}
+     * 初始化主窗口
      */
-    static all_windows=[];
-    /**
-     * 创建主视图
-     * @returns {PanelWindow}
-     */
-    static createWindow() {
-        let preload_path = path.join(__dirname, './preload.js');
+    static init() {
+        const {PanelWindow} = require('../../panel')
         const mainWindow = new PanelWindow({
             // center: true,
             width: 300,
@@ -34,29 +28,37 @@ class main_window {
                 enableRemoteModule: true,
                 nodeIntegrationInWorker: true,// worker内使用node
                 // webSecurity:false,
-                preload: preload_path
+                preload: './preload.js'
             }
         })
-        log(preload_path, 'preload');
-        log(mainWindow.id, '窗口id')
+        mainWindow.webContents.openDevTools({mode: 'detach', activate: false});
+
+        console.log(mainWindow.id, '窗口id')
         // mainWindow.maximize();
         // 所有工作空间中显示
         mainWindow.setVisibleOnAllWorkspaces(true);
-        let file = path.join(path.renderer_views, 'index.html');
+        let file = 'app/renderer/views/index.html';
         mainWindow.loadFile(file).finally(function () {
             // mainWindow.showInactive()
         })
-        this.all_windows.push(mainWindow)
-
-        return mainWindow;
+        this.#windows['main'] = mainWindow
     }
 
-    static createLoadingWindow() {
+    /**
+     * 获取window主窗口
+     * @returns {PanelWindow}
+     */
+    static getMain(){
+        return this.#windows['main'];
+    }
+
+
+    static loading_window() {
         const mainWindow = new PanelWindow({
             center: true,
             width: 300,
             height: 300,
-            show: false,
+            show: true,
             frame: false,
             transparent: true,
             hasShadow: false,
@@ -69,9 +71,11 @@ class main_window {
                 // preload: preload_path
             }
         })
+        mainWindow.webContents.openDevTools({mode: 'detach', activate: false});
+
         // 所有工作空间中显示
         mainWindow.setVisibleOnAllWorkspaces(true);
-        let file = path.join(path.renderer_views, 'loading.html');
+        let file = 'app/renderer/views/loading.html';
         mainWindow
             .loadFile(file)
             .finally(function () {
@@ -79,10 +83,11 @@ class main_window {
             })
         mainWindow.setIgnoreMouseEvents(true)
         // mainWindow.webContents.openDevTools()
-        return mainWindow;
+        WindowsManager.#windows['loading_window'] = mainWindow
     }
 
-    static create(name){
+    static create(name) {
+        const BrowserWindow = require('electron')
         const window = new BrowserWindow({
             center: true,
             width: 500,
@@ -102,7 +107,7 @@ class main_window {
         })
         // 所有工作空间中显示
         window.setVisibleOnAllWorkspaces(true);
-        let file = path.join(path.renderer_views, name+'.html');
+        let file = path.join(path.renderer_views, name + '.html');
         window.loadFile(file)
             .finally(function () {
                 window.show()
@@ -110,29 +115,35 @@ class main_window {
         // window.setAlwaysOnTop(true,'screen-saver')
         // window.setIgnoreMouseEvents(true)
         // mainWindow.webContents.openDevTools()
-        this.all_windows.push(window);
+        WindowsManager.#windows[name] = window
         return window
     }
 
-    static showAllDevTools(){
-        console.log(this.all_windows)
-
-        this.all_windows.forEach(function (value, index, array) {
-            if (value){
-                value.webContents.openDevTools({mode:'detach',activate:false});
+    static showAllDevTools() {
+        for (const windowsKey in this.#windows) {
+            /**
+             * @type BrowserWindow
+             */
+            let value = this.#windows[windowsKey];
+            if (value) {
+                value.webContents.openDevTools({mode: 'detach', activate: false});
             }
-
-        })
+        }
     }
-    static closeAllDevTools(){
-        this.all_windows.forEach(function (value, index, array) {
-            if (value){
+
+    static closeAllDevTools() {
+        for (const windowsKey in this.#windows) {
+            /**
+             * @type BrowserWindow
+             */
+            let value = this.#windows[windowsKey];
+            if (value) {
                 value.webContents.closeDevTools();
             }
-        })
+        }
     }
 }
 
 module.exports = {
-    main_window
+    WindowsManager
 }

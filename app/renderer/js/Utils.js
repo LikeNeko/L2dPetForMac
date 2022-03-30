@@ -7,7 +7,7 @@ class Utils {
         })
     }
 
-    static system_info() {
+    static system_info(proxy) {
         // // electron 版本
         // console.log('process.versions.electron', process.versions.electron)
         // // ABI版本
@@ -21,13 +21,13 @@ class Utils {
         // // 架构信息
         // console.log('process.env.PROCESSOR_ARCHITECTURE', process.env.PROCESSOR_ARCHITECTURE)
 
-        $("#debug_info .electron")[0].innerHTML += process.versions.electron
-        $("#debug_info .abi")[0].innerHTML += process.versions.modules
-        $("#debug_info .node")[0].innerHTML += process.versions.node
-        $("#debug_info .chrome")[0].innerHTML += process.versions.chrome
+        proxy.electron_version = process.versions.electron
+        proxy.abi = process.versions.modules
+        proxy.node = process.versions.node
+        proxy.chrome = process.versions.chrome
 
         setInterval(function () {
-            $("#debug_info .cpu")[0].innerHTML = "cpu:" + process.getCPUUsage().percentCPUUsage.toFixed(2) + "%";
+            proxy.cpu = "cpu:" + process.getCPUUsage().percentCPUUsage.toFixed(2) + "%";
         }, 1000);
     }
 
@@ -68,4 +68,3 @@ class Utils {
         });
     }
 }
-window.Utils = Utils;

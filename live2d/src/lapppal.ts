@@ -56,7 +56,7 @@ export class LAppPal {
 
   public static log(any:any,tag:string = "info"):void{
     // @ts-ignore
-    window.log(any,tag);
+    console.log(any,tag);
   }
   public static getName(fun){
     return typeof fun==='function'?

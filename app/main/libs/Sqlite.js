@@ -1,4 +1,5 @@
 let sqlite = require('sqlite3').verbose();
+let sqlite3 = require('sqlite3');
 
 // async created () {
 //     const db = Sqlite.getInstance()
@@ -20,14 +21,14 @@ class Sqlite {
     // 连接数据库
     connect(path) {
         return new Promise((resolve, reject) => {
-            this.db = new sqlite.Database(path, (err) => {
+            this.db = new sqlite.Database(path,sqlite3.OPEN_READONLY, (err) => {
+                this.db.configure("busyTimeout", 3000);
                 if (err === null) {
                     resolve(err)
                 } else {
                     reject(err)
                 }
             })
-            this.db.configure("busyTimeout", 3000);
         })
     }
 

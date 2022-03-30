@@ -1,0 +1,13 @@
+diff --git a/node_modules/fd-slicer/index.js b/node_modules/fd-slicer/index.js
+index 65d32a3..c6631d8 100644
+--- a/node_modules/fd-slicer/index.js
++++ b/node_modules/fd-slicer/index.js
+@@ -106,7 +106,7 @@ ReadStream.prototype._read = function(n) {
+   }
+   self.context.pend.go(function(cb) {
+     if (self.destroyed) return cb();
+-    var buffer = new Buffer(toRead);
++    var buffer = Buffer.alloc(toRead);
+     fs.read(self.context.fd, buffer, 0, toRead, self.pos, function(err, bytesRead) {
+       if (err) {
+         self.destroy(err);

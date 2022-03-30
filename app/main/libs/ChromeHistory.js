@@ -1,11 +1,10 @@
 let SqliteDB = require("./Sqlite.js").Sqlite
 let fs = require("fs")
 let Rsync = require("rsync");
-let thisDict = {
-}
+let os = require("os")
 
 class ChromeHistory {
-    history_db_path = `/Users/neko/Library/Application Support/Google/Chrome/Default/History`;
+    history_db_path = `/Library/Application Support/Google/Chrome/Default/History`;
     db_file = `./History`
 
     sqlite_sql = {
@@ -30,7 +29,7 @@ class ChromeHistory {
 
     }
     begin(){
-        this.watchHistory(this.history_db_path)
+        this.watchHistory(os.homedir() + this.history_db_path )
     }
     /**
      * 监听文件实时变化
@@ -41,8 +40,9 @@ class ChromeHistory {
         rsync.source(file)
             .destination('./History')
             .execute(function (error, code, cmd) {
-                log('load History success','rsync')
-        });
+                log('load History success',cmd,code)
+        }.bind(this));
+
         fs.watch(file, function(event, filename)  {
             console.log(`文件发生更新${filename}-${event}`)
             // Build the command
@@ -50,7 +50,7 @@ class ChromeHistory {
                 .destination('./History')
                 .execute(function (error, code, cmd) {
                     // we're done
-                    // 有变化
+                    // 初始化 去同步一下
                     this.initDB();
                     this.getHistoryUrls()
                 }.bind(this));
@@ -74,7 +74,6 @@ class ChromeHistory {
         }.bind(this))
 
     }
-
 
 
     getHistoryUrls() {

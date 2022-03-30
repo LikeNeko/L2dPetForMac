@@ -1,0 +1,78 @@
+diff --git a/node_modules/ali-oss/shims/stream-http/lib/request.js b/node_modules/ali-oss/shims/stream-http/lib/request.js
+index fcd533b..cfefd5e 100644
+--- a/node_modules/ali-oss/shims/stream-http/lib/request.js
++++ b/node_modules/ali-oss/shims/stream-http/lib/request.js
+@@ -31,7 +31,7 @@ var ClientRequest = module.exports = function (opts) {
+ 	self._body = []
+ 	self._headers = {}
+ 	if (opts.auth)
+-		self.setHeader('Authorization', 'Basic ' + new Buffer(opts.auth).toString('base64'))
++		self.setHeader('Authorization', 'Basic ' + Buffer.alloc(opts.auth).toString('base64'))
+ 	Object.keys(opts.headers).forEach(function (name) {
+ 		self.setHeader(name, opts.headers[name])
+ 	})
+diff --git a/node_modules/ali-oss/shims/stream-http/lib/response.js b/node_modules/ali-oss/shims/stream-http/lib/response.js
+index 17d1fb7..12f3c71 100644
+--- a/node_modules/ali-oss/shims/stream-http/lib/response.js
++++ b/node_modules/ali-oss/shims/stream-http/lib/response.js
+@@ -46,7 +46,7 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, f
+ 					return new Promise(function (resolve, reject) {
+ 						if (self._destroyed) {
+ 							reject()
+-						} else if(self.push(new Buffer(chunk))) {
++						} else if(self.push(Buffer.alloc(chunk))) {
+ 							resolve()
+ 						} else {
+ 							self._resumeFetch = resolve
+@@ -84,7 +84,7 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, f
+ 					self.push(null)
+ 					return
+ 				}
+-				self.push(new Buffer(result.value))
++				self.push(Buffer.alloc(result.value))
+ 				read()
+ 			}).catch(function (err) {
+ 				global.clearTimeout(fetchTimer)
+@@ -161,7 +161,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
+ 				response = new global.VBArray(xhr.responseBody).toArray()
+ 			} catch (e) {}
+ 			if (response !== null) {
+-				self.push(new Buffer(response))
++				self.push(Buffer.alloc(response))
+ 				break
+ 			}
+ 			// Falls through in IE8	
+@@ -175,7 +175,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
+ 			if (response.length > self._pos) {
+ 				var newData = response.substr(self._pos)
+ 				if (self._charset === 'x-user-defined') {
+-					var buffer = new Buffer(newData.length)
++					var buffer = Buffer.alloc(newData.length)
+ 					for (var i = 0; i < newData.length; i++)
+ 						buffer[i] = newData.charCodeAt(i) & 0xff
+ 
+@@ -190,13 +190,13 @@ IncomingMessage.prototype._onXHRProgress = function () {
+ 			if (xhr.readyState !== rStates.DONE || !xhr.response)
+ 				break
+ 			response = xhr.response
+-			self.push(new Buffer(new Uint8Array(response)))
++			self.push(Buffer.alloc(new Uint8Array(response)))
+ 			break
+ 		case 'moz-chunked-arraybuffer': // take whole
+ 			response = xhr.response
+ 			if (xhr.readyState !== rStates.LOADING || !response)
+ 				break
+-			self.push(new Buffer(new Uint8Array(response)))
++			self.push(Buffer.alloc(new Uint8Array(response)))
+ 			break
+ 		case 'ms-stream':
+ 			response = xhr.response
+@@ -205,7 +205,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
+ 			var reader = new global.MSStreamReader()
+ 			reader.onprogress = function () {
+ 				if (reader.result.byteLength > self._pos) {
+-					self.push(new Buffer(new Uint8Array(reader.result.slice(self._pos))))
++					self.push(Buffer.alloc(new Uint8Array(reader.result.slice(self._pos))))
+ 					self._pos = reader.result.byteLength
+ 				}
+ 			}

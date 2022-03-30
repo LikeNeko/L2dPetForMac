@@ -1,0 +1,13 @@
+diff --git a/node_modules/fs-minipass/index.js b/node_modules/fs-minipass/index.js
+index cd585a8..47969f0 100644
+--- a/node_modules/fs-minipass/index.js
++++ b/node_modules/fs-minipass/index.js
+@@ -268,7 +268,7 @@ class WriteStream extends EE {
+ 
+   write (buf, enc) {
+     if (typeof buf === 'string')
+-      buf = new Buffer(buf, enc)
++      buf = Buffer.alloc(buf, enc)
+ 
+     if (this[_ended]) {
+       this.emit('error', new Error('write() after end()'))

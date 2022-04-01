@@ -16,7 +16,6 @@ console.log = (function (logFunc) {
                 }
             })
             logFunc.call(console, ...arr)
-            // isLogStack ? console.trace() : null  // 是否打印堆栈
         } catch (e) {
             console.log(`a log error: ${e}`)
         }

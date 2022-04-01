@@ -14,6 +14,7 @@ DEFS_Debug := \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-DV8_COMPRESS_POINTERS' \
 	'-DV8_31BIT_SMIS_ON_64BIT_ARCH' \
+	'-DV8_REVERSE_JSARGS' \
 	'-DOPENSSL_NO_PINSHARED' \
 	'-DOPENSSL_THREADS' \
 	'-DBUILDING_NODE_EXTENSION' \
@@ -25,7 +26,7 @@ DEFS_Debug := \
 CFLAGS_Debug := \
 	-O0 \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.10 \
+	-mmacosx-version-min=10.13 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -53,13 +54,13 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/neko/.electron-gyp/9.1.0/include/node \
-	-I/Users/neko/.electron-gyp/9.1.0/src \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/config \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/openssl/include \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/uv/include \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/zlib \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/v8/include \
+	-I/Users/Neko/.node-gyp/13.0.1/include/node \
+	-I/Users/Neko/.node-gyp/13.0.1/src \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/openssl/config \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/openssl/openssl/include \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/uv/include \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/zlib \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/v8/include \
 	-I$(srcdir)/node_modules/nan
 
 DEFS_Release := \
@@ -74,15 +75,16 @@ DEFS_Release := \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-DV8_COMPRESS_POINTERS' \
 	'-DV8_31BIT_SMIS_ON_64BIT_ARCH' \
+	'-DV8_REVERSE_JSARGS' \
 	'-DOPENSSL_NO_PINSHARED' \
 	'-DOPENSSL_THREADS' \
 	'-DBUILDING_NODE_EXTENSION'
 
 # Flags passed to all source files.
 CFLAGS_Release := \
-	-Os \
+	-O3 \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.10 \
+	-mmacosx-version-min=10.13 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -110,13 +112,13 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/neko/.electron-gyp/9.1.0/include/node \
-	-I/Users/neko/.electron-gyp/9.1.0/src \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/config \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/openssl/openssl/include \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/uv/include \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/zlib \
-	-I/Users/neko/.electron-gyp/9.1.0/deps/v8/include \
+	-I/Users/Neko/.node-gyp/13.0.1/include/node \
+	-I/Users/Neko/.node-gyp/13.0.1/src \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/openssl/config \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/openssl/openssl/include \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/uv/include \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/zlib \
+	-I/Users/Neko/.node-gyp/13.0.1/deps/v8/include \
 	-I$(srcdir)/node_modules/nan
 
 OBJS := \
@@ -153,7 +155,7 @@ LDFLAGS_Debug := \
 	-undefined dynamic_lookup \
 	-Wl,-no_pie \
 	-Wl,-search_paths_first \
-	-mmacosx-version-min=10.10 \
+	-mmacosx-version-min=10.13 \
 	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++
@@ -167,7 +169,7 @@ LDFLAGS_Release := \
 	-undefined dynamic_lookup \
 	-Wl,-no_pie \
 	-Wl,-search_paths_first \
-	-mmacosx-version-min=10.10 \
+	-mmacosx-version-min=10.13 \
 	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++

@@ -199,7 +199,7 @@
         <div id="move" class="button">移动</div>
     </div>
 
-    <ul id="debug_info" v-on:mousemove="debug_info_move">
+    <ul id="debug_info" v-on:mouseenter="debug_info_move(true)" v-on:mouseout="debug_info_move(false)">
         <li class="cpu">{{cpu}}</li>
         <li class="electron">ele:{{electron_version}}</li>
         <li class="abi">abi:{{abi}}</li>
@@ -232,14 +232,7 @@
     const {ipcRenderer, remote, clipboard} = require('electron')
 
     class Index {
-
-        /**
-         * @type Electron.BrowserWindow
-         */
-        static curr_window
-
         constructor() {
-            Index.curr_window = remote.getCurrentWindow();
             this.initStore();
             this.initLive2d();
             this.initVue();
@@ -257,38 +250,23 @@
          */
         loadModel() {
             console.log('执行成功', 'load');
+            let that = this
             live2d._viewMatrix.scale(0.8, 0.8)
             // live2d.getModel(0).startRandomMotion("TapBody", 3);
             ipcRenderer.on('show_msg', (event, arg) => {
                 console.log("show_msg", arg)
                 Utils.msg(arg.msg)
             });
-            // ipcRenderer.on('mail', (event, arg) => {
-            //     if (live2d) {
-            //         live2d.getModel(0).startMotion("TapBody", 0, 3);
-            //     }
-            //     $("#debug_info").append(`<li>mail:${arg.title}</li>`)
-            //     console.log(arg.title)
-            // });
-            // ipcRenderer.on(RPC.chrome_history, (event, arg) => {
-            //     if (live2d) {
-            //         live2d.getModel(0).startMotion("TapBody", 0, 3);
-            //     }
-            //     $("#debug_info").append(`<li>chrome:${arg.title}-visit:${arg.visit_count}</li>`)
-            //     console.log(arg.title)
-            //     window.Utils.msg("主人在Chrome访问了:"+arg.title)
-            // });
-            // ipcRenderer.on('show_tips', (event, arg) => {
-            //
-            // });
-            // ipcRenderer.send(RPC.show_main_window);
 
             live2d.move_hit = function (str) {
                 if (str.indexOf('tail') === 0) {
                     Utils.msg('摸尾巴')
                 }
+                that.v_proxy.is_click_hit = str != '';
             }
+
             live2d.click_hit = function (str) {
+                console.log(str)
                 // ipcRenderer.sendSync(RPC.focus)
             }
             // live2d.getModel(0).startMotion('TapBody', 1, 3, function () {
@@ -320,7 +298,8 @@
             const VueData = {
                 data() {
                     return {
-                        loading:true,
+                        loading: true,
+                        is_click_hit: false,
                         electron_version: 0,
                         abi: 0,
                         node: 0,
@@ -329,16 +308,25 @@
                         curr_scale: 0.1,
                     }
                 },
+                created() {
+                    this.$watch('is_click_hit', function (newValue, oldValue) {
+                        if (newValue == false) {
+                            ipcRenderer.send('open_ignore_mouse_events')
+                        } else {
+                            ipcRenderer.send('close_ignore_mouse_events')
+                        }
+                    })
+                },
                 methods: {
-                    debug_info_move: function () {
-                        Index.curr_window.setIgnoreMouseEvents(false, {forward: true})
+                    debug_info_move: function (is) {
+
                     },
                     mtn_run: function () {
                         // 播放完成后弹出提示
                         Utils.msg('准备随机播放动作')
-                        // live2d.getModel(0).startRandomMotion("TapBody", 3, function (e) {
-                        //     Utils.msg('动作播放完成')
-                        // })
+                        live2d.getModel(0).startRandomMotion("TapBody", 3, function (e) {
+                            Utils.msg('动作播放完成')
+                        })
                     },
                     next_scene: function () {
                         live2d.nextScene()

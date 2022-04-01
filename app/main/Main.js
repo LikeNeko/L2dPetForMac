@@ -1,3 +1,5 @@
+const {ipcMain} = require("electron");
+
 /**
  * 管理应用生命周期类
  */
@@ -19,12 +21,6 @@ class Main {
             .then(this.init)
             .then(this.start);
 
-        app.on('activate', this.on_activate)
-        // Quit when all windows are closed.
-        app.on('window-all-closed', this.on_window_all_closed)
-        app.on('exit', this.on_exit)
-        app.on('will-quit', this.on_will_quit)
-        app.on('before-quit', this.on_before_quit)
     }
 
     /**
@@ -120,39 +116,6 @@ class Main {
                 WindowsManager.getMain().webContents.openDevTools({mode: 'detach', activate: false});
             }
         })
-    }
-
-    /// --- 监听事件 ---
-
-    /**
-     * 激活
-     */
-    on_activate(e, v) {
-        console.log('active', e, v)
-        // 在macOS上，重新创建一个窗口是很常见的
-        // 点击dock图标，没有其他窗口打开。
-        // if (BrowserWindow.getAllWindows().length === 0) main_window.createWindow()
-    }
-
-    /**
-     * 窗口关闭
-     */
-    on_window_all_closed() {
-        if (process.platform !== 'darwin') {
-            app.quit()
-        }
-    }
-
-    on_exit() {
-        console.log('exit')
-    }
-
-    on_will_quit() {
-        console.log('will-quit')
-    }
-
-    on_before_quit() {
-        console.log('before-quit')
     }
 }
 

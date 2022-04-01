@@ -26,9 +26,10 @@ class WindowsManager {
             webPreferences: {
                 nodeIntegration: true,// 主线程的node
                 enableRemoteModule: true,
+                contextIsolation:false,
                 nodeIntegrationInWorker: true,// worker内使用node
                 // webSecurity:false,
-                preload: './preload.js'
+                // preload: 'app/preload.js'//18版本必须是绝对路径
             }
         })
 

@@ -8,6 +8,9 @@ class IpcMainServer {
         'close_dev_tools',
         'focus',
         'zip_image',
+        'open_ignore_mouse_events',
+        'close_ignore_mouse_events',
+        'store',
     ]
 
     /**
@@ -19,7 +22,17 @@ class IpcMainServer {
             ipcMain.on(this.ipcs[i], this[this.ipcs[i]])
         }
     }
-
+    static store(event, arg){
+        event.returnValue = global.store;
+    }
+    static open_ignore_mouse_events(event, arg){
+        WindowsManager.getMain().setIgnoreMouseEvents(true,{forward:true})
+        console.log('open')
+    }
+    static close_ignore_mouse_events(event, arg){
+        WindowsManager.getMain().setIgnoreMouseEvents(false,{forward:true})
+        console.log('close')
+    }
     /**
      * 展示主页面
      * @param event

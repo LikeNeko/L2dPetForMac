@@ -27,8 +27,6 @@ export let lAppDelegateEvent:LAppDelegateEvent = null;
 
 let lastCalledTime;
 let fps;
-const { remote } = require('electron')
-let curr_window = remote.getCurrentWindow();
 
 interface LAppDelegateEvent {
     modelCompleteSetup();
@@ -404,19 +402,9 @@ function onMouseMoved(e: MouseEvent): void {
     posY *= scale;
     let hit  = LAppLive2DManager.getInstance();
     let hitstr = hit.isHit(posX,posY);
-    if (hitstr != "" && hit.move_hit){
+    // 设定了监听就走不管有没有hit
+    if (hit.move_hit){
         hit.move_hit(hitstr)
-    }
-    if (LAppDefine.IsElectron){
-        if (!hitstr){
-            //整个app 忽略所有点击事件
-            curr_window.setIgnoreMouseEvents(true, { forward: true })
-            LAppPal.log(true,'move')
-        }else{
-
-            curr_window.setIgnoreMouseEvents(false,{ forward: true })
-            LAppPal.log(false,'move')
-        }
     }
 
     LAppDelegate.getInstance()._view.onTouchesMoved(posX, posY);

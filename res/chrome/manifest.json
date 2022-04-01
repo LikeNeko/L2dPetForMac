@@ -1,23 +1,30 @@
 {
   "manifest_version": 2,
-
   "name": "pet",
   "description": "This extension demonstrates a browser action with kittens.",
   "version": "1.0",
   "background": {
     "persistent": false,
-    "scripts": ["bg.js"]
+    "scripts": [
+      "bg.js"
+    ]
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*"],
+      "matches": [
+        "http://*/*"
+      ],
       "css": [],
-      "js": [ "page.js"]
+      "js": [
+        "page.js"
+      ]
     }
   ],
   "permissions": [
-      "history",
-    "http://*/*","https://*/*"
+    "history",
+    "notifications",
+    "http://*/*",
+    "https://*/*"
   ],
   "browser_action": {
     "default_icon": "icon.png",

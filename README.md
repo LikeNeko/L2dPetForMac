@@ -41,8 +41,14 @@
 17. 快捷键`cmd+p`打开debug模式
 18. 拖动移动位置
 19. 顶部的菜单栏里加了管理面板的入口(google历史下载记录查看，拖动文件获得地址)
-21. loading加载窗口
-22. 拖入图片，压缩图片
+20. loading加载窗口
+21. 拖入图片，压缩图片
+
+待重构:
+1. sqlite 封装
+2. mail-listener5 会报Buffer 
+3. chrome 浏览
+4. chrome 通过插件注入 live2d模型
 
 ## 项目开始
 

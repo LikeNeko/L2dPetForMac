@@ -168,7 +168,7 @@ export class LAppDelegate {
             document.body.appendChild(fps_element)
             setInterval(function () {
                 fps_element.innerText = 'fps:'+fps.toFixed(2);
-            },1000)
+            },10000)
         }
 
 

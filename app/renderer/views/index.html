@@ -76,10 +76,120 @@
         }
 
     </style>
+    <style>
+        /*! 首页加载动画 */
+        .think-page-loader {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999999;
+            position: fixed;
+            text-align: center;
+            background-color: rgba(187, 187, 187, 0.68);
+        }
 
+        .loader {
+            top: 50%;
+            width: 50px;
+            height: 50px;
+            margin: -35px 0 0 -35px;
+            z-index: 999999;
+            display: inline-block;
+            position: fixed;
+            background-color: rgba(187, 187, 187, 0.0);
+        }
+
+        .loader:before {
+            top: 59px;
+            left: 0;
+            width: 50px;
+            height: 7px;
+            opacity: 0.1;
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background-color: #000;
+            animation: shadow .5s linear infinite;
+        }
+
+        .loader:after {
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            content: "";
+            position: absolute;
+            border-radius: 3px;
+            background-color: rgb(0, 255, 74);
+            animation: loading .5s linear infinite;
+        }
+
+        @-webkit-keyframes loading {
+            17% {
+                border-bottom-right-radius: 3px;
+            }
+            25% {
+                transform: translateY(9px) rotate(22.5deg);
+            }
+            50% {
+                transform: translateY(18px) scale(1, 0.9) rotate(45deg);
+                border-bottom-right-radius: 40px;
+            }
+            75% {
+                transform: translateY(9px) rotate(67.5deg);
+            }
+            100% {
+                transform: translateY(0) rotate(90deg);
+            }
+        }
+
+        @keyframes loading {
+            17% {
+                border-bottom-right-radius: 3px;
+            }
+            25% {
+                transform: translateY(9px) rotate(22.5deg);
+            }
+            50% {
+                border-bottom-right-radius: 40px;
+                transform: translateY(18px) scale(1, 0.9) rotate(45deg);
+            }
+            75% {
+                transform: translateY(9px) rotate(67.5deg);
+            }
+            100% {
+                transform: translateY(0) rotate(90deg);
+            }
+        }
+
+        @-webkit-keyframes shadow {
+            0%,
+            100% {
+                transform: scale(1, 1);
+            }
+            50% {
+                transform: scale(1.5, 1);
+            }
+        }
+
+        @keyframes shadow {
+            0%,
+            100% {
+                transform: scale(1, 1);
+            }
+            50% {
+                transform: scale(1.2, 1);
+            }
+        }
+    </style>
 </head>
 <body>
+
 <div id="app">
+    <div class="think-page-loader" v-show="loading">
+        <div class="loader"></div>
+    </div>
     <div id="buttons">
         <div v-on:click="mtn_run" class="button">动作</div>
         <div v-on:click="next_scene" class="button ">换模</div>
@@ -138,9 +248,10 @@
         /**
          * 初始化来自main的配置
          */
-        initStore(){
+        initStore() {
             window.store = remote.getGlobal('store');
         }
+
         /**
          * 加载模型相关的操作
          */
@@ -148,11 +259,11 @@
             console.log('执行成功', 'load');
             live2d._viewMatrix.scale(0.8, 0.8)
             // live2d.getModel(0).startRandomMotion("TapBody", 3);
-            // ipcRenderer.on(RPC.show_mtn, (event, arg) => {
-            //     live2d.getModel(0).startRandomMotion("TapBody", 3);
-            //     console.log("播放特效", '特效')
-            // });
-            // ipcRenderer.on(RPC.mail, (event, arg) => {
+            ipcRenderer.on('show_msg', (event, arg) => {
+                console.log("show_msg", arg)
+                Utils.msg(arg.msg)
+            });
+            // ipcRenderer.on('mail', (event, arg) => {
             //     if (live2d) {
             //         live2d.getModel(0).startMotion("TapBody", 0, 3);
             //     }
@@ -174,7 +285,7 @@
 
             live2d.move_hit = function (str) {
                 if (str.indexOf('tail') === 0) {
-                    window.Utils.msg('摸尾巴')
+                    Utils.msg('摸尾巴')
                 }
             }
             live2d.click_hit = function (str) {
@@ -196,6 +307,7 @@
                     that.loadModel();
                     Utils.drag_move('#move');
                     Utils.unScroll()
+                    that.v_proxy.loading = false;
                 },
             })
         }
@@ -205,10 +317,10 @@
          * @returns {{node: number, chrome: number, curr_scale: number, abi: number, cpu: number, electron_version: number}}
          */
         initVue() {
-            Utils.msg('初始化vue')
             const VueData = {
                 data() {
                     return {
+                        loading:true,
                         electron_version: 0,
                         abi: 0,
                         node: 0,
@@ -246,17 +358,38 @@
                         Utils.msg('复制成功')
                     },
                     danmu: function () {
-                        let bulletScreenEngine = new openBSE.BulletScreenEngine(document.getElementById('danmu_div'));
-                        let _startTime = 1;
-                        for (var i = 0; i < 10; i++) {
+                        let dm = function () {
+                            return new Promise(function (resolve) {
+                                if (!window.bulletScreenEngine) {
+                                    if (window.openBSE) {
+                                        window.bulletScreenEngine = new openBSE.BulletScreenEngine(document.getElementById('danmu_div'));
+                                        resolve()
+                                    } else {
+                                        console.log('第一次需要加载弹幕基础库')
+                                        $.getScript('../js/openBSE.all.js', function () {
+                                            window.bulletScreenEngine = new openBSE.BulletScreenEngine(document.getElementById('danmu_div'));
+                                            resolve()
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        dm().then(function () {
+                            // let _startTime = 1;
+                            // for (var i = 0; i < 10; i++) {
+                            //     bulletScreenEngine.addBulletScreen({
+                            //         text: "喵喵喵",
+                            //         startTime: _startTime
+                            //     });
+                            //     _startTime += parseInt(Math.random() * 300);
+                            // }
                             bulletScreenEngine.addBulletScreen({
                                 text: "喵喵喵",
-                                startTime: _startTime
+                                startTime: 1
                             });
-                            _startTime += parseInt(Math.random() * 300);
-                        }
+                            bulletScreenEngine.play();
+                        })
 
-                        bulletScreenEngine.play();
                     }
                 }
             }

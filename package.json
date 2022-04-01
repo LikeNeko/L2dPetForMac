@@ -22,20 +22,22 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "dependencies": {
-    "ali-oss": "^6.10.0",
     "applescript": "^1.0.0",
     "bindings": "latest",
     "cron": "^1.8.2",
-    "electron": "^9.1.0",
     "electron-clipboard-watcher": "^1.0.1",
     "electron-store": "^8.0.1",
+    "events-manage": "^1.0.2",
     "lowdb": "^1.0.0",
     "mail-listener5": "^2.0.2",
     "nodejs-websocket": "^1.7.2",
-    "patch-package": "^6.2.2",
     "rsync": "^0.6.1",
     "sqlite3": "^5.0.0",
     "tinify": "^1.6.0-beta.2"
+  },
+  "devDependencies": {
+    "electron": "^9.0.1",
+    "patch-package": "^6.2.2"
   },
   "build": {
     "mac": {

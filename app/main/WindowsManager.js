@@ -15,7 +15,7 @@ class WindowsManager {
             height: 300,
             x: 1300,
             y: 800,
-            show: false,
+            show: true,
             // minimizable: false,
             // resizable: false,
             // fullscreenable: false,

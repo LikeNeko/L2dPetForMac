@@ -157,30 +157,22 @@ export class LAppDelegate {
      */
     public run(): void {
         if (DebugLogEnable){
-            let fps_element = document.createElement('div');
-            fps_element.style.position = 'absolute';
-            fps_element.style.right = '0';
-            fps_element.style.top =  '0';
-            fps_element.style.color = 'rebeccapurple';
-
-            document.body.appendChild(fps_element)
-            setInterval(function () {
-                fps_element.innerText = 'fps:'+fps.toFixed(2);
-            },10000)
+            // @ts-ignore
+            var stats = new Stats();
+            stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.body.appendChild( stats.dom );
         }
 
 
         // メインループ
         const loop = (): void => {
+            if (DebugLogEnable) {
+                stats.begin();
+            }
             // インスタンスの有無の確認
             if (s_instance == null) {
                 return;
             }
-            // if(!lastCalledTime) {
-            //     lastCalledTime = Date.now();
-            //     fps = 0;
-            //     return;
-            // }
             let delta = (Date.now() - lastCalledTime)/1000;
             lastCalledTime = Date.now();
             fps = 1/delta;
@@ -213,7 +205,9 @@ export class LAppDelegate {
             // pixels  = new Uint8Array( canvas.width*canvas.height*4);
             // //从缓冲区读取像素数据，然后将其装到事先建立好的像素集合里
             // gl.readPixels(0, 0,gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-
+            if (DebugLogEnable) {
+                stats.end();
+            }
             // ループのために再帰呼び出し
             requestAnimationFrame(loop);
         };

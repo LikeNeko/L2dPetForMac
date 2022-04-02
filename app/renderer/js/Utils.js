@@ -55,12 +55,12 @@ class Utils {
         window.addEventListener('mouseup', () => {
             dragging = false;
         });
-        const win = require('electron').remote.getCurrentWindow();
+        const {ipcRenderer} = require('electron')
 
         window.addEventListener('mousemove', (e) => {
             if (dragging) {
                 const { pageX, pageY } = e;
-                const pos = win.getPosition()
+                const pos = ipcRenderer.sendSync('main_window-get_position')
                 pos[0] = pos[0] + pageX - mouseX;
                 pos[1] = pos[1] + pageY - mouseY;
                 window.moveTo(pos[0], pos[1]);

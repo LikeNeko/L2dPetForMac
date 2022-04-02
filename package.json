@@ -5,7 +5,7 @@
   "main": "app/main/main_remould.js",
   "scripts": {
     "release": "standard-version",
-    "start": "electron . ",
+    "start": "./node_modules/.bin/electron . ",
     "run": "echo 执行",
     "postinstall": "patch-package #模块名(imap);electron-builder install-app-deps;",
     "build-mac": "electron-builder --mac dmg -c.electronVersion=9.1.0",

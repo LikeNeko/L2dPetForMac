@@ -1,5 +1,3 @@
-const {ipcMain} = require("electron");
-
 /**
  * 管理应用生命周期类
  */
@@ -37,7 +35,7 @@ class Main {
             global.store = new Store()
 
             // 加载初始化配置
-            store.set({
+            global.store.set({
                 version: global.app.getVersion(),
                 listen_mail: {
                     on: false,
@@ -48,7 +46,7 @@ class Main {
                 }
             })
 
-            if (store.get('listen_mail.on')) {
+            if (global.store.get('listen_mail.on')) {
                 const {EmailListen} = require("./loads/EmailListen");
                 EmailListen.init();
                 EmailListen.on();

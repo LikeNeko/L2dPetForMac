@@ -212,6 +212,7 @@
 </body>
 
 <script src="../../../live2d/Core/live2dcubismcore.min.js"></script>
+<script src="../js/stats.js"></script>
 <script src="../../../live2d/dist/bundle.js"></script>
 <script src="../js/vue.global.js"></script>
 <script src="../js/Utils.js"></script>
@@ -242,7 +243,16 @@
          * 初始化来自main的配置
          */
         initStore() {
-            window.store = remote.getGlobal('store');
+            class Store{
+                get(name,def=undefined){
+                    return ipcRenderer.sendSync('store-get',{key:name,def:def})
+                }
+                set(name,val){
+                    return ipcRenderer.sendSync('store-set',{key:name,value:val})
+                }
+            }
+            window.store = new Store();
+            console.log( window.store.get('aaa'))
         }
 
         /**
@@ -257,7 +267,7 @@
                 console.log("show_msg", arg)
                 Utils.msg(arg.msg)
             });
-
+            // 优化了帧率问题
             live2d.move_hit = function (str) {
                 if (str.indexOf('tail') === 0) {
                     Utils.msg('摸尾巴')
@@ -311,16 +321,23 @@
                 created() {
                     this.$watch('is_click_hit', function (newValue, oldValue) {
                         if (newValue == false) {
-                            ipcRenderer.send('open_ignore_mouse_events')
+                            ipcRenderer.send('main_window-open_ignore_mouse_events')
                         } else {
-                            ipcRenderer.send('close_ignore_mouse_events')
+                            ipcRenderer.send('main_window-close_ignore_mouse_events')
                         }
                     })
                 },
                 methods: {
+                    /**
+                     * debug面板被移入移出事件处理
+                     * @param is
+                     */
                     debug_info_move: function (is) {
 
                     },
+                    /**
+                     * 启动一个模型的随机动作
+                     */
                     mtn_run: function () {
                         // 播放完成后弹出提示
                         Utils.msg('准备随机播放动作')
@@ -328,9 +345,15 @@
                             Utils.msg('动作播放完成')
                         })
                     },
+                    /**
+                     * 下一个模型
+                     */
                     next_scene: function () {
                         live2d.nextScene()
                     },
+                    /**
+                     * 模型大小
+                     */
                     model_scale: function () {
                         let num = this.curr_scale;
                         num += 0.1;
@@ -340,6 +363,9 @@
                         this.curr_scale = num;
                         live2d._viewMatrix.scale(num, num)
                     },
+                    /**
+                     * 测试复制能力
+                     */
                     text_copy: function () {
                         clipboard.writeText('喵喵喵~', 'selection')
                         console.log(clipboard.readText('selection'))

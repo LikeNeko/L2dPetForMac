@@ -1,26 +1,37 @@
 /**
- * Copyright(c) Live2D Inc. All rights reserved.
+ * 版权(c) Live2D Inc .)保留所有权利。
  *
- * Use of this source code is governed by the Live2D Open Software license
- * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
+ * 此源代码的使用受Live2D开放软件许可证的约束
+ * that can be found at https:// www.live2d.com/eula/live2d-open-software-license-agreement_en.html。
  */
 
 import { gl, canvas } from './lappdelegate';
 import {LAppPal} from "./lapppal";
 
 /**
- * スプライトを実装するクラス
+ * 实现雪碧的类
  *
- * テクスチャＩＤ、Rectの管理
+ * 纹理ID、Rect的管理
  */
 export class LAppSprite {
   /**
-   * コンストラクタ
+   * The elves width
+   */
+  _width: number;
+  /**
+   * The elves height
+   */
+  _height: number;
+
+  _x: any;
+  _y: any;
+  /**
+   * 构造函数
    * @param x            x座標
    * @param y            y座標
    * @param width        横幅
    * @param height       高さ
-   * @param textureId    テクスチャ
+   * @param textureId    纹理
    */
   constructor(
     x: number,
@@ -29,12 +40,11 @@ export class LAppSprite {
     height: number,
     textureId: WebGLTexture
   ) {
+    this._width = width;
+    this._height = height;
     this._rect = new Rect();
-    LAppPal.log(width,'精灵宽')
-    LAppPal.log(x,'x值')
     this._rect.left = x - width * 0.5;
     this._rect.right = x + width * 0.5;
-    LAppPal.log(this._rect.left,'left')
     this._rect.up = y + height * 0.5;
     this._rect.down = y - height * 0.5;
     this._texture = textureId;
@@ -54,7 +64,7 @@ export class LAppSprite {
   }
 
   /**
-   * 解放する。
+   * 解放
    */
   public release(): void {
     this._rect = null;
@@ -73,39 +83,38 @@ export class LAppSprite {
   }
 
   /**
-   * テクスチャを返す
+   * 返回纹理
    */
   public getTexture(): WebGLTexture {
     return this._texture;
   }
 
   /**
-   * 描画する。
-   * @param programId シェーダープログラム
-   * @param canvas 描画するキャンパス情報
+   * 绘图
+   * @param programId 着色器程序
    */
   public render(programId: WebGLProgram): void {
     if (this._texture == null) {
-      // ロードが完了していない
+      // 加载没有完成
       return;
     }
 
-    // 初回描画時
+    // 初回绘制时
     if (this._firstDraw) {
-      // 何番目のattribute変数か取得
+      // 获取属性变量的数目
       this._positionLocation = gl.getAttribLocation(programId, 'position');
       gl.enableVertexAttribArray(this._positionLocation);
 
       this._uvLocation = gl.getAttribLocation(programId, 'uv');
       gl.enableVertexAttribArray(this._uvLocation);
 
-      // 何番目のuniform変数か取得
+      // 得到UNIFORM变量的个数
       this._textureLocation = gl.getUniformLocation(programId, 'texture');
 
-      // uniform属性の登録
+      // uniform属性的注册
       gl.uniform1i(this._textureLocation, 0);
 
-      // uvバッファ、座標初期化
+      // Uv缓冲，坐标初始化
       {
         this._uvArray = new Float32Array([
           1.0,
@@ -118,62 +127,62 @@ export class LAppSprite {
           1.0
         ]);
 
-        // uvバッファを作成
+        // 创建uv缓冲器
         this._uvBuffer = gl.createBuffer();
       }
 
-      // 頂点バッファ、座標初期化
+      // 顶点缓冲，坐标初始化
       {
         const maxWidth = canvas.width;
         const maxHeight = canvas.height;
 
-        // 頂点データ
+        // 顶点数据
         this._positionArray = new Float32Array([
-          (this._rect.right - maxWidth * 0.5) / (maxWidth * 0.5),
-          (this._rect.up - maxHeight * 0.5) / (maxHeight * 0.5),
-          (this._rect.left - maxWidth * 0.5) / (maxWidth * 0.5),
-          (this._rect.up - maxHeight * 0.5) / (maxHeight * 0.5),
-          (this._rect.left - maxWidth * 0.5) / (maxWidth * 0.5),
-          (this._rect.down - maxHeight * 0.5) / (maxHeight * 0.5),
-          (this._rect.right - maxWidth * 0.5) / (maxWidth * 0.5),
-          (this._rect.down - maxHeight * 0.5) / (maxHeight * 0.5)
+          (this._rect.right - maxWidth * 0.5) / (maxWidth* 0.5),
+          (this._rect.up - maxHeight * 0.5) / (maxHeight* 0.5),
+          (this._rect.left - maxWidth * 0.5) / (maxWidth* 0.5),
+          (this._rect.up - maxHeight * 0.5) / (maxHeight* 0.5),
+          (this._rect.left - maxWidth * 0.5) / (maxWidth* 0.5),
+          (this._rect.down - maxHeight * 0.5) / (maxHeight* 0.5),
+          (this._rect.right - maxWidth * 0.5) / (maxWidth* 0.5),
+          (this._rect.down - maxHeight * 0.5) / (maxHeight* 0.5)
         ]);
 
-        // 頂点バッファを作成
+        // 创建一个顶点缓冲器
         this._vertexBuffer = gl.createBuffer();
       }
 
-      // 頂点インデックスバッファ、初期化
+      // 顶点索引缓冲器初始化
       {
-        // インデックスデータ
+        // 索引数据
         this._indexArray = new Uint16Array([0, 1, 2, 3, 2, 0]);
 
-        // インデックスバッファを作成
+        // 创建索引缓冲器
         this._indexBuffer = gl.createBuffer();
       }
 
       this._firstDraw = false;
     }
 
-    // UV座標登録
+    // UV座标登录
     gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this._uvArray, gl.STATIC_DRAW);
 
-    // attribute属性を登録
+    // 注册attribute属性
     gl.vertexAttribPointer(this._uvLocation, 2, gl.FLOAT, false, 0, 0);
 
-    // 頂点座標を登録
+    // 登记顶点坐标
     gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this._positionArray, gl.STATIC_DRAW);
 
-    // attribute属性を登録
+    // 注册attribute属性
     gl.vertexAttribPointer(this._positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-    // 頂点インデックスを作成
+    // 创建顶点索引
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this._indexArray, gl.DYNAMIC_DRAW);
 
-    // モデルの描画
+    // 模型图
     gl.bindTexture(gl.TEXTURE_2D, this._texture);
     gl.drawElements(
       gl.TRIANGLES,
@@ -184,15 +193,15 @@ export class LAppSprite {
   }
 
   /**
-   * 当たり判定
+   * 猜中判定
    * @param pointX x座標
    * @param pointY y座標
    */
   public isHit(pointX: number, pointY: number): boolean {
-    // 画面サイズを取得する。
+    // 获取画面尺寸。
     const { height } = canvas;
 
-    // Y座標は変換する必要あり
+    // Y坐标需要变换，
     const y = height - pointY;
 
     return (
@@ -204,10 +213,10 @@ export class LAppSprite {
   }
 
   _texture: WebGLTexture; // テクスチャ
-  _vertexBuffer: WebGLBuffer; // 頂点バッファ
-  _uvBuffer: WebGLBuffer; // uv頂点バッファ
-  _indexBuffer: WebGLBuffer; // 頂点インデックスバッファ
-  _rect: Rect; // 矩形
+  _vertexBuffer: WebGLBuffer; // 顶点缓冲器
+  _uvBuffer: WebGLBuffer; // uv顶点缓冲器
+  _indexBuffer: WebGLBuffer; // 顶点索引缓冲器
+  _rect: Rect; // 矩形的
 
   _positionLocation: number;
   _uvLocation: number;

@@ -9,6 +9,8 @@ import {Live2DCubismFramework as cubismmatrix44} from '@framework/math/cubismmat
 import {Live2DCubismFramework as csmvector} from '@framework/type/csmvector';
 import {Live2DCubismFramework as acubismmotion} from '@framework/motion/acubismmotion';
 import {Live2DCubismFramework as cubismid} from "@framework/id/cubismid";
+import { Live2DCubismFramework as live2dcubismframework } from '@framework/live2dcubismframework';
+import CubismFramework = live2dcubismframework.CubismFramework;
 
 import Csm_csmVector = csmvector.csmVector;
 import Csm_CubismMatrix44 = cubismmatrix44.CubismMatrix44;
@@ -20,20 +22,36 @@ import {LAppPal} from './lapppal';
 import {canvas, LAppDelegate, lAppDelegateEvent} from './lappdelegate';
 import * as LAppDefine from './lappdefine';
 
+import {LStore} from "./lstore";
+
 export let s_instance: LAppLive2DManager = null;
 
 /**
- * サンプルアプリケーションにおいてCubismModelを管理するクラス
- * モデル生成と破棄、タップイベントの処理、モデル切り替えを行う。
+ * 在样本应用中管理CubismModel的类
+ * 进行模型生成和丢弃、轻敲事件的处理、模型切换。
  */
 export class LAppLive2DManager {
     public click_hit:Function = null;
     public move_hit:Function = null;
+
     /**
-     * クラスのインスタンス（シングルトン）を返す。
-     * インスタンスが生成されていない場合は内部でインスタンスを生成する。
+     * 获取管理对象ID
+     */
+    public getIdManager(){
+        return CubismFramework.getIdManager();
+    }
+
+    /**
+     * 获取代理
+     */
+    public getLAppDelegate(){
+        return LAppDelegate.getInstance();
+    }
+    /**
+     * 返回类的实例(singleton)。
+     * 如果没有生成实例，则在内部生成实例。
      *
-     * @return クラスのインスタンス
+     * @return 类的实例
      */
     public static getInstance(): LAppLive2DManager {
         if (s_instance == null) {
@@ -44,7 +62,7 @@ export class LAppLive2DManager {
     }
 
     /**
-     * クラスのインスタンス（シングルトン）を解放する。
+     * 释放类的实例(singleton)。
      */
     public static releaseInstance(): void {
         if (s_instance != null) {
@@ -55,10 +73,10 @@ export class LAppLive2DManager {
     }
 
     /**
-     * 現在のシーンで保持しているモデルを返す。
+     * 返回保持在当前场景中的模型。
      *
-     * @param no モデルリストのインデックス値
-     * @return モデルのインスタンスを返す。インデックス値が範囲外の場合はNULLを返す。
+     * @param no 模型列表的索引值
+     * @return {LAppModel} 模型的实例。如果索引值不在范围内，则返回空。
      */
     public getModel(no: number): LAppModel {
         if (no < this._models.getSize()) {
@@ -69,7 +87,7 @@ export class LAppLive2DManager {
     }
 
     /**
-     * 現在のシーンで保持しているすべてのモデルを解放する
+     * 释放当前场景中保存的所有模型
      */
     public releaseAllModel(): void {
         for (let i = 0; i < this._models.getSize(); i++) {
@@ -81,10 +99,10 @@ export class LAppLive2DManager {
     }
 
     /**
-     * 画面をドラッグした時の処理
+     * 拖动画面时的处理
      *
-     * @param x 画面のX座標
-     * @param y 画面のY座標
+     * @param x 画面的x坐标
+     * @param y 画面的y坐标
      */
     public onDrag(x: number, y: number): void {
         for (let i = 0; i < this._models.getSize(); i++) {
@@ -97,10 +115,10 @@ export class LAppLive2DManager {
     }
 
     /**
-     * 画面をタップした時の処理
+     * 点击画面时的处理
      *
-     * @param x 画面のX座標
-     * @param y 画面のY座標
+     * @param x 画面的x坐标
+     * @param y 画面的y坐标
      */
     public onTap(x: number, y: number): void {
         if (LAppDefine.DebugLogEnable) {
@@ -163,8 +181,8 @@ export class LAppLive2DManager {
         return '';
     }
     /**
-     * 画面を更新するときの処理
-     * モデルの更新処理及び描画処理を行う
+     * 更新画面时的处理
+     * 进行模型的更新处理和绘制处理
      */
     public onUpdate(): void {
         let projection: Csm_CubismMatrix44 = new Csm_CubismMatrix44();
@@ -184,35 +202,41 @@ export class LAppLive2DManager {
             projection = saveProjection.clone();
 
             model.update();
-            model.draw(projection); // 参照渡しなのでprojectionは変質する。
+            model.draw(projection); // 因为是参照交付，所以projection会变质。
         }
     }
 
     /**
-     * 次のシーンに切りかえる
-     * サンプルアプリケーションではモデルセットの切り替えを行う。
+     * 切换到下一个场景
+     * 在样本应用中切换模型集。
      */
     public nextScene(): void {
-        const no: number = (this._sceneIndex + 1) % LAppDefine.ModelDirSize;
+        let ModelDir:[] = LStore.get('ModelDir')??LAppDefine.ModelDir;
+        if (ModelDir == []){
+            return;
+        }
+        const no: number = (this._sceneIndex + 1) % ModelDir.length;
         this.changeScene(no);
     }
 
     /**
-     * シーンを切り替える
-     * サンプルアプリケーションではモデルセットの切り替えを行う。
+     * 切换场景
+     * 在样本应用中切换模型集。
      */
     public changeScene(index: number): void {
         this._sceneIndex = index;
         if (LAppDefine.DebugLogEnable) {
             LAppPal.printMessage(`[APP]model index: ${this._sceneIndex}`);
         }
+        let ModelDir:[] = LStore.get('ModelDir')??LAppDefine.ModelDir;
+        let ResourcesPath:[] = LStore.get('ResourcesPath')??LAppDefine.ResourcesPath;
 
-        // ModelDir[]に保持したディレクトリ名から
-        // model3.jsonのパスを決定する。
-        // ディレクトリ名とmodel3.jsonの名前を一致させておくこと。
-        const model: string = LAppDefine.ModelDir[index];
-        const modelPath: string = LAppDefine.ResourcesPath + model + '/';
-        let modelJsonName: string = LAppDefine.ModelDir[index];
+        // ModelDir[]中保存的目录名称
+        // model3.确定json的路径。
+        // 目录名和model3.json的名字要一致。
+        const model: string = ModelDir[index];
+        const modelPath: string = ResourcesPath + model + '/';
+        let modelJsonName: string = ModelDir[index];
         modelJsonName += '.model3.json';
 
         this.releaseAllModel();
@@ -221,7 +245,7 @@ export class LAppLive2DManager {
     }
 
     /**
-     * コンストラクタ
+     * 构造函数
      */
     constructor() {
         this._viewMatrix = new Csm_CubismMatrix44();
@@ -230,10 +254,10 @@ export class LAppLive2DManager {
         this.changeScene(this._sceneIndex);
     }
 
-    _viewMatrix: Csm_CubismMatrix44; // モデル描画に用いるview行列
-    _models: Csm_csmVector<LAppModel>; // モデルインスタンスのコンテナ
-    _sceneIndex: number; // 表示するシーンのインデックス値
-    // モーション再生終了のコールバック関数
+    _viewMatrix: Csm_CubismMatrix44; // 用于模型绘制的view矩阵
+    _models: Csm_csmVector<LAppModel>; // 模型实例的容器
+    _sceneIndex: number; // 要显示的场景的索引值
+    // 运动回放结束的回调函数
     _finishedMotion = (self: ACubismMotion): void => {
         LAppPal.printMessage('Motion Finished:');
         console.log(self);

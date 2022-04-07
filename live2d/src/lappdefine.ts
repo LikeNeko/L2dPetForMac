@@ -22,48 +22,47 @@ export const ViewLogicalMaxRight = 2.0;
 export const ViewLogicalMaxBottom = -2.0;
 export const ViewLogicalMaxTop = 2.0;
 
-// 相対パス
+// 相对路径
 export const ResourcesPath = '../../res/models/';
 
-// モデルの後ろにある背景の画像ファイル
+// 模型后面的背景图像文件
 export const BackImageName = 'back_class_normal.png';
 
-// 歯車
+// 齿轮
 export const GearImageName = 'icon_gear.png';
 
-// 終了ボタン
+// 结束按钮
 export const PowerImageName = 'CloseNormal.png';
 
-// モデル定義---------------------------------------------
-// モデルを配置したディレクトリ名の配列
-// ディレクトリ名とmodel3.jsonの名前を一致させておくこと
-export let ModelDir: string[] = ['Senko','jinsechangzhifa','Rice','Hiyori','Haru',  'Mark', 'Natori'];
+// 模型定义- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// 配置模型的目录名的排列
+// 保持目录名称与模型3一致。json的名字
+export let ModelDir: string[] = ['++gongkaimo','cat_model_miao_pro','Senko','jinsechangzhifa','Rice','Hiyori','Haru',  'Mark', 'Natori'];
 export const ModelDirSize: number = ModelDir.length;
 
-// 外部定義ファイル（json）と合わせる
-export const MotionGroupIdle = 'Idle'; // アイドリング
-export const MotionGroupTapBody = 'TapBody'; // 体をタップしたとき
+// 配合外部定义文件(json)
+export const MotionGroupIdle = 'Idle'; // 怠速
+export const MotionGroupTapBody = 'TapBody'; // 当你轻敲它的身体时
 
-// 外部定義ファイル（json）と合わせる
+// 配合外部定义文件(json)
 export const HitAreaNameHead = 'Head';
 export const HitAreaNameBody = 'Body';
 
-// モーションの優先度定数
+// 运动的优先级常数
 export const PriorityNone = 0;
 export const PriorityIdle = 1;
 export const PriorityNormal = 2;
 export const PriorityForce = 3;
 
-// デバッグ用ログの表示オプション
+// 调试用日志的显示选项
 export const DebugLogEnable = true;
 export const DebugTouchLogEnable = true;
 export const DebugModelLogEnable = true;
 
-// Frameworkから出力するログのレベル設定
+// 从Framework输出的日志的等级设定
 export const CubismLoggingLevel: LogLevel = LogLevel.LogLevel_Verbose;
 
-// デフォルトのレンダーターゲットサイズ
+// 默认的渲染目标尺寸
 export const RenderTargetWidth = window.innerWidth;
 export const RenderTargetHeight = window.innerHeight;
 
-export const IsElectron = true;

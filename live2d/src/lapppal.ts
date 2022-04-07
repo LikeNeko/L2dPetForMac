@@ -6,21 +6,21 @@
  */
 
 /**
- * プラットフォーム依存機能を抽象化する Cubism Platform Abstraction Layer.
+ * 抽象化平台相关功能的Cubism Platform Abstraction Layer。
  *
- * ファイル読み込みや時刻取得等のプラットフォームに依存する関数をまとめる。
+ * 汇总文件读取和时刻获取等依赖于平台的函数。
  */
 // 声明一个全局的log方法，用来打log
 
 export class LAppPal {
   /**
-   * ファイルをバイトデータとして読みこむ
+   * 把文件作为字节数据读取
    *
    * @param filePath 読み込み対象ファイルのパス
    * @return
    * {
-   *      buffer,   読み込んだバイトデータ
-   *      size        ファイルサイズ
+   *      buffer,  读取的字节数据
+   *      size     文件大小
    * }
    */
   public static loadFileAsBytes(
@@ -33,7 +33,7 @@ export class LAppPal {
   }
 
   /**
-   * デルタ時間（前回フレームとの差分）を取得する
+   * 获取增量时间(与前一帧的差)
    * @return デルタ時間[ms]
    */
   public static getDeltaTime(): number {
@@ -47,7 +47,7 @@ export class LAppPal {
   }
 
   /**
-   * メッセージを出力する
+   * 输出信息
    * @param message 文字列
    */
   public static printMessage(message: string): void {

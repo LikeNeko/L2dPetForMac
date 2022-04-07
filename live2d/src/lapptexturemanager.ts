@@ -11,19 +11,19 @@ import csmVector_iterator = csmvector.iterator;
 import { gl } from './lappdelegate';
 
 /**
- * テクスチャ管理クラス
- * 画像読み込み、管理を行うクラス。
+ * 纹理管理类
+ * 进行图像读取和管理的班级。
  */
 export class LAppTextureManager {
   /**
-   * コンストラクタ
+   * 构造函数
    */
   constructor() {
     this._textures = new Csm_csmVector<TextureInfo>();
   }
 
   /**
-   * 解放する。
+   * 解放
    */
   public release(): void {
     for (
@@ -37,18 +37,18 @@ export class LAppTextureManager {
   }
 
   /**
-   * 画像読み込み
+   * 图像读取
    *
    * @param fileName 読み込む画像ファイルパス名
-   * @param usePremultiply Premult処理を有効にするか
-   * @return 画像情報、読み込み失敗時はnullを返す
+   * @param usePremultiply 启用Premult处理
+   * @return portrait情報、読み込み失敗時はnullを返す
    */
   public createTextureFromPngFile(
     fileName: string,
     usePremultiply: boolean,
     callback: (textureInfo: TextureInfo) => void
   ): void {
-    // search loaded texture already
+    // 搜索已经加载了纹理
     for (
       let ite: csmVector_iterator<TextureInfo> = this._textures.begin();
       ite.notEqual(this._textures.end());
@@ -58,9 +58,9 @@ export class LAppTextureManager {
         ite.ptr().fileName == fileName &&
         ite.ptr().usePremultply == usePremultiply
       ) {
-        // 2回目以降はキャッシュが使用される(待ち時間なし)
-        // WebKitでは同じImageのonloadを再度呼ぶには再インスタンスが必要
-        // 詳細：https://stackoverflow.com/a/5024181
+        // 第二次以后使用缓存(无等待时间)
+        // WebKit需要重新实例才能再次调用同一Image的onload
+        // 详细：https://stackoverflow.com/a/5024181
         ite.ptr().img = new Image();
         ite.ptr().img.onload = (): void => callback(ite.ptr());
         ite.ptr().img.src = fileName;
@@ -68,16 +68,16 @@ export class LAppTextureManager {
       }
     }
 
-    // データのオンロードをトリガーにする
+    // 以加载数据为触发要素
     const img = new Image();
     img.onload = (): void => {
-      // テクスチャオブジェクトの作成
+      // 创建纹理对象
       const tex: WebGLTexture = gl.createTexture();
 
-      // テクスチャを選択
+      // 选择纹理
       gl.bindTexture(gl.TEXTURE_2D, tex);
 
-      // テクスチャにピクセルを書き込む
+      // 在纹理上写入像素
       gl.texParameteri(
         gl.TEXTURE_2D,
         gl.TEXTURE_MIN_FILTER,
@@ -85,18 +85,18 @@ export class LAppTextureManager {
       );
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-      // Premult処理を行わせる
+      // 进行Premult处理
       if (usePremultiply) {
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
       }
 
-      // テクスチャにピクセルを書き込む
+      // 在纹理上写入像素
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
 
-      // ミップマップを生成
+      // 生成地图
       gl.generateMipmap(gl.TEXTURE_2D);
 
-      // テクスチャをバインド
+      // 粘合纹理
       gl.bindTexture(gl.TEXTURE_2D, null);
 
       const textureInfo: TextureInfo = new TextureInfo();
@@ -116,9 +116,9 @@ export class LAppTextureManager {
   }
 
   /**
-   * 画像の解放
+   * 图像的解放
    *
-   * 配列に存在する画像全てを解放する。
+   * 释放阵列中存在的所有图像。
    */
   public releaseTextures(): void {
     for (let i = 0; i < this._textures.getSize(); i++) {
@@ -129,9 +129,9 @@ export class LAppTextureManager {
   }
 
   /**
-   * 画像の解放
+   * 图像的解放
    *
-   * 指定したテクスチャの画像を解放する。
+   * 释放指定纹理的图像。
    * @param texture 解放するテクスチャ
    */
   public releaseTextureByTexture(texture: WebGLTexture): void {
@@ -147,9 +147,9 @@ export class LAppTextureManager {
   }
 
   /**
-   * 画像の解放
+   * 图像的解放
    *
-   * 指定した名前の画像を解放する。
+   * 释放指定名称的图像。
    * @param fileName 解放する画像ファイルパス名
    */
   public releaseTextureByFilePath(fileName: string): void {
@@ -166,13 +166,13 @@ export class LAppTextureManager {
 }
 
 /**
- * 画像情報構造体
+ * 画像情报构造体
  */
 export class TextureInfo {
   img: HTMLImageElement; // 画像
-  id: WebGLTexture = null; // テクスチャ
-  width = 0; // 横幅
-  height = 0; // 高さ
+  id: WebGLTexture = null; // 纹理
+  width = 0; // banner
+  height = 0; // 高
   usePremultply: boolean; // Premult処理を有効にするか
-  fileName: string; // ファイル名
+  fileName: string; // 文件名
 }

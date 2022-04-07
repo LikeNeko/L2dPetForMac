@@ -17,6 +17,7 @@ import {LAppLive2DManager} from './lapplive2dmanager';
 import * as LAppDefine from './lappdefine';
 import {LAppModel} from "./lappmodel";
 import { DebugLogEnable } from './lappdefine';
+import { LStore } from './lstore';
 
 export let canvas: HTMLCanvasElement = null;
 export let s_instance: LAppDelegate = null;
@@ -25,8 +26,6 @@ export let frameBuffer: WebGLFramebuffer = null;
 export let scale: number = window.devicePixelRatio;
 export let lAppDelegateEvent:LAppDelegateEvent = null;
 
-let lastCalledTime;
-let fps;
 
 interface LAppDelegateEvent {
     modelCompleteSetup();
@@ -34,15 +33,19 @@ interface LAppDelegateEvent {
 
 
 /**
- * アプリケーションクラス。
- * Cubism SDKの管理を行う。
+ *  应用程序类
+ *  管理Cubism SDK。
  */
 export class LAppDelegate {
     /**
-     * クラスのインスタンス（シングルトン）を返す。
-     * インスタンスが生成されていない場合は内部でインスタンスを生成する。
+     *  Live2d renders with view classes
+     */
+    _canvas: HTMLCanvasElement;
+    /**
+     *  返回类的实例(singleton)。
+     *  如果没有生成实例，则在内部生成实例。
      *
-     * @return クラスのインスタンス
+     *  @return {LAppDelegate}
      */
     public static getInstance(): LAppDelegate {
         if (s_instance == null) {
@@ -53,7 +56,7 @@ export class LAppDelegate {
     }
 
     /**
-     * クラスのインスタンス（シングルトン）を解放する。
+     *  释放类的实例(singleton)。
      */
     public static releaseInstance(): void {
         if (s_instance != null) {
@@ -64,12 +67,22 @@ export class LAppDelegate {
     }
 
     /**
-     * APPに必要な物を初期化する。
+     *  Initial Configuration
+     */
+    public initDefine(){
+        LStore.set('ModelDir',LAppDefine.ModelDir)
+        LStore.set("ResourcesPath",LAppDefine.ResourcesPath)
+    }
+
+    /**
+     *  初始化APP所需的物品。
      */
     public initialize(): boolean {
-        // キャンバスの作成
+        this.initDefine();
+        // 帆布制作
         canvas = document.createElement('canvas');
-
+        this._canvas = canvas;
+        canvas.id = 'live2d';
         canvas.width = LAppDefine.RenderTargetWidth;
         canvas.height = LAppDefine.RenderTargetHeight;
 
@@ -79,9 +92,7 @@ export class LAppDelegate {
         canvas.width = canvas.width * scale;
         canvas.height = canvas.height * scale;
 
-        // canvas.setAttribute('style','width:'+LAppDefine.RenderTargetWidth+'px;height:'+LAppDefine.RenderTargetHeight+'px');
-
-        // glコンテキストを初期化
+        // Gl环境初始化
         // @ts-ignore
         gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
@@ -97,7 +108,6 @@ export class LAppDelegate {
             return false;
         }
 
-        // キャンバスを DOM に追加
         document.body.appendChild(canvas);
 
         if (!frameBuffer) {
@@ -110,15 +120,14 @@ export class LAppDelegate {
 
         const supportTouch: boolean = 'ontouchend' in canvas;
 
-        // document.getElementsByName('body')[0].on
         if (supportTouch) {
-            // タッチ関連コールバック関数登録
+            // 点击关联回调函数注册
             canvas.ontouchstart = onTouchBegan;
             canvas.ontouchmove = onTouchMoved;
             canvas.ontouchend = onTouchEnded;
             canvas.ontouchcancel = onTouchCancel;
         } else {
-            // マウス関連コールバック関数登録
+            // 鼠标关联回调函数注册
             canvas.onmousedown = onClickBegan;
             canvas.onmousemove = onMouseMoved;
             canvas.onmouseup = onClickEnded;
@@ -126,17 +135,17 @@ export class LAppDelegate {
             canvas.onmouseleave = onMouseLeave;
         }
 
-        // AppViewの初期化
+        // 初始化AppView
         this._view.initialize();
 
-        // Cubism SDKの初期化
+        // 立体主义SDK初始化
         this.initializeCubism();
 
         return true;
     }
 
     /**
-     * 解放する。
+     *  解放
      */
     public release(): void {
         this._textureManager.release();
@@ -145,15 +154,15 @@ export class LAppDelegate {
         this._view.release();
         this._view = null;
 
-        // リソースを解放
+        // Free resources
         LAppLive2DManager.releaseInstance();
 
-        // Cubism SDKの解放
+        // Liberation of the Cubism SDK
         Csm_CubismFramework.dispose();
     }
 
     /**
-     * 実行処理。
+     *  执行处理
      */
     public run(): void {
         if (DebugLogEnable){
@@ -164,7 +173,7 @@ export class LAppDelegate {
         }
 
 
-        // メインループ
+        // 主循环
         const loop = (): void => {
             if (DebugLogEnable) {
                 stats.begin();
@@ -173,9 +182,6 @@ export class LAppDelegate {
             if (s_instance == null) {
                 return;
             }
-            let delta = (Date.now() - lastCalledTime)/1000;
-            lastCalledTime = Date.now();
-            fps = 1/delta;
 
             // 時間更新
             LAppPal.updateTime();
@@ -186,39 +192,35 @@ export class LAppDelegate {
             // 深度テストを有効化
             gl.enable(gl.DEPTH_TEST);
 
-            // 近くにある物体は、遠くにある物体を覆い隠す
+            // 近处的物体会使远处的物体变得模糊
             gl.depthFunc(gl.LEQUAL);
 
-            // カラーバッファや深度バッファをクリアする
+            // 清除颜色缓冲和深度缓冲
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
             gl.clearDepth(1.0);
 
-            // 透過設定
+            // 透过设置
             gl.enable(gl.BLEND);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-            // 描画更新
+            // 地图更新
             this._view.render();
 
-            // 建立像素集合 这种方式性能canvas缓冲区越大越差
-            // pixels  = new Uint8Array( canvas.width*canvas.height*4);
-            // //从缓冲区读取像素数据，然后将其装到事先建立好的像素集合里
-            // gl.readPixels(0, 0,gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             if (DebugLogEnable) {
                 stats.end();
             }
-            // ループのために再帰呼び出し
+            // Recursive call loop
             requestAnimationFrame(loop);
         };
         loop();
     }
 
     /**
-     * シェーダーを登録する。
+     *  注册着色器。
      */
     public createShader(): WebGLProgram {
-        // バーテックスシェーダーのコンパイル
+        // 编译顶点着色器
         const vertexShaderId = gl.createShader(gl.VERTEX_SHADER);
 
         if (vertexShaderId == null) {
@@ -240,7 +242,7 @@ export class LAppDelegate {
         gl.shaderSource(vertexShaderId, vertexShader);
         gl.compileShader(vertexShaderId);
 
-        // フラグメントシェーダのコンパイル
+        // 编译器片段着色器
         const fragmentShaderId = gl.createShader(gl.FRAGMENT_SHADER);
 
         if (fragmentShaderId == null) {
@@ -260,7 +262,7 @@ export class LAppDelegate {
         gl.shaderSource(fragmentShaderId, fragmentShader);
         gl.compileShader(fragmentShaderId);
 
-        // プログラムオブジェクトの作成
+        // 程序对象的创建
         const programId = gl.createProgram();
         gl.attachShader(programId, vertexShaderId);
         gl.attachShader(programId, fragmentShaderId);
@@ -268,7 +270,7 @@ export class LAppDelegate {
         gl.deleteShader(vertexShaderId);
         gl.deleteShader(fragmentShaderId);
 
-        // リンク
+        // link
         gl.linkProgram(programId);
 
         gl.useProgram(programId);
@@ -277,7 +279,7 @@ export class LAppDelegate {
     }
 
     /**
-     * View情報を取得する。
+     *  获取View信息。
      */
     public getView(): LAppView {
         return this._view;
@@ -292,7 +294,7 @@ export class LAppDelegate {
     }
 
     /**
-     * コンストラクタ
+     *  构造函数
      */
     constructor() {
         this._captured = false;
@@ -306,18 +308,18 @@ export class LAppDelegate {
     }
 
     /**
-     * Cubism SDKの初期化
+     *  Cubism SDK的初始化
      */
     public initializeCubism(): void {
-        // setup cubism
+        // Setting cubism
         this._cubismOption.logFunction = LAppPal.printMessage;
         this._cubismOption.loggingLevel = LAppDefine.CubismLoggingLevel;
         Csm_CubismFramework.startUp(this._cubismOption);
 
-        // initialize cubism
+        // Initializing cubism
         Csm_CubismFramework.initialize();
 
-        // load model
+        // Load model
         LAppLive2DManager.getInstance();
 
         LAppPal.updateTime();
@@ -325,13 +327,13 @@ export class LAppDelegate {
         this._view.initializeSprite();
     }
 
-    _cubismOption: Csm_Option; // Cubism SDK Option
-    _view: LAppView; // View情報
-    _captured: boolean; // 点击了吗?
+    _cubismOption: Csm_Option; // Cubism SDK option
+    _view: LAppView; // View情报
+    _captured: boolean; // 你点击了吗?
     _mouseX: number; // X坐标
-    _mouseY: number; // 鼠标Y坐标
-    _isEnd: boolean; // APP終了しているか
-    _textureManager: LAppTextureManager; // テクスチャマネージャー
+    _mouseY: number; // 鼠标坐标
+    _isEnd: boolean; // APP是否关闭
+    _textureManager: LAppTextureManager; // Texture management
 }
 
 function onMouseLeave() {
@@ -349,7 +351,7 @@ function onMouseEnter(e: MouseEvent) {
 }
 
 /**
- * クリックしたときに呼ばれる。
+ *  点击的时候被叫到。
  */
 function onClickBegan(e: MouseEvent): void {
     LAppPal.log('click_began')
@@ -377,7 +379,7 @@ export function hitModel(posX,posY) {
 }
 
 /**
- * マウスポインタが動いたら呼ばれる。
+ *  鼠标指针一动就叫。
  */
 function onMouseMoved(e: MouseEvent): void {
     // if (!LAppDelegate.getInstance()._captured) {
@@ -406,7 +408,7 @@ function onMouseMoved(e: MouseEvent): void {
 }
 
 /**
- * クリックが終了したら呼ばれる。
+ *  点击结束后就会叫我。
  */
 function onClickEnded(e: MouseEvent): void {
     LAppDelegate.getInstance()._captured = false;
@@ -431,7 +433,7 @@ function onClickEnded(e: MouseEvent): void {
 }
 
 /**
- * タッチしたときに呼ばれる。
+ *  触摸的时候被叫。
  */
 function onTouchBegan(e: TouchEvent): void {
     if (!LAppDelegate.getInstance()._view) {
@@ -449,7 +451,7 @@ function onTouchBegan(e: TouchEvent): void {
 }
 
 /**
- * スワイプすると呼ばれる。
+ *  被称为滑动。
  */
 function onTouchMoved(e: TouchEvent): void {
     if (!LAppDelegate.getInstance()._captured) {
@@ -471,7 +473,7 @@ function onTouchMoved(e: TouchEvent): void {
 }
 
 /**
- * タッチが終了したら呼ばれる。
+ *  触摸结束后被叫。
  */
 function onTouchEnded(e: TouchEvent): void {
     LAppDelegate.getInstance()._captured = false;
@@ -491,7 +493,7 @@ function onTouchEnded(e: TouchEvent): void {
 }
 
 /**
- * タッチがキャンセルされると呼ばれる。
+ *  触摸被取消。
  */
 function onTouchCancel(e: TouchEvent): void {
     LAppDelegate.getInstance()._captured = false;

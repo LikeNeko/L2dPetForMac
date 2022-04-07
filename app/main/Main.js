@@ -3,8 +3,8 @@
  */
 class Main {
     constructor() {
-        // 启动应用加载越少越好
         console.log('启动')
+        // 启动应用加载越少越好
         const {app, Notification, globalShortcut} = require('electron')
         global.app = app;
         global.Notification = Notification;
@@ -18,6 +18,11 @@ class Main {
         app.whenReady()
             .then(this.init)
             .then(this.start);
+
+        app.on('before-quit',function (){
+            console.log('退出前准备')
+            global.ioHook.stop();
+        })
 
     }
 
@@ -71,6 +76,20 @@ class Main {
             })
             server.on();
         })
+
+        setTimeout(function (){
+            const ioHook = require('iohook');
+            ioHook.start(false);
+            global.ioHook = ioHook;
+            ioHook.on('mousemove', (type)=>{
+                if (WindowsManager.getMain()){
+                    WindowsManager.getMain().webContents.send('my_on_drag',{
+                        screenX:type.x,
+                        screenY:type.y
+                    })
+                }
+            });
+        },1000);
     }
 
     /**
@@ -79,6 +98,9 @@ class Main {
      * 有些api只能在此事件发生后使用。
      */
     init() {
+        console.log('AppPath:', global.app.getAppPath());
+        console.log('UserData:', global.app.getPath('userData'));
+
         const {WindowsManager} = require("./WindowsManager");
         global.WindowsManager = WindowsManager;
         WindowsManager.init();

@@ -26,8 +26,8 @@
         #debug_info {
             display: block;
             position: absolute;
-            right: 0;
-            top: 15px;
+            right: 10px;
+            bottom: 10px;
         }
 
         li {
@@ -185,7 +185,6 @@
     </style>
 </head>
 <body>
-
 <div id="app">
     <div class="think-page-loader" v-show="loading">
         <div class="loader"></div>
@@ -211,7 +210,7 @@
 </div>
 </body>
 
-<script src="../../../live2d/Core/live2dcubismcore.min.js"></script>
+<script src="../../../live2d/Core/live2dcubismcore.4.1.0.min.js"></script>
 <script src="../js/stats.js"></script>
 <script src="../../../live2d/dist/bundle.js"></script>
 <script src="../js/vue.global.js"></script>
@@ -220,6 +219,10 @@
 <script src="../js/tip.js"></script>
 
 <script>
+    // 1. 设置当前模型的part显示隐藏 live2d.getModel(0).getModel().setPartOpacityByIndex(16,0)
+    // 2. 设置当前模型的param live2d.getModel(0).getModel()._savedParameters 这个对象里都是改完立即生效的
+
+    //live2d.getModel(0).getModel()._savedParameters._ptr[7] = 1 bakaneko-左手隐藏
     /**
      * @type LAppLive2DManager
      */
@@ -230,7 +233,7 @@
     window.live2d_onload
 
     // 获取app的配置项
-    const {ipcRenderer, remote, clipboard} = require('electron')
+    const {ipcRenderer, clipboard} = require('electron')
 
     class Index {
         constructor() {
@@ -243,16 +246,17 @@
          * 初始化来自main的配置
          */
         initStore() {
-            class Store{
-                get(name,def=undefined){
-                    return ipcRenderer.sendSync('store-get',{key:name,def:def})
+            class Store {
+                get(name, def = undefined) {
+                    return ipcRenderer.sendSync('store-get', {key: name, def: def})
                 }
-                set(name,val){
-                    return ipcRenderer.sendSync('store-set',{key:name,value:val})
+
+                set(name, val) {
+                    return ipcRenderer.sendSync('store-set', {key: name, value: val})
                 }
             }
+
             window.store = new Store();
-            console.log( window.store.get('aaa'))
         }
 
         /**
@@ -267,6 +271,19 @@
                 console.log("show_msg", arg)
                 Utils.msg(arg.msg)
             });
+            // 监听窗口外move
+            ipcRenderer.on('my_on_drag', (event, arg) => {
+                const live2DManager = live2d;
+                // 不知道为什么这么算就行，但他就可以了，跟着屏幕中心看
+                // 点击位置/屏幕x*2-1
+                let x = arg.screenX / screen.width * 2 - 1;
+                // 点击位置/屏幕y*2-1
+                let y = arg.screenY / screen.height * 2 - 1;
+
+                live2DManager.onDrag(x, -y);
+                // live2d.getModel(0).getModel()._savedParameters._ptr[3] = x*30;
+                // live2d.getModel(0).getModel()._savedParameters._ptr[4] = -y*30;
+            })
             // 优化了帧率问题
             live2d.move_hit = function (str) {
                 if (str.indexOf('tail') === 0) {

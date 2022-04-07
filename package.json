@@ -8,12 +8,13 @@
     "start": "./node_modules/.bin/electron . ",
     "run": "echo 执行",
     "postinstall": "patch-package #模块名(imap);electron-builder install-app-deps;",
-    "build-mac": "electron-builder --mac dmg -c.electronVersion=9.1.0",
-    "build-mac1": "electron-builder --mac dmg -c.electronVersion=13.6.9",
-    "build-mac-p": "electron-builder --mac dmg -c.electronVersion=9.1.0 -p always",
+    "build-mac": "electron-builder --mac dmg -c.electronVersion=12.2.3",
+    "build-mac1": "electron-builder --mac dmg -c.electronVersion=12.2.3",
+    "build-mac-p": "electron-builder --mac dmg -c.electronVersion=12.2.3 -p always",
     "build-mac2": "electron-packager . --platform=darwin --overwrite --out=builds --prune=true",
-    "build-sqlite3": "yarn add sqlite3 --build-from-source --sqlite_libname=sqlcipher --sqlite=`brew --prefix` --runtime=electron --target=9.1.0 --dist-url=https://electronjs.org/headers",
-    "download_vue_element_ui": "./install-vue.sh"
+    "build-sqlite3": "yarn add sqlite3 --build-from-source --sqlite_libname=sqlcipher --sqlite=`brew --prefix` --runtime=electron --target=12.2.3 --dist-url=https://electronjs.org/headers",
+    "download_vue_element_ui": "./install-vue.sh",
+    "build_iohook": "npm rebuild --runtime=electron --target=12.2.3 --disturl=https://atom.io/download/atom-shell --abi=87"
   },
   "repository": "github:LikeNeko/L2dPetForMac",
   "keywords": [
@@ -29,15 +30,15 @@
     "electron-clipboard-watcher": "^1.0.1",
     "electron-store": "^8.0.1",
     "events-manage": "^1.0.2",
-    "lowdb": "^1.0.0",
+    "iohook": "^0.9.3",
     "mail-listener5": "^2.0.2",
     "nodejs-websocket": "^1.7.2",
+    "request-promise": "^4.2.6",
     "rsync": "^0.6.1",
-    "sqlite3": "^5.0.0",
-    "tinify": "^1.6.0-beta.2"
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
-    "electron": "^13.6.9",
+    "electron": "^12.2.3",
     "patch-package": "^6.2.2"
   },
   "build": {
@@ -53,5 +54,18 @@
     "commitizen": {
       "path": "./node_modules/cz-customizable"
     }
+  },
+  "iohook": {
+    "targets": [
+      "node-83",
+      "electron-87"
+    ],
+    "platforms": [
+      "win32",
+      "darwin"
+    ],
+    "arches": [
+      "x64"
+    ]
   }
 }

@@ -19,8 +19,8 @@
         var defaults = {
             side:1,
             msg:'',
-            color:'#FFF',
-            bg:'rgba(255,0,0,0.59)',
+            color:'rgba(0,0,0,1)',
+            bg:'rgba(186,186,186,0.9)',
             time:2,
             x:0,
             y:0

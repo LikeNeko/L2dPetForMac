@@ -6,17 +6,6 @@ const {Store} = require("./job/Store");
 const {DevTools} = require("./job/DevTools");
 
 class IpcMainServer {
-    static ipcs = [
-        'chrome_new_url',
-        'open_dev_tools',
-        'close_dev_tools',
-        'focus',
-        'zip_image',
-        'open_ignore_mouse_events',
-        'close_ignore_mouse_events',
-        'store_get',
-        'store_set',
-    ]
 
     /**
      * 开启监听.

@@ -1,0 +1,18 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "++gongkaimo.moc3",
+		"Textures": [
+			"++gongkaimo.4096/texture_00.png"
+		],
+		"Physics": "++gongkaimo.physics3.json",
+		"DisplayInfo": "++gongkaimo.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		}
+	]
+}

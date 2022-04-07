@@ -15,10 +15,10 @@ class WindowsManager {
             height: 300,
             x: 1300,
             y: 800,
-            show: true,
+            show: false,
             // minimizable: false,
-            // resizable: false,
-            // fullscreenable: false,
+            // resizable: true,
+            // fullscreen: true,
             frame: false,
             transparent: true,
             hasShadow: false,
@@ -36,9 +36,9 @@ class WindowsManager {
         console.log(mainWindow.id, '窗口id')
         // mainWindow.maximize();
         // 所有工作空间中显示
-        // mainWindow.setVisibleOnAllWorkspaces(true);
-        mainWindow.setAlwaysOnTop(false)
-
+        mainWindow.setVisibleOnAllWorkspaces(true);
+        // mainWindow.setAlwaysOnTop(true)
+        mainWindow.webContents.openDevTools({detach:true});
         let file = 'app/renderer/views/index.html';
         mainWindow.loadFile(file).finally(function () {
             // mainWindow.showInactive()

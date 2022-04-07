@@ -10,7 +10,7 @@
     "sourceMap": true,
     "baseUrl": "./",
     "paths": {
-      "@framework/*": ["./Framework/src/*"]
+      "@framework/*": ["./Framework/src/*"],
     }
   },
   "include": [
@@ -18,7 +18,6 @@
     "Core/*.ts"
   ],
   "exclude": [
-    "node_modules",
     "dist"
   ]
 }

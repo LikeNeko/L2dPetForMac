@@ -788,11 +788,11 @@ export class CubismModel {
     this._model = null;
   }
 
-  private _notExistPartOpacities: csmMap<number, number>; // 存在していないパーツの不透明度のリスト
+  private _notExistPartOpacities: csmMap<number, number>; // 非现有部件的不透明度列表
   private _notExistPartId: csmMap<CubismIdHandle, number>; // 存在していないパーツIDのリスト
 
-  private _notExistParameterValues: csmMap<number, number>; // 存在していないパラメータの値のリスト
-  private _notExistParameterId: csmMap<CubismIdHandle, number>; // 存在していないパラメータIDのリスト
+  private _notExistParameterValues: csmMap<number, number>; // 缺失参数值的列表
+  private _notExistParameterId: csmMap<CubismIdHandle, number>; // 缺少参数id列表
 
   private _savedParameters: csmVector<number>; // 保存されたパラメータ
 

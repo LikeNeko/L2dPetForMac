@@ -28,10 +28,11 @@ class WindowsManager {
                 enableRemoteModule: true,
                 contextIsolation:false,
                 nodeIntegrationInWorker: true,// worker内使用node
-                // webSecurity:false,
                 // preload: 'app/preload.js'//18版本必须是绝对路径
             }
         })
+        // 屏蔽安全策略
+        process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
         console.log(mainWindow.id, '窗口id')
         // mainWindow.maximize();

@@ -269,7 +269,9 @@
             // live2d.getModel(0).startRandomMotion("TapBody", 3);
             ipcRenderer.on('show_msg', (event, arg) => {
                 console.log("show_msg", arg)
-                Utils.msg(arg.msg)
+                if (arg.msg){
+                    Utils.msg(arg.msg)
+                }
             });
             // 监听窗口外move
             ipcRenderer.on('my_on_drag', (event, arg) => {

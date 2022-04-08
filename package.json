@@ -1,6 +1,6 @@
 {
   "name": "L2dPetForMac",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "基于electronjs的live2d桌宠项目，想在mac上养一只live2d宠物的话可以试试，另外这个项目自认为是比较适合学习live2d的sdk的一个项目，也许你会有很多灵感:)",
   "main": "app/main/main_remould.js",
   "scripts": {

@@ -20,6 +20,7 @@
     "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
+    "twgl.js": "^4.22.0",
     "whatwg-fetch": "^3.0.0"
   }
 }

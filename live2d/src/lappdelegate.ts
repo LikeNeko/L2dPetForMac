@@ -15,16 +15,17 @@ import {LAppPal} from './lapppal';
 import {LAppTextureManager} from './lapptexturemanager';
 import {LAppLive2DManager} from './lapplive2dmanager';
 import * as LAppDefine from './lappdefine';
-import {LAppModel} from "./lappmodel";
-import { DebugLogEnable } from './lappdefine';
-import { LStore } from './lstore';
+import {DebugLogEnable} from './lappdefine';
+import {LStore} from './lstore';
+import {twgl} from "./lcanvas";
 
 export let canvas: HTMLCanvasElement = null;
 export let s_instance: LAppDelegate = null;
 export let gl: WebGLRenderingContext = null;
 export let frameBuffer: WebGLFramebuffer = null;
 export let scale: number = window.devicePixelRatio;
-export let lAppDelegateEvent:LAppDelegateEvent = null;
+export let lAppDelegateEvent: LAppDelegateEvent = null;
+
 
 
 interface LAppDelegateEvent {
@@ -41,6 +42,7 @@ export class LAppDelegate {
      *  Live2d renders with view classes
      */
     _canvas: HTMLCanvasElement;
+
     /**
      *  返回类的实例(singleton)。
      *  如果没有生成实例，则在内部生成实例。
@@ -69,9 +71,9 @@ export class LAppDelegate {
     /**
      *  Initial Configuration
      */
-    public initDefine(){
-        LStore.set('ModelDir',LAppDefine.ModelDir)
-        LStore.set("ResourcesPath",LAppDefine.ResourcesPath)
+    public initDefine() {
+        LStore.set('ModelDir', LAppDefine.ModelDir)
+        LStore.set("ResourcesPath", LAppDefine.ResourcesPath)
     }
 
     /**
@@ -165,11 +167,11 @@ export class LAppDelegate {
      *  执行处理
      */
     public run(): void {
-        if (DebugLogEnable){
+        if (DebugLogEnable) {
             // @ts-ignore
             var stats = new Stats();
-            stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-            document.body.appendChild( stats.dom );
+            stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.body.appendChild(stats.dom);
         }
 
 
@@ -217,39 +219,38 @@ export class LAppDelegate {
     }
 
     /**
-     *  注册着色器。
+     * 注册着色器。
      */
-    public createShader(): WebGLProgram {
-        // 编译顶点着色器
-        const vertexShaderId = gl.createShader(gl.VERTEX_SHADER);
-
-        if (vertexShaderId == null) {
-            LAppPal.printMessage('failed to create vertexShader');
-            return null;
-        }
-
-        const vertexShader: string =
+    public createShader():WebGLProgram{
+        let vertexShader: string =
             'precision mediump float;' +
-            'attribute vec3 position;' +
+            'attribute vec3 a_position;' +
             'attribute vec2 uv;' +
             'varying vec2 vuv;' +
             'void main(void)' +
             '{' +
-            '   gl_Position = vec4(position, 1.0);' +
+            '   gl_Position = vec4(a_position, 1.0);' +
             '   vuv = uv;' +
             '}';
-
-        gl.shaderSource(vertexShaderId, vertexShader);
-        gl.compileShader(vertexShaderId);
-
-        // 编译器片段着色器
-        const fragmentShaderId = gl.createShader(gl.FRAGMENT_SHADER);
-
-        if (fragmentShaderId == null) {
-            LAppPal.printMessage('failed to create fragmentShader');
-            return null;
-        }
-
+        vertexShader = '' +
+            'precision mediump float;' +
+            'attribute vec3 a_position;\n' +
+            'attribute vec2 uv;' +
+            'uniform vec2 u_resolution;\n' +
+            'uniform mat3 u_matrix;\n' +
+            'varying vec2 vuv;' +
+            'void main() {\n' +
+            '  // Multiply the position by the matrix.\n' +
+            '  vec2 position = (u_matrix * a_position).xy;\n' +
+            '  // convert the position from pixels to 0.0 to 1.0\n' +
+            '  vec2 zeroToOne = position / u_resolution;\n' +
+            '  // convert from 0->1 to 0->2\n' +
+            '  vec2 zeroToTwo = zeroToOne * 2.0;\n' +
+            '  // convert from 0->2 to -1->+1 (clipspace)\n' +
+            '  vec2 clipSpace = zeroToTwo - 1.0;\n' +
+            '  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);\n' +
+            '  vuv = uv;' +
+            '}'
         const fragmentShader: string =
             'precision mediump float;' +
             'varying vec2 vuv;' +
@@ -258,25 +259,12 @@ export class LAppDelegate {
             '{' +
             '   gl_FragColor = texture2D(texture, vuv);' +
             '}';
+        let program = twgl.createProgram(gl,[vertexShader,fragmentShader])
 
-        gl.shaderSource(fragmentShaderId, fragmentShader);
-        gl.compileShader(fragmentShaderId);
-
-        // 程序对象的创建
-        const programId = gl.createProgram();
-        gl.attachShader(programId, vertexShaderId);
-        gl.attachShader(programId, fragmentShaderId);
-
-        gl.deleteShader(vertexShaderId);
-        gl.deleteShader(fragmentShaderId);
-
-        // link
-        gl.linkProgram(programId);
-
-        gl.useProgram(programId);
-
-        return programId;
+        gl.useProgram(program);
+        return program;
     }
+
 
     /**
      *  获取View信息。
@@ -285,7 +273,7 @@ export class LAppDelegate {
         return this._view;
     }
 
-    public setLappModelEvent(call:LAppDelegateEvent){
+    public setLappModelEvent(call: LAppDelegateEvent) {
         lAppDelegateEvent = call;
     }
 
@@ -369,11 +357,12 @@ function onClickBegan(e: MouseEvent): void {
     LAppDelegate.getInstance()._view.onTouchesBegan(posX, posY);
 
 }
-export function hitModel(posX,posY) {
+
+export function hitModel(posX, posY) {
     let view = LAppDelegate.getInstance().getView()
     const viewX: number = view.transformViewX(posX);
     const viewY: number = view.transformViewY(posY);
-    return LAppLive2DManager.getInstance().hitModel(viewX,viewY)
+    return LAppLive2DManager.getInstance().hitModel(viewX, viewY)
     // console.log(pixels) 配合loop里的readPixels 虽然性能较差，但可以控制的点很多，比如像素颜色
     // return pixels[((posY * (canvas.width * 4)) + (posX * 4)) + 3] > 0;
 }
@@ -396,10 +385,10 @@ function onMouseMoved(e: MouseEvent): void {
     let posY: number = e.clientY - rect.top;
     posX *= scale;
     posY *= scale;
-    let hit  = LAppLive2DManager.getInstance();
-    let hitstr = hit.isHit(posX,posY);
+    let hit = LAppLive2DManager.getInstance();
+    let hitstr = hit.isHit(posX, posY);
     // 设定了监听就走不管有没有hit
-    if (hit.move_hit){
+    if (hit.move_hit) {
         hit.move_hit(hitstr)
     }
 
@@ -424,9 +413,9 @@ function onClickEnded(e: MouseEvent): void {
     posX *= scale;
     posY *= scale;
     LAppPal.log('点击')
-    let hit  = LAppLive2DManager.getInstance();
-    let hitstr = hit.isHit(posX,posY);
-    if (hitstr != ""&&hit.click_hit){
+    let hit = LAppLive2DManager.getInstance();
+    let hitstr = hit.isHit(posX, posY);
+    if (hitstr != "" && hit.click_hit) {
         hit.click_hit(hitstr)
     }
     LAppDelegate.getInstance()._view.onTouchesEnded(posX, posY);

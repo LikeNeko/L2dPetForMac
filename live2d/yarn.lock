@@ -3829,6 +3829,11 @@ tty-browserify@0.0.0:
   resolved "https://registry.npm.taobao.org/tty-browserify/download/tty-browserify-0.0.0.tgz"
   integrity sha1-oVe6QC2iTpv5V/mqadUk7tQpAaY=
 
+twgl.js@^4.22.0:
+  version "4.22.0"
+  resolved "https://registry.npmjs.org/twgl.js/-/twgl.js-4.22.0.tgz#73e90f56d4c450bd3dabaa130b050acb95dd3f74"
+  integrity sha512-R9FfA3yDLwoiO2gnIkzxcWOI7i8L79c/vPNyt0BrERKjczYEL6zQIvd+0SBKgQmI7+lltYB3xawxrSyqy+qRpg==
+
 type-is@~1.6.17, type-is@~1.6.18:
   version "1.6.18"
   resolved "https://registry.npm.taobao.org/type-is/download/type-is-1.6.18.tgz"

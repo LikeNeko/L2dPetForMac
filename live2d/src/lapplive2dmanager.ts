@@ -19,7 +19,7 @@ import CubismIdHandle = cubismid.CubismIdHandle;
 
 import {LAppModel} from './lappmodel';
 import {LAppPal} from './lapppal';
-import {canvas, LAppDelegate, lAppDelegateEvent} from './lappdelegate';
+import {canvas, LAppDelegate} from './lappdelegate';
 import * as LAppDefine from './lappdefine';
 
 import {LStore} from "./lstore";

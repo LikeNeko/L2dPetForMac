@@ -20,6 +20,7 @@ import {b2World} from "./box2d/dynamics/b2_world";
 import {b2Body, b2BodyDef, b2BodyType} from "./box2d/dynamics/b2_body";
 import {b2PolygonShape} from "./box2d/collision/b2_polygon_shape";
 import {b2FixtureDef} from "./box2d/dynamics/b2_fixture";
+import {twgl} from "./lcanvas";
 
 /**
  * 描画クラス。

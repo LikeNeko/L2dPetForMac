@@ -87,14 +87,18 @@ export class LAppTextureManager {
 
       // 进行Premult处理
       if (usePremultiply) {
+        // 透明处理
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
       }
 
       // 在纹理上写入像素
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
 
-      // 生成地图
-      gl.generateMipmap(gl.TEXTURE_2D);
+      // 是2次冥的走这个
+      if (0===(img.width&img.width-1) || 0===(img.height&img.height-1)){
+        // 生成地图
+        gl.generateMipmap(gl.TEXTURE_2D);
+      }
 
       // 粘合纹理
       gl.bindTexture(gl.TEXTURE_2D, null);

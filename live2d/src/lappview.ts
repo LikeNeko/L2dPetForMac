@@ -7,20 +7,33 @@
 
 import {Live2DCubismFramework as cubismMatrix44} from '@framework/math/cubismmatrix44';
 import {Live2DCubismFramework as cubismviewmatrix} from '@framework/math/cubismviewmatrix';
-import Csm_CubismViewMatrix = cubismviewmatrix.CubismViewMatrix;
-import Csm_CubismMatrix44 = cubismMatrix44.CubismMatrix44;
 import {TouchManager} from './touchmanager';
 import {LAppLive2DManager} from './lapplive2dmanager';
-import {LAppDelegate, canvas, gl} from './lappdelegate';
-import {LAppSprite, Rect} from './lappsprite';
+import {canvas, gl, LAppDelegate, scale} from './lappdelegate';
+import {LAppSprite} from './lappsprite';
 import {TextureInfo} from './lapptexturemanager';
 import {LAppPal} from './lapppal';
 import * as LAppDefine from './lappdefine';
-import {b2World} from "./box2d/dynamics/b2_world";
-import {b2Body, b2BodyDef, b2BodyType} from "./box2d/dynamics/b2_body";
-import {b2PolygonShape} from "./box2d/collision/b2_polygon_shape";
-import {b2FixtureDef} from "./box2d/dynamics/b2_fixture";
-import {twgl} from "./lcanvas";
+import Csm_CubismViewMatrix = cubismviewmatrix.CubismViewMatrix;
+import Csm_CubismMatrix44 = cubismMatrix44.CubismMatrix44;
+
+import Matter, {
+    Bodies,
+    Body,
+    Composite,
+    Engine,
+    Render,
+    Runner,
+    Vector,
+    World,
+    Constraint,
+    MouseConstraint,
+    Mouse,
+    Composites
+} from 'matter-js';
+import {m3} from './lcanvas';
+import {CubismIdHandle, Live2DCubismFramework} from "@framework/id/cubismid";
+import CubismId = Live2DCubismFramework.CubismId;
 
 /**
  * 描画クラス。
@@ -34,11 +47,14 @@ export class LAppView {
     _gear: LAppSprite; // ギア画像
     _changeModel: boolean; // モデル切り替えフラグ
     _isClick: boolean; // クリック中
-    _next_random_motion: LAppSprite; // 随机一个动作
     _num = 0.8;
-    _world: b2World;
     _ground: LAppSprite;
-    _apple: LAppSprite;
+    _frontProgramId: WebGLProgram;
+    _apples: Matter.Body[] = [];
+    _matter_engine: Engine;
+    _back_zhuozi: LAppSprite;
+    _hands: LAppSprite;
+    _zuai: any;
 
     /**
      * コンストラクタ
@@ -47,7 +63,6 @@ export class LAppView {
         this._programId = null;
         this._back = null;
         this._gear = null;
-        this._next_random_motion = null;
 
         // タッチ関係のイベント管理
         this._touchManager = new TouchManager();
@@ -113,53 +128,62 @@ export class LAppView {
      * 描画する。
      */
     public render(): void {
-        gl.useProgram(this._programId);
-
-        if (this._back) {
-            this._back.render(this._programId);
-        }
-        if (this._gear) {
-            this._gear.render(this._programId);
-        }
-        if (this._next_random_motion) {
-            this._next_random_motion.render(this._programId);
-        }
-
-
-        gl.flush();
-
+        // gl.useProgram(this._programId);
+        // // 后置ui
+        //
+        // gl.flush();
         const live2DManager: LAppLive2DManager = LAppLive2DManager.getInstance();
 
         live2DManager.onUpdate();
-
+        // 前置ui
         // gl.useProgram(this._programId);
-        // if (this._ground) {
-        //     this._ground.render(this._programId)
-        //     this._apple.render(this._programId);
-        // }
         //
-        // // 物理世界是否处理完成
-        // if (this._world) {
-        //     this._world.Step(1 / 60, 6, 2);
-        //     for (let bodyIndex: b2Body = this._world.GetBodyList(); bodyIndex; bodyIndex = bodyIndex.GetNext()) {
-        //         let x = bodyIndex.GetPosition().x * 30;
-        //         let y = bodyIndex.GetPosition().y * 30;
-        //         let r = bodyIndex.GetAngle() * 180 / Math.PI;
-        //         if (bodyIndex.m_userData.type == 'apple' && this._apple) {
-        //             this._apple.setX(x);
-        //             this._apple.setY(y);
-        //             this._apple.render(this._programId);
-        //         }
-        //     }
-        // }
-        // gl.flush();
+        // // 透过设置
+        // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        //
+        // // if (this._back) {
+        // //     this._back.render(this._programId);
+        // // }
+        // //
+        // // if (this._gear) {
+        // //     this._gear.render(this._programId);
+        // // }
+        //
+        // // 前置
+        // gl.flush()
 
+    }
+
+    public addApple(x, y) {
+        let tmp = [];
+        for (let i = 0; i < 3; i++) {
+            let boxC:Matter.Body;
+            if(parseInt((Math.random() * 10).toString()) <5){
+                boxC = Bodies.rectangle(x/scale, y/scale, 20, 20);
+            }else{
+                boxC = Bodies.circle(x/scale, y/scale, 20,{
+                    render:{
+                        sprite:{
+                            texture:LAppDefine.ResourcesPath+LAppDefine.GearImageName,
+                            xScale:1,
+                            yScale:1
+                        }
+                    }
+                });
+            }
+            this._apples.push(boxC)
+            tmp.push(boxC)
+        }
+
+
+        Composite.add(this._matter_engine.world, tmp);
     }
 
     /**
      * 画像の初期化を行う。
      */
     public initializeSprite(): void {
+
 
         const width: number = canvas.width;
         const height: number = canvas.height;
@@ -172,10 +196,10 @@ export class LAppView {
         // 背景画像初期化
         imageName = LAppDefine.BackImageName;
 
-        // 非同期なのでコールバック関数を作成
+        // 背景图
         const initBackGroundTexture = (textureInfo: TextureInfo): void => {
-            const x: number = width * 0.5;
-            const y: number = height * 0.5;
+            const x: number = 0;
+            const y: number = 0;
 
             const fwidth = width;
             const fheight = height;
@@ -188,53 +212,213 @@ export class LAppView {
             initBackGroundTexture
         );
 
-        // 初始化box2d 逻辑
-        this._world = new b2World({x: 0, y: -10});
-        let groundBodyDef = new b2BodyDef();
-        groundBodyDef.userData = {type: "ground"}
-        groundBodyDef.position.Set(0, 200 / 30);//此处就是把300像素转换成10米
-        groundBodyDef.type = b2BodyType.b2_staticBody;//地面是不会动的，所以设置为静态
-        // 地面
-        let groundBox = new b2PolygonShape();//这是个矩形
-        groundBox.SetAsBox(500 / 2 / 30, 30 / 2 / 30);
-        this._world.CreateBody(groundBodyDef).CreateFixture(groundBox);
+        textureManager.createTextureFromPngFile(
+            resourcesPath + 'cat_model_miao_pro/mousebg.png',
+            false,
+            (textureInfo: TextureInfo): void => {
+                const x: number = 0;
+                const y: number = 0;
 
-        // 礼物
-        let appleDef = new b2BodyDef();
-        appleDef.userData = {type: 'apple'}
-        appleDef.type = b2BodyType.b2_dynamicBody;//动态的
-        appleDef.position.Set(30 / 30, 0 / 30);
-        // 刚体
-        let appleShape = new b2PolygonShape();
-        appleShape.SetAsBox(50 / 2 / 30, 50 / 2 / 30);
-        // 材质
-        let fixDef = new b2FixtureDef();//这个就是材质
+                const fwidth = 1200;
+                const fheight = 1200;
+                //配置纹理图像
+                this._back_zhuozi = new LAppSprite(x, y, fwidth, fheight, textureInfo.id);
+                this._back_zhuozi._scale.y = -0.92;
+                this._back_zhuozi._scale.x = 0.92;
+                this._back_zhuozi.position(74, 16);
 
-        fixDef.shape = appleShape;
-        fixDef.density = 1.0;//这个就是之前提到过的密度
-        fixDef.friction = 0.3;//这个是摩擦
-        fixDef.restitution = 0.2;//掉在地上弹起来的效果
-        this._world.CreateBody(appleDef).CreateFixture(fixDef);//添加到世界中
+            }
+        );
+        textureManager.createTextureFromPngFile(
+            resourcesPath + 'cat_model_miao_pro/hand/1.png',
+            false,
+            (textureInfo: TextureInfo): void => {
+                const x: number = 0;
+                const y: number = 0;
+
+                const fwidth = 1200;
+                const fheight = 1200;
+                //配置纹理图像
+                this._hands = new LAppSprite(x, y, fwidth, fheight, textureInfo.id);
+                this._hands._scale.y = -1;
+                this._hands._scale.x = 1;
+                this._hands.position(0, 0);
+                this.initBindDebugContr(this._hands)
+
+            }
+        );
 
         //歯車画像初期化
         imageName = LAppDefine.GearImageName;
         const initGearTexture = (textureInfo: TextureInfo): void => {
-            const x = width - textureInfo.width * 0.5;
-            const y = height - textureInfo.height * 0.5;
+            const x = 0;
+            const y = 0;
             const fwidth = textureInfo.width;
             const fheight = textureInfo.height;
+
             this._gear = new LAppSprite(x, y, fwidth, fheight, textureInfo.id);
+
         };
 
         textureManager.createTextureFromPngFile(
             resourcesPath + imageName,
-            false,
+            true,
             initGearTexture
         );
         // 创建着色器
         if (this._programId == null) {
             this._programId = LAppDelegate.getInstance().createShader();
         }
+        this.initMatter()
+    }
+
+    /**
+     * 绑定调试面板到精灵上
+     * @param sprite
+     */
+    public initBindDebugContr(sprite: LAppSprite) {
+        let gear = sprite;
+        // 初始化ui
+        webglLessonsUI.setupSlider("#x", {
+            value: gear._x, slide: function (event, ui) {
+                gear._translation.x = ui.value;
+                gear.reload();
+            }, max: gl.canvas.width
+        });
+        webglLessonsUI.setupSlider("#y", {
+            value: gear._y, slide: function (event, ui) {
+                gear._translation.y = ui.value;
+                gear.reload();
+            }, max: gl.canvas.height
+        });
+        webglLessonsUI.setupSlider("#angle", {
+            slide: function (event, ui) {
+                let angleInDegrees = 360 - ui.value;
+                gear._angleInRadians = angleInDegrees * Math.PI / 180;
+                gear.reload();
+            }, max: 360
+        });
+        webglLessonsUI.setupSlider("#scaleX", {
+            value: gear._scale.x,
+            slide: function (event, ui) {
+                gear._scale.x = ui.value;
+                gear.reload();
+            },
+            min: -5,
+            max: 5,
+            step: 0.01,
+            precision: 2
+        });
+        webglLessonsUI.setupSlider("#scaleY", {
+            value: gear._scale.y,
+            slide: function (event, ui) {
+                gear._scale.y = ui.value;
+                gear.reload();
+            },
+            min: -5,
+            max: 5,
+            step: 0.01,
+            precision: 2
+        });
+        webglLessonsUI.setupSlider("#origin_x", {
+            value: gear._origin.x, slide: function (event, ui) {
+                gear._origin.x = ui.value;
+                gear.reload();
+            }, max: gear._width
+        });
+        webglLessonsUI.setupSlider("#origin_y", {
+            value: gear._origin.y, slide: function (event, ui) {
+                gear._origin.y = ui.value;
+                gear.reload();
+            }, max: gear._height
+        });
+    }
+
+    public initMatter() {
+        // create an engine
+        var engine = Engine.create();
+        this._matter_engine = engine;
+
+        // // create a renderer
+        var render = Render.create({
+            element: document.getElementById('wuli'),
+            engine: engine,
+            options: {
+                width: parseInt(canvas.style.width),
+                height: parseInt(canvas.style.height),
+                pixelRatio: scale,
+                background: 'rgba(250,250,250,0)',
+                wireframeBackground: 'rgba(34,34,34,0)',
+                hasBounds: true,
+                wireframes: false,
+                showSleeping: false,
+                showDebug: false,
+                showBroadphase: false,
+                showBounds: false,
+                showVelocity: false,
+                showCollisions: false,
+                showSeparations: false,
+                showAxes: false,
+                showPositions: false,
+                showAngleIndicator: false,
+                showIds: true,
+                showVertexNumbers: false,
+                showConvexHulls: false,
+                showInternalEdges: false,
+                showMousePosition: false
+            }
+        });
+        Matter.Events.on(engine, 'collisionStart', function (event) {
+            var pairs = event.pairs;
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i];
+                // 所有已碰撞的物体
+                if (pair.bodyA.id == 3) {
+                    // Body.setVelocity(pair.bodyB, Vector.create(2, -10))
+                    Composite.remove(engine.world,pair.bodyB)
+                }
+                if (pair.bodyA.id == 5){
+                    console.log(123)
+                    LAppLive2DManager.getInstance()._viewMatrix.translateRelative(0,-LAppPal.getDeltaTime())
+                }
+            }
+        })
+        // create two boxes and a ground
+        var boxA = Bodies.rectangle(300, 300, 20, 20);
+        var boxB = Bodies.rectangle(20, 50, 20, 20);
+        var ground = Bodies.rectangle(300, 550, 600, 50, {isStatic: true});
+
+        // 钉子固定用
+        var dingzi = Bodies.rectangle(100, 100, 20, 20,{
+            isStatic:true,
+            collisionFilter:{
+                category:null,
+                group:-1,
+                mask:null
+            }
+        })
+        if (!this._zuai) {
+            let box = Bodies.circle(100, 100, 40, {
+            })
+            Composite.add(this._matter_engine.world, box);
+            this._zuai = box;
+
+        }
+        let line = Constraint.create({
+            pointA:{x:300,y:200},
+            bodyB:this._zuai,
+            stiffness:0.1,
+            length:0,
+        })
+
+        Composite.add(engine.world, [boxA, boxB, ground,dingzi,line]);
+
+
+        Render.run(render);
+        var runner = Runner.create();
+
+        Runner.run(runner, engine);
+
     }
 
     /**
@@ -244,6 +428,8 @@ export class LAppView {
      * @param pointY 屏幕Y坐标
      */
     public onTouchesBegan(pointX: number, pointY: number): void {
+        this.addApple(pointX, pointY)
+
         this._touchManager.touchesBegan(pointX, pointY);
     }
 

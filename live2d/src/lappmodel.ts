@@ -5,7 +5,7 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
-import { Live2DCubismFramework as live2dcubismframework } from '@framework/live2dcubismframework';
+import {Constant, Live2DCubismFramework as live2dcubismframework} from '@framework/live2dcubismframework';
 import { Live2DCubismFramework as cubismid } from '@framework/id/cubismid';
 import { Live2DCubismFramework as cubismusermodel } from '@framework/model/cubismusermodel';
 import { Live2DCubismFramework as icubismmodelsetting } from '@framework/icubismmodelsetting';
@@ -48,6 +48,8 @@ import { TextureInfo } from './lapptexturemanager';
 import * as LAppDefine from './lappdefine';
 import 'whatwg-fetch';
 import {DebugModelLogEnable} from "./lappdefine";
+import {Vector} from "matter-js";
+import {Rect} from "./lappsprite";
 
 export enum LoadStep {
   LoadAssets,
@@ -703,6 +705,54 @@ export class LAppModel extends CubismUserModel {
 
     return false;
   }
+
+  /**
+   *
+   * @param drawableId
+   */
+  public getDrawRect(drawableId:CubismIdHandle){
+      const drawIndex: number = this._model.getDrawableIndex(drawableId);
+
+      if (drawIndex < 0) {
+        return new Rect(); // 存在しない場合はfalse
+      }
+
+      const count: number = this._model.getDrawableVertexCount(drawIndex);
+      const vertices: Float32Array = this._model.getDrawableVertices(drawIndex);
+      let left: number = vertices[0];
+      let right: number = vertices[0];
+      let top: number = vertices[1];
+      let bottom: number = vertices[1];
+
+      for (let j = 1; j < count; ++j) {
+        const x = vertices[Constant.vertexOffset + j * Constant.vertexStep];
+        const y = vertices[Constant.vertexOffset + j * Constant.vertexStep + 1];
+
+        if (x < left) {
+          left = x; // Min x
+        }
+
+        if (x > right) {
+          right = x; // Max x
+        }
+
+        if (y < top) {
+          top = y; // Min y
+        }
+
+        if (y > bottom) {
+          bottom = y; // Max y
+        }
+      }
+
+      let rect = new Rect()
+      rect.left = (left+1)*(600/2);
+      rect.right =(right+1)*(600/2);
+      rect.up= (top+1)*(600/2);
+      rect.down =(bottom+1)*(600/2);
+      return rect;
+  }
+
 
   /**
    * 从组名中统一载入运动数据。

@@ -11,11 +11,11 @@ class WindowsManager {
         const {PanelWindow} = require('../../panel')
         const mainWindow = new PanelWindow({
             // center: true,
-            width: 300,
-            height: 300,
+            width: 600,
+            height: 600,
             x: 1300,
             y: 800,
-            show: false,
+            show: true,
             // minimizable: false,
             // resizable: true,
             // fullscreen: true,

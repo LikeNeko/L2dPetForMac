@@ -7,6 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
     "removeComments": true,
+    "allowJs": true,
     "sourceMap": true,
     "baseUrl": "./",
     "paths": {
@@ -15,6 +16,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "src/**/*.js",
     "Core/*.ts"
   ],
   "exclude": [

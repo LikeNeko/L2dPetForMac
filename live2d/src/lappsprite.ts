@@ -26,12 +26,12 @@ export class LAppSprite {
 
     _x: any;
     _y: any;
-    _resolutionLocation: WebGLUniformLocation;
     _matrixLocation: WebGLUniformLocation;
     _matrix: number[];
-    _angleInRadians: any;
-    _translation: { x: any; y: any; };
-    _scale: { x: number; y: number; };
+    _angleInRadians = 0;
+    _translation = { x: 0, y: 0 };
+    _scale = { x: 1, y: 1 };
+    _origin = { x: 0, y:0};
 
     /**
      * 构造函数
@@ -52,12 +52,15 @@ export class LAppSprite {
         this._height = height;
         this._x = x;
         this._y = y;
+        this._translation.x = x;
+        this._translation.y = y;
         this._rect = new Rect();
 
-        this._rect.left = x - width * 0.5;
-        this._rect.right = x + width * 0.5;
-        this._rect.up = y + height * 0.5;
-        this._rect.down = y - height * 0.5;
+        this._rect.left = x;// 0- 64*0.5 32
+        this._rect.right = x + width;// 0+64*0.5 32
+        this._rect.up = y ;
+        this._rect.down = y - height;
+        console.log(this._rect,x,y,width,height)
         this._texture = textureId;
         this._vertexBuffer = null;
         this._uvBuffer = null;
@@ -91,6 +94,8 @@ export class LAppSprite {
 
         gl.deleteBuffer(this._indexBuffer);
         this._indexBuffer = null;
+
+        this._matrixLocation = null;
     }
 
     /**
@@ -100,24 +105,39 @@ export class LAppSprite {
         return this._texture;
     }
     public position(x,y) {
+        this._x = x;
+        this._y = y;
         this._translation = {x:x,y:y}
+        this.reload()
     }
 
     public angle(val) {
-        this._angleInRadians =(360 - val) * Math.PI / 180;
+        this._angleInRadians =val;
+        this.reload()
     }
 
     public scale(x,y) {
         this._scale = {x:x,y:y}
+        this.reload()
+    }
+    public origin(x,y){
+        this._origin = {x:x,y:y}
+        this.reload()
     }
 
     public reset(){
-        this.position(0,0)
-        this.scale(1,1);
-        this.angle(0)
-        let matrix = m3.translate(m3.identity(), this._translation.x, this._translation.y);
+        this.reload()
+    }
+    public reload(){
+        // Compute the matrices
+        let matrix = m3.projection(gl.drawingBufferWidth, gl.drawingBufferHeight);
+        matrix = m3.translate(matrix, this._translation.x, this._translation.y);
         matrix = m3.rotate(matrix, this._angleInRadians);
         matrix = m3.scale(matrix, this._scale.x, this._scale.y);
+        // make a matrix that will move the origin of the 'F' to its center.
+        let moveOriginMatrix = m3.translation(-this._origin.x, -this._origin.y);
+        // let moveOriginMatrix = m3.translation(-this._width/2, -this._height/2);
+        matrix = m3.multiply(matrix, moveOriginMatrix);
         this._matrix = matrix;
     }
     public rect(rect:Rect){
@@ -153,11 +173,7 @@ export class LAppSprite {
             gl.enableVertexAttribArray(this._uvLocation);
 
             // lookup uniforms
-            this._resolutionLocation = gl.getUniformLocation(programId, "u_resolution");
             this._matrixLocation = gl.getUniformLocation(programId, "u_matrix");
-
-            // 设置默认参数配置
-            this.reset();
 
             // 得到UNIFORM变量的个数
             this._textureLocation = gl.getUniformLocation(programId, 'texture');
@@ -169,14 +185,10 @@ export class LAppSprite {
             // Uv缓冲，坐标初始化
             {
                 this._uvArray = new Float32Array([
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    1.0,
-                    1.0
+                    1.0, 0.0,
+                    0.0, 0.0,
+                    0.0, 1.0,
+                    1.0, 1.0
                 ]);
 
                 // 创建uv缓冲器
@@ -185,17 +197,12 @@ export class LAppSprite {
 
             // 顶点缓冲，坐标初始化
             {
-                // const maxWidth = canvas.width;
-                // const maxHeight = canvas.height;
-
-                // 顶点数据
-                // this._positionArray = new Float32Array([
-                //   (this._rect.right - maxWidth * 0.5) / (maxWidth* 0.5), (this._rect.up - maxHeight * 0.5) / (maxHeight* 0.5),
-                //   (this._rect.left - maxWidth * 0.5) / (maxWidth* 0.5), (this._rect.up - maxHeight * 0.5) / (maxHeight* 0.5),
-                //   (this._rect.left - maxWidth * 0.5) / (maxWidth* 0.5), (this._rect.down - maxHeight * 0.5) / (maxHeight* 0.5),
-                //   (this._rect.right - maxWidth * 0.5) / (maxWidth* 0.5), (this._rect.down - maxHeight * 0.5) / (maxHeight* 0.5)
-                // ]);
-
+                this._positionArray = new Float32Array([
+                    this._rect.right, this._rect.up,
+                    this._rect.left, this._rect.up,
+                    this._rect.left, this._rect.down,
+                    this._rect.right, this._rect.down
+                ])
                 // 创建一个顶点缓冲器
                 this._vertexBuffer = gl.createBuffer();
             }
@@ -211,12 +218,8 @@ export class LAppSprite {
 
             this._firstDraw = false;
         }
-        this._positionArray = new Float32Array([
-            this._rect.right, this._rect.up,
-            this._rect.left, this._rect.up,
-            this._rect.left, this._rect.down,
-            this._rect.right, this._rect.down
-        ])
+        this.reload()
+
         // UV座标登录
         gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this._uvArray, gl.STATIC_DRAW);
@@ -225,14 +228,13 @@ export class LAppSprite {
         gl.vertexAttribPointer(this._uvLocation, 2, gl.FLOAT, false, 0, 0);
 
         // 登记顶点坐标
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+
         gl.bufferData(gl.ARRAY_BUFFER, this._positionArray, gl.STATIC_DRAW);
 
         // 注册attribute属性
         gl.vertexAttribPointer(this._positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-        // 设置水平分辨率
-        gl.uniform2f(this._resolutionLocation, gl.canvas.width, gl.canvas.height);
 
         // Set the matrix.
         gl.uniformMatrix3fv(this._matrixLocation, false, this._matrix);
@@ -243,6 +245,12 @@ export class LAppSprite {
 
         // 模型图
         gl.bindTexture(gl.TEXTURE_2D, this._texture);
+
+        // 宽高不等也ok
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.drawElements(
             gl.TRIANGLES,
             this._indexArray.length,

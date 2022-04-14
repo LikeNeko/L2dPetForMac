@@ -37,7 +37,7 @@ export const PowerImageName = 'CloseNormal.png';
 // 模型定义- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // 配置模型的目录名的排列
 // 保持目录名称与模型3一致。json的名字
-export let ModelDir: string[] = ['++gongkaimo','cat_model_miao_pro','Senko','jinsechangzhifa','Rice','Hiyori','Haru',  'Mark', 'Natori'];
+export let ModelDir: string[] = ['huli0622','++gongkaimo','Senko','jinsechangzhifa','Rice','Hiyori','Haru',  'Mark', 'Natori'];
 export const ModelDirSize: number = ModelDir.length;
 
 // 配合外部定义文件(json)

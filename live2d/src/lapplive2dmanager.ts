@@ -174,6 +174,7 @@ export class LAppLive2DManager {
         let model = this._models.at(0).getModel();
 
         for (let i = 0; i < model.getDrawableCount(); i++) {
+            //todo 可以过滤一部分这里
             if (this._models.at(0).isHit(model.getDrawableId(i),viewX,viewY)) {
                 return model.getDrawableId(i).getString().s;
             }
@@ -260,6 +261,5 @@ export class LAppLive2DManager {
     // 运动回放结束的回调函数
     _finishedMotion = (self: ACubismMotion): void => {
         LAppPal.printMessage('Motion Finished:');
-        console.log(self);
     };
 }

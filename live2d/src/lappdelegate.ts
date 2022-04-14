@@ -27,7 +27,6 @@ export let scale: number = window.devicePixelRatio;
 export let lAppDelegateEvent: LAppDelegateEvent = null;
 
 
-
 interface LAppDelegateEvent {
     modelCompleteSetup();
 }
@@ -221,34 +220,16 @@ export class LAppDelegate {
     /**
      * 注册着色器。
      */
-    public createShader():WebGLProgram{
-        let vertexShader: string =
+    public createShader(): WebGLProgram {
+        let vertexShader: string = '' +
             'precision mediump float;' +
-            'attribute vec3 a_position;' +
+            'attribute vec2 a_position;\n' +
             'attribute vec2 uv;' +
-            'varying vec2 vuv;' +
-            'void main(void)' +
-            '{' +
-            '   gl_Position = vec4(a_position, 1.0);' +
-            '   vuv = uv;' +
-            '}';
-        vertexShader = '' +
-            'precision mediump float;' +
-            'attribute vec3 a_position;\n' +
-            'attribute vec2 uv;' +
-            'uniform vec2 u_resolution;\n' +
             'uniform mat3 u_matrix;\n' +
             'varying vec2 vuv;' +
             'void main() {\n' +
-            '  // Multiply the position by the matrix.\n' +
-            '  vec2 position = (u_matrix * a_position).xy;\n' +
-            '  // convert the position from pixels to 0.0 to 1.0\n' +
-            '  vec2 zeroToOne = position / u_resolution;\n' +
-            '  // convert from 0->1 to 0->2\n' +
-            '  vec2 zeroToTwo = zeroToOne * 2.0;\n' +
-            '  // convert from 0->2 to -1->+1 (clipspace)\n' +
-            '  vec2 clipSpace = zeroToTwo - 1.0;\n' +
-            '  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);\n' +
+            '  // 使位置和矩阵相乘\n' +
+            '  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);' +
             '  vuv = uv;' +
             '}'
         const fragmentShader: string =
@@ -259,7 +240,7 @@ export class LAppDelegate {
             '{' +
             '   gl_FragColor = texture2D(texture, vuv);' +
             '}';
-        let program = twgl.createProgram(gl,[vertexShader,fragmentShader])
+        let program = twgl.createProgram(gl, [vertexShader, fragmentShader])
 
         gl.useProgram(program);
         return program;
@@ -342,7 +323,6 @@ function onMouseEnter(e: MouseEvent) {
  *  点击的时候被叫到。
  */
 function onClickBegan(e: MouseEvent): void {
-    LAppPal.log('click_began')
     if (!LAppDelegate.getInstance()._view) {
         LAppPal.printMessage('view notfound');
         return;
@@ -363,8 +343,6 @@ export function hitModel(posX, posY) {
     const viewX: number = view.transformViewX(posX);
     const viewY: number = view.transformViewY(posY);
     return LAppLive2DManager.getInstance().hitModel(viewX, viewY)
-    // console.log(pixels) 配合loop里的readPixels 虽然性能较差，但可以控制的点很多，比如像素颜色
-    // return pixels[((posY * (canvas.width * 4)) + (posX * 4)) + 3] > 0;
 }
 
 /**
@@ -412,7 +390,6 @@ function onClickEnded(e: MouseEvent): void {
     // 解决模糊问题
     posX *= scale;
     posY *= scale;
-    LAppPal.log('点击')
     let hit = LAppLive2DManager.getInstance();
     let hitstr = hit.isHit(posX, posY);
     if (hitstr != "" && hit.click_hit) {

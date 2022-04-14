@@ -25,6 +25,7 @@
   "license": "CC0-1.0",
   "dependencies": {
     "applescript": "^1.0.0",
+    "async": "^3.2.3",
     "bindings": "latest",
     "cron": "^1.8.2",
     "electron-clipboard-watcher": "^1.0.1",

@@ -1,9 +1,10 @@
 import * as tg from "twgl.js";
+
 /**
  * m3矩阵转换
  */
 export let m3 = {
-    projection: function(width, height) {
+    projection: function (width, height) {
         // 注意：这个矩阵翻转了 Y 轴，所以 0 在上方
         return [
             2 / width, 0, 0,
@@ -12,7 +13,7 @@ export let m3 = {
         ];
     },
 
-    identity: function() {
+    identity: function () {
         return [
             1, 0, 0,
             0, 1, 0,
@@ -20,7 +21,7 @@ export let m3 = {
         ];
     },
 
-    translation: function(tx, ty) {
+    translation: function (tx, ty) {
         return [
             1, 0, 0,
             0, 1, 0,
@@ -28,17 +29,17 @@ export let m3 = {
         ];
     },
 
-    rotation: function(angleInRadians) {
+    rotation: function (angleInRadians) {
         var c = Math.cos(angleInRadians);
         var s = Math.sin(angleInRadians);
         return [
-            c,-s, 0,
+            c, -s, 0,
             s, c, 0,
             0, 0, 1,
         ];
     },
 
-    scaling: function(sx, sy) {
+    scaling: function (sx, sy) {
         return [
             sx, 0, 0,
             0, sy, 0,
@@ -46,7 +47,7 @@ export let m3 = {
         ];
     },
 
-    multiply: function(a, b) {
+    multiply: function (a, b) {
         var a00 = a[0 * 3 + 0];
         var a01 = a[0 * 3 + 1];
         var a02 = a[0 * 3 + 2];
@@ -77,15 +78,15 @@ export let m3 = {
             b20 * a02 + b21 * a12 + b22 * a22,
         ];
     },
-    translate: function(m, tx, ty) {
+    translate: function (m, tx, ty) {
         return m3.multiply(m, m3.translation(tx, ty));
     },
 
-    rotate: function(m, angleInRadians) {
+    rotate: function (m, angleInRadians) {
         return m3.multiply(m, m3.rotation(angleInRadians));
     },
 
-    scale: function(m, sx, sy) {
+    scale: function (m, sx, sy) {
         return m3.multiply(m, m3.scaling(sx, sy));
     },
 };

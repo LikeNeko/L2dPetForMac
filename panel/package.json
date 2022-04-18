@@ -12,11 +12,6 @@
     "gyp12":"node-gyp rebuild --target=12.2.3 --dist-url=https://atom.io/download/electron",
     "test": "mocha"
   },
-  "devDependencies": {
-    "mocha": "^5.2.0",
-    "node-gyp": "^3.8.0",
-    "spectron": "^5.0.0"
-  },
   "dependencies": {
     "nan": "^2.11.1"
   },

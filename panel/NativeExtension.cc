@@ -2,8 +2,8 @@
 
 using v8::FunctionTemplate;
 
-// NativeExtension.cc represents the top level of the module.
-// C++ constructs that are exposed to javascript are exported here
+// NativeExtension。Cc代表模块的顶层。
+// 向javascript公开的c++构造在这里导出
 
 NAN_MODULE_INIT(InitAll) {
   Nan::Set(target, Nan::New("MakePanel").ToLocalChecked(),

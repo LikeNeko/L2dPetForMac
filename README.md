@@ -60,13 +60,6 @@
 1. 启动 `electronjs` 命令：`yarn ; yarn run start` 正常的话这时桌面应该有模型被显示了
 2. 启动 `live2d` 热更新 命令：`cd live2d ; yarn ; yarn run start` 这一步是为了开启热更新，方便修改
 3. 不想开启热更新的话可以在 `cd live2d` 目录下面使用`yarn run build` 此时会更新 `live2d` 目录下的 `dict` 文件夹
-4. 默认为`debug`模式，可手动修改`app/libs/Config.js`中的`debug`为`false`
-
-5. `cmd + p` 打开界面里的debug视图
-
-6. `yarn run download_vue_element_ui` vue相关的需要执行这个命令
-
-7. `yarn global add imagezip` 全局安装压缩图片的命令或者项目安装`yarn add imagezip`
 
 > tips
 

@@ -18,6 +18,7 @@ import * as LAppDefine from './lappdefine';
 import {DebugLogEnable} from './lappdefine';
 import {LStore} from './lstore';
 import {twgl} from "./lcanvas";
+import {Bodies, Common, Composite, Vector} from "matter-js";
 
 export let canvas: HTMLCanvasElement = null;
 export let s_instance: LAppDelegate = null;
@@ -393,6 +394,14 @@ function onClickEnded(e: MouseEvent): void {
     let hit = LAppLive2DManager.getInstance();
     let hitstr = hit.isHit(posX, posY);
     if (hitstr != "" && hit.click_hit) {
+        let r:Vector[][] = LAppLive2DManager.getInstance().getModel(0).getDrawRect(LAppLive2DManager.getInstance().getIdManager().getId(hitstr))
+
+        let b = require('poly-decomp');
+        Common.setDecomp(b)
+        console.log(r)
+        let c =  Bodies.fromVertices(posX / scale, posY / scale, r ,{isStatic:true});
+        console.log(c)
+        Composite.add(LAppLive2DManager.getInstance().getLAppDelegate().getView()._matter_engine.world, c);
         hit.click_hit(hitstr)
     }
     LAppDelegate.getInstance()._view.onTouchesEnded(posX, posY);

@@ -50,6 +50,7 @@ import 'whatwg-fetch';
 import {DebugModelLogEnable} from "./lappdefine";
 import {Vector} from "matter-js";
 import {Rect} from "./lappsprite";
+import {LAppLive2DManager} from "./lapplive2dmanager";
 
 export enum LoadStep {
   LoadAssets,
@@ -410,24 +411,27 @@ export class LAppModel extends CubismUserModel {
         );
         texturePath = this._modelHomeDir + texturePath;
 
-        // 负载完成时调用的回叫函数
-        const onLoad = (textureInfo: TextureInfo): void => {
-          this.getRenderer().bindTexture(modelTextureNumber, textureInfo.id);
+        // 获取缓存数据 todo 改成异步加载 启动应用预加载模型
+        LAppLive2DManager.getInstance().cachedFile(texturePath,function (){
+          // 负载完成时调用的回叫函数
+          const onLoad = (textureInfo: TextureInfo): void => {
+            this.getRenderer().bindTexture(modelTextureNumber, textureInfo.id);
 
-          this._textureCount++;
+            this._textureCount++;
 
-          if (this._textureCount >= textureCount) {
-            // 加载完成
-            this._state = LoadStep.CompleteSetup;
-            lAppDelegateEvent.modelCompleteSetup();
-          }
-        };
+            if (this._textureCount >= textureCount) {
+              // 加载完成
+              this._state = LoadStep.CompleteSetup;
+              lAppDelegateEvent.modelCompleteSetup();
+            }
+          };
 
-        // 读入
-        LAppDelegate.getInstance()
-          .getTextureManager()
-          .createTextureFromPngFile(texturePath, usePremultiply, onLoad);
-        this.getRenderer().setIsPremultipliedAlpha(usePremultiply);
+          // 读入
+          LAppDelegate.getInstance()
+              .getTextureManager()
+              .createTextureFromPngFile(texturePath, usePremultiply, onLoad);
+          this.getRenderer().setIsPremultipliedAlpha(usePremultiply);
+        }.bind(this))
       }
 
       this._state = LoadStep.WaitLoadTexture;
@@ -714,7 +718,7 @@ export class LAppModel extends CubismUserModel {
       const drawIndex: number = this._model.getDrawableIndex(drawableId);
 
       if (drawIndex < 0) {
-        return new Rect(); // 存在しない場合はfalse
+        // return new Rect(); // 存在しない場合はfalse
       }
 
       const count: number = this._model.getDrawableVertexCount(drawIndex);
@@ -724,10 +728,11 @@ export class LAppModel extends CubismUserModel {
       let top: number = vertices[1];
       let bottom: number = vertices[1];
 
+      let tmp:Vector[] = [];
       for (let j = 1; j < count; ++j) {
         const x = vertices[Constant.vertexOffset + j * Constant.vertexStep];
         const y = vertices[Constant.vertexOffset + j * Constant.vertexStep + 1];
-
+        tmp.push(Vector.create((x+1)*(LAppDefine.RenderTargetWidth/2),(y+1)*(LAppDefine.RenderTargetWidth/2)))
         if (x < left) {
           left = x; // Min x
         }
@@ -745,12 +750,18 @@ export class LAppModel extends CubismUserModel {
         }
       }
 
+      // 取一个正矩形
+      left = right;
+      top = bottom;
+
       let rect = new Rect()
-      rect.left = (left+1)*(600/2);
-      rect.right =(right+1)*(600/2);
-      rect.up= (top+1)*(600/2);
-      rect.down =(bottom+1)*(600/2);
-      return rect;
+      // 转成实际坐标
+      rect.left = (left+1)*(LAppDefine.RenderTargetWidth/2);
+      rect.right =(right+1)*(LAppDefine.RenderTargetWidth/2);
+      rect.up= (top+1)*(LAppDefine.RenderTargetHeight/2);
+      rect.down =(bottom+1)*(LAppDefine.RenderTargetHeight/2);
+      console.log(rect)
+      return [tmp];
   }
 
 

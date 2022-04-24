@@ -19,10 +19,12 @@ import CubismIdHandle = cubismid.CubismIdHandle;
 
 import {LAppModel} from './lappmodel';
 import {LAppPal} from './lapppal';
-import {canvas, LAppDelegate} from './lappdelegate';
+import {canvas, LAppDelegate, scale} from './lappdelegate';
 import * as LAppDefine from './lappdefine';
 
 import {LStore} from "./lstore";
+import {Bodies, Common, Composite, Vector} from "matter-js";
+import {LAppView} from "./lappview";
 
 export let s_instance: LAppLive2DManager = null;
 
@@ -33,6 +35,7 @@ export let s_instance: LAppLive2DManager = null;
 export class LAppLive2DManager {
     public click_hit:Function = null;
     public move_hit:Function = null;
+    public cache_imgs = new Map;
 
     /**
      * 获取管理对象ID
@@ -243,6 +246,29 @@ export class LAppLive2DManager {
         this.releaseAllModel();
         this._models.pushBack(new LAppModel());
         this._models.at(0).loadAssets(modelPath, modelJsonName);
+    }
+
+    /**
+     * 异步woker
+     * @param f
+     */
+    public createWorker(f) {
+        var blob = new Blob(['(' + f.toString() +')()']);
+        var url = window.URL.createObjectURL(blob);
+        var worker = new Worker(url);
+        return worker;
+    }
+    public cachedFile(file,call){
+        fetch(file).then(response => {
+            response.blob().then(blob => {
+                createImageBitmap(blob).then(img => {
+                    // img 即是一个 ImageBitmap 实例
+                    this.cache_imgs.set(file,img);
+                    console.log('缓存成功')
+                    call(img)
+                });
+            });
+        });
     }
 
     /**

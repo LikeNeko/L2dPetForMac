@@ -9,6 +9,7 @@ import { Live2DCubismFramework as csmvector } from '@framework/type/csmvector';
 import Csm_csmVector = csmvector.csmVector;
 import csmVector_iterator = csmvector.iterator;
 import { gl } from './lappdelegate';
+import {LAppLive2DManager} from "./lapplive2dmanager";
 
 /**
  * 纹理管理类
@@ -91,8 +92,16 @@ export class LAppTextureManager {
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
       }
 
-      // 在纹理上写入像素
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      if (LAppLive2DManager.getInstance().cache_imgs[fileName]){
+        console.log('使用缓存')
+        // 在纹理上写入像素
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
+            LAppLive2DManager.getInstance().cache_imgs[fileName]);
+      }else{
+        // 在纹理上写入像素
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      }
+
 
       // 是2次冥的走这个
       if (0===(img.width&img.width-1) || 0===(img.height&img.height-1)){

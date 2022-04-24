@@ -29,16 +29,21 @@ import Matter, {
     Constraint,
     MouseConstraint,
     Mouse,
-    Composites
+    Composites,
+    Common
 } from 'matter-js';
 import {m3} from './lcanvas';
 import {CubismIdHandle, Live2DCubismFramework} from "@framework/id/cubismid";
 import CubismId = Live2DCubismFramework.CubismId;
+import {Tween, Easing, update} from "@tweenjs/tween.js";
 
 /**
  * 描画クラス。
  */
 export class LAppView {
+    get matter_engine(): Matter.Engine {
+        return this._matter_engine;
+    }
     _touchManager: TouchManager; // タッチマネージャー
     _deviceToScreen: Csm_CubismMatrix44; // デバイスからスクリーンへの行列
     _viewMatrix: Csm_CubismViewMatrix; // viewMatrix
@@ -55,6 +60,11 @@ export class LAppView {
     _back_zhuozi: LAppSprite;
     _hands: LAppSprite;
     _zuai: any;
+
+    // 测试补件
+    public static tween: Tween<any>;
+    public static position = {x: 0, y: 0, r: 0};
+    private static tween_back: Tween<{ r: number; x: number; y: number }>;
 
     /**
      * コンストラクタ
@@ -135,6 +145,7 @@ export class LAppView {
         const live2DManager: LAppLive2DManager = LAppLive2DManager.getInstance();
 
         live2DManager.onUpdate();
+        update();
         // 前置ui
         // gl.useProgram(this._programId);
         //
@@ -155,28 +166,29 @@ export class LAppView {
     }
 
     public addApple(x, y) {
-        let tmp = [];
-        for (let i = 0; i < 3; i++) {
-            let boxC:Matter.Body;
-            if(parseInt((Math.random() * 10).toString()) <5){
-                boxC = Bodies.rectangle(x/scale, y/scale, 20, 20);
-            }else{
-                boxC = Bodies.circle(x/scale, y/scale, 20,{
-                    render:{
-                        sprite:{
-                            texture:LAppDefine.ResourcesPath+LAppDefine.GearImageName,
-                            xScale:1,
-                            yScale:1
-                        }
-                    }
-                });
-            }
-            this._apples.push(boxC)
-            tmp.push(boxC)
-        }
+
+        // let tmp = [];
+        // for (let i = 0; i < 3; i++) {
+        //     let boxC: Matter.Body;
+        //     if (parseInt((Math.random() * 10).toString()) < 5) {
+        //         boxC = Bodies.rectangle(x / scale, y / scale, 20, 20);
+        //     } else {
+        //         boxC = Bodies.circle(x / scale, y / scale, 20, {
+        //             render: {
+        //                 sprite: {
+        //                     texture: LAppDefine.ResourcesPath + LAppDefine.GearImageName,
+        //                     xScale: 1,
+        //                     yScale: 1
+        //                 }
+        //             }
+        //         });
+        //     }
+        //     this._apples.push(boxC)
+        //     tmp.push(boxC)
+        // }
 
 
-        Composite.add(this._matter_engine.world, tmp);
+        // Composite.add(this._matter_engine.world, tmp);
     }
 
     /**
@@ -375,11 +387,38 @@ export class LAppView {
                 // 所有已碰撞的物体
                 if (pair.bodyA.id == 3) {
                     // Body.setVelocity(pair.bodyB, Vector.create(2, -10))
-                    Composite.remove(engine.world,pair.bodyB)
+                    Composite.remove(engine.world, pair.bodyB)
                 }
-                if (pair.bodyA.id == 5){
-                    console.log(123)
-                    LAppLive2DManager.getInstance()._viewMatrix.translateRelative(0,-LAppPal.getDeltaTime())
+                if (pair.bodyA.id == 3) {
+                    if (LAppView.tween == null){
+                        LAppView.position.y = 0;
+                        LAppView.tween = new Tween(LAppView.position)
+                            .to({y: -0.5}, 300)
+                            .easing(Easing.Linear.None)
+                            .onUpdate(function () {
+                                LAppLive2DManager.getInstance()._viewMatrix.translateY(LAppView.position.y);
+                            });
+                        LAppView.tween_back = new Tween(LAppView.position)
+                            .to({y:0},1000)
+                            .easing(Easing.Quartic.In)
+                            .onUpdate(function (){
+                                LAppLive2DManager.getInstance()._viewMatrix.translateY(LAppView.position.y);
+                            })
+                    }
+                    if (LAppView.tween_back.isPlaying()){
+                        LAppView.tween_back.pause().stop();
+                        LAppView.tween = new Tween(LAppView.position)
+                            .to({y: -0.5}, 300)
+                            .easing(Easing.Linear.None)
+                            .onUpdate(function () {
+                                console.log('update start',LAppView.position.y)
+                                LAppLive2DManager.getInstance()._viewMatrix.translateY(LAppView.position.y);
+                            }).chain(LAppView.tween_back).start();
+
+                    }else{
+                        LAppView.tween.chain(LAppView.tween_back)
+                        LAppView.tween.start()
+                    }
                 }
             }
         })
@@ -389,29 +428,21 @@ export class LAppView {
         var ground = Bodies.rectangle(300, 550, 600, 50, {isStatic: true});
 
         // 钉子固定用
-        var dingzi = Bodies.rectangle(100, 100, 20, 20,{
-            isStatic:true,
-            collisionFilter:{
-                category:null,
-                group:-1,
-                mask:null
+        var dingzi = Bodies.rectangle(100, 100, 20, 20, {
+            isStatic: true,
+            collisionFilter: {
+                category: null,
+                group: -1,
+                mask: null
             }
         })
         if (!this._zuai) {
-            let box = Bodies.circle(100, 100, 40, {
-            })
+            let box = Bodies.circle(100, 100, 40, {})
             Composite.add(this._matter_engine.world, box);
             this._zuai = box;
 
         }
-        let line = Constraint.create({
-            pointA:{x:300,y:200},
-            bodyB:this._zuai,
-            stiffness:0.1,
-            length:0,
-        })
-
-        Composite.add(engine.world, [boxA, boxB, ground,dingzi,line]);
+        Composite.add(engine.world, [boxA, boxB, ground, dingzi]);
 
 
         Render.run(render);

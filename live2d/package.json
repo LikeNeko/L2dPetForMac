@@ -21,7 +21,9 @@
     "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "^18.6.4",
     "matter-js": "^0.18.0",
+    "poly-decomp": "^0.3.0",
     "tern": "^0.24.3",
     "twgl.js": "^4.22.0",
     "whatwg-fetch": "^3.0.0"
